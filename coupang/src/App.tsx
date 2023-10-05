@@ -1,18 +1,17 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Layout from './components/layout/Layout';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+import React from "react";
+
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Main from "./pages/Main/Main";
 
 function App() {
-	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Layout />}></Route>
-				<Route path="login" element={<LoginPage />} />
-				<Route path="signup" element={<SignupPage />} />
-			</Routes>
-		</BrowserRouter>
-	);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Main />,
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
