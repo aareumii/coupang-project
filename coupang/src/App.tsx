@@ -1,12 +1,17 @@
-import React from 'react';
-
-import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function App() {
 	return (
-		<div>
-			<p>coupang</p>
-		</div>
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Layout />}></Route>
+				<Route path="login" element={<LoginPage />} />
+				<Route path="signup" element={<SignupPage />} />
+			</Routes>
+		</BrowserRouter>
 	);
 }
 
