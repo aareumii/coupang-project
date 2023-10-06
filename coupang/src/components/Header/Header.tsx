@@ -35,6 +35,7 @@ const HeaderWapper = styled.div`
 const HeaderNav = styled.div`
   display: flex;
   gap: 10px;
+  cursor: pointer;
   > p {
     color: black;
     font-size: 0.1rem;
@@ -44,6 +45,7 @@ const HeaderNav = styled.div`
 const MembershipNav = styled.div`
   display: flex;
   gap: 10px;
+  cursor: pointer;
   > p {
     color: black;
     font-size: 0.1rem;

@@ -1,13 +1,16 @@
 import React from "react";
 import Header from "../../components/Header/Header";
-import ItemList from "../../components/Header/ItemList";
+import ItemList from "../../components/MainHome/ItemList";
 import Category from "../../components/Header/Category";
 import SearchBar from "../../components/Header/SearchBar";
 import Pagination from "../../components/Header/Pagination";
 import styled from "styled-components";
-import coupang from "../../assets/headerImg/Bakepang.png";
+import coupang from "../../assets/headerImg/베이크팡.png";
 import MyCoupang from "../../components/Header/MyCoupang";
 import Cart from "../../components/Header/Cart";
+import ItemCategory from "../../components/MainHome/ItemCategory";
+import ItemFilter from "../../components/MainHome/ItemFilter";
+import Banner from "../../components/MainHome/Banner";
 
 const main = () => {
   return (
@@ -20,7 +23,11 @@ const main = () => {
         <MyCoupang />
         <Cart />
       </header>
-      <main>
+      <Banner />
+
+      <main className="main">
+        <ItemCategory />
+        <ItemFilter />
         <ItemList />
         <Pagination />
       </main>
@@ -38,11 +45,22 @@ const StMain = styled.div`
     display: flex;
     /* gap: 50px; */
     align-items: center;
+    padding-top: 25px;
+    z-index: 20;
+    position: relative;
+    margin-bottom: 30px;
   }
   .logo {
-    padding: 15px 15px;
-    width: 170px;
+    padding-left: 100px;
+
+    width: 150px;
     height: 40px;
     cursor: pointer;
+  }
+  .main {
+    width: 60vw;
+    margin: auto;
+    padding-top: 40px;
+    padding-left: 160px;
   }
 `;
