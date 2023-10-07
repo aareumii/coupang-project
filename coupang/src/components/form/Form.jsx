@@ -5,15 +5,15 @@ const Form = ({ title }) => {
 	return (
 		<FormContainer>
 			<div>
-				<input type="email" placeholder="이메일 혹은 아이디를 입력하세요" />
+				<input type="email" placeholder="아이디(이메일)" />
 				<div>
-					<FormError></FormError>
+					<FormError>아이디(이메일)를 입력해주세요.</FormError>
 				</div>
 			</div>
 			<div>
-				<input type="password" placeholder="Password" />
+				<input type="password" placeholder="비밀번호" />
 				<div>
-					<FormError></FormError>
+					<FormError>비밀번호를 입력해주세요.</FormError>
 				</div>
 			</div>
 			<button type="submit">{title}</button>
@@ -32,35 +32,43 @@ const FormContainer = styled.div`
 	div {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		width: 100%;
 		margin-bottom: 10px;
 	}
 	input {
-		width: 80%;
-		height: auto;
-		padding: 10px 15px;
-		color: #000;
-		font-size: 16px;
-		border: 1px solid #000;
-		border-radius: 5px;
-		outline: none;
-
+		margin: 0;
+		height: 48px;
+		box-sizing: border-box;
+		width: 100%;
+		padding: 16px 0 12px;
+		border: 1px solid #e8e8e8;
+		background: none transparent;
+		font-family: dotum, sans-serif;
+		font-size: 14px;
+		line-height: 20px;
+		color: #111;
+		font-weight: 700;
+		text-indent: 12px;
+		&::placeholder {
+			color: #b1b1b1;
+		}
 		&:focus {
-			border: 3px solid #000;
-			border-radius: 5px;
+			border-bottom: 2px solid #e52528;
 		}
 	}
 	button {
-		width: 80%;
-		margin-top: 10px;
-		padding: 15px 40px;
-		color: #000;
-		font-size: 14px;
-
-		border: 1px solid #000;
-		cursor: pointer;
-		transition: 0.3s all ease;
+		width: 100%;
+		font-family: apple sd gothic neo, malgun gothic, nanumbarungothic,
+			nanumgothic, dotum, sans-serif;
+		background: #346aff;
+		color: #fff;
+		font-weight: bold;
+		padding: 12.5px 0;
+		border-radius: 4px;
+		font-size: 16px;
+		box-shadow: none;
+		line-height: 19px;
+		border: none;
 
 		/* &:hover {
 			background: var(--second-color);
@@ -69,15 +77,12 @@ const FormContainer = styled.div`
 `;
 
 const FormError = styled.span`
-	position: relative;
+	color: #e52528;
 	display: block;
-	width: 80%;
-	margin-top: 15px;
-	padding: 5px;
-	color: #000;
-	font-size: 13px;
-	background: var(--second-color);
-	border: 1px solid var(--second-color);
-	border-radius: 5px;
-	box-shadow: rgb(0 0 0 / 16%) 0 3px 6px, rgb(0 0 0 / 23%) 0 3px 6px;
+	margin: 9px 12px 0;
+	padding: 0;
+	font-family: dotum, sans-serif;
+	font-size: 12px;
+	line-height: 18px;
+	cursor: default;
 `;
