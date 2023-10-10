@@ -1,8 +1,12 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Header = () => {
+interface HeaderProps {
+	isLoggedIn: boolean;
+	onLogout: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
 	return (
 		<>
 			<HeaderWapper>
@@ -12,22 +16,28 @@ const Header = () => {
 						<p>입점신청 ▼</p>
 					</HeaderNav>
 					<MembershipNav>
-						<p>
-							<Link
-								to={'/login'}
-								style={{ textDecoration: 'none', color: ' #000' }}
-							>
-								로그인
-							</Link>
-						</p>
-						<p>
-							<Link
-								to={'/signup'}
-								style={{ textDecoration: 'none', color: ' #000' }}
-							>
-								회원가입
-							</Link>
-						</p>
+						{isLoggedIn ? (
+							<p onClick={onLogout}>로그아웃</p>
+						) : (
+							<>
+								<p>
+									<Link
+										to={'/login'}
+										style={{ textDecoration: 'none', color: ' #000' }}
+									>
+										로그인
+									</Link>
+								</p>
+								<p>
+									<Link
+										to={'/signup'}
+										style={{ textDecoration: 'none', color: ' #000' }}
+									>
+										회원가입
+									</Link>
+								</p>
+							</>
+						)}
 						<p>고객센터</p>
 					</MembershipNav>
 				</HeaderContainer>

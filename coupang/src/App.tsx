@@ -1,10 +1,8 @@
-import React from 'react';
-
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Main from './pages/Main/Main';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import SignupPage from './pages/RegisterPage/SignUp';
 import Cartpage from './pages/CartPage/Cartpage';
 
 function App() {
