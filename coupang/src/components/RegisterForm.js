@@ -7,9 +7,13 @@ function RegisterForm({ onAddItem }) {
     product: "",
     category: "",
     description: "",
-    media: "./assets/img.png",
+    media1: "",
+    media2: "",
+    media3: "",
     price: 0,
     quantity: 0,
+    registrationDate: "",
+    endDate: "",
   });
 
   const [showCategory, setShowCategory] = useState(false);
@@ -20,12 +24,20 @@ function RegisterForm({ onAddItem }) {
     evt.preventDefault();
     console.log("제출된 데이터:", formData);
     setFormData({
+      id: "",
       product: "",
+      category: "",
       description: "",
-      media: "",
+      media1: "",
+      media2: "",
+      media3: "",
       price: 0,
+      quantity: 0,
+      registrationDate: "",
+      endDate: "",
     });
     onAddItem(formData);
+    console.log("새로추가된 상품:",formData);
   };
 
   const handleChange = (evt) => {
@@ -48,7 +60,7 @@ function RegisterForm({ onAddItem }) {
           type="text"
           placeholder="앙버터 크로와상"
           name="product"
-          value={formData.name}
+          value={formData.product}
           id="product"
           onChange={handleChange}
         />
@@ -81,14 +93,30 @@ function RegisterForm({ onAddItem }) {
           id="description"
           onChange={handleChange}
         />
+        <div className="media-inputs">
+          <label htmlFor="media1">미디어추가</label>
+          <input
+            type="file"
+            name="media1"
+            id="media1"
+            onChange={handleChange}
+          />
+          <label htmlFor="media2"></label>
+          <input
+            type="file"
+            name="media2"
+            id="media2"
+            onChange={handleChange}
+          />
+          <label htmlFor="media3"></label>
+          <input
+            type="file"
+            name="media3"
+            id="media3"
+            onChange={handleChange}
+          />
+        </div>
 
-        <label htmlFor="media">미디어 추가</label>
-        <input
-          type="file" 
-          name="media"
-          id="media"
-          onChange={handleChange}
-        />
         <label htmlFor="price">가격</label>
         <input
           type="number"
@@ -107,6 +135,24 @@ function RegisterForm({ onAddItem }) {
           id="quantity"
           onChange={handleChange}
         />
+        <label htmlFor="registrationDate">상품등록일</label>
+        <input
+          type="date"
+          placeholder=""
+          name="registrationDate"
+          value={formData.registrationDate}
+          id="registrationDate"
+          onChange={handleChange}
+        />
+        <label htmlFor="endDate">판매종료일</label>
+        <input
+          type="date"
+          placeholder=""
+          name="endDate"
+          value={formData.endDate}
+          id="endDate"
+          onChange={handleChange}
+        />
         <button type="submit">저장</button>
       </StyledForm>
     </StyledRegisterForm>
@@ -114,85 +160,3 @@ function RegisterForm({ onAddItem }) {
 }
 
 export default RegisterForm;
-
-
-{/*import React, { useState } from "react";
-import RegisterForm from "./RegisterForm";
-import { StyledInventoryList } from "./InventoryList.styles";
-
-function InventoryList() {
-  const [items, setItems] = useState([
-    {
-      id: 0,
-      product: "소금치즈",
-      description: "트러플소금에 치즈추가",
-      media:
-        "https://e7.pngegg.com/pngimages/365/237/png-clipart-bread-bread.png",
-      price: 3800,
-      quantity: 20,
-    },
-    {
-      id: 1,
-      product: "플레인브레드",
-      description: "빵",
-      media:
-        "https://e7.pngegg.com/pngimages/365/237/png-clipart-bread-bread.png",
-      price: 1500,
-      quantity: 15,
-    },
-    {
-      id: 2,
-      product: "버터",
-      description: "버터",
-      media:
-        "https://e7.pngegg.com/pngimages/365/237/png-clipart-bread-bread.png",
-      price: 500,
-      quantity: 8,
-    },
-  ]);
-
-  const onAddItem = (item) => {
-    const newItem = { ...item, id: 100 };
-    setItems((items) => [...items, newItem]);
-  };
-
-  return (
-    <StyledInventoryList>
-      <h4>상품 목록 및 재고관리</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>상품명</th>
-            <th>미디어</th>
-            <th>상품 설명</th>
-            <th>가격</th>
-            <th>재고관리</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.product}</td>
-              <td><img src={item.media} alt={item.product} width="30" height="30" /></td>
-              <td>{item.description}</td>
-              <td>{item.price}원</td>
-              <td>
-                <div className="quantity">
-                  <button>-</button>
-                  <p>{item.quantity}개</p>
-                  <button>+</button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <RegisterForm onAddItem={onAddItem} />
-    </StyledInventoryList>
-  );
-}
-
-export default InventoryList
-
-*/}
-
