@@ -1,12 +1,13 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Bakepang from '../../assets/headerImg/Bakepang.png';
 import DaumPostcode from 'react-daum-postcode';
+import signup from '../../api/auth';
+import { sendSms, verifySms } from '../../api/sms';
 
 const SignupPage = () => {
-	const [profileImage, setProfileImage] = useState(null);
+	const [img, setImg] = useState(null);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,11 +33,8 @@ const SignupPage = () => {
 	const [error, setError] = useState('');
 
 	const handleImageChange = (e) => {
-		const file = e.target.files[0];
-		if (file) {
-			// 파일이 선택되면 파일을 상태 변수에 저장
-			setProfileImage(file);
-		}
+		const selectedImage = e.target.files[0];
+		setImg(selectedImage); // 선택한 이미지를 img 상태에 저장
 	};
 
 	const handleGenderChange = (e) => {
@@ -51,6 +49,10 @@ const SignupPage = () => {
 
 	const validatePassword = (password) => {
 		return password.length >= 8;
+	};
+
+	const validateConfirmPassword = (password, confirmPassword) => {
+		return password === confirmPassword;
 	};
 
 	const validateName = (name) => {
@@ -82,6 +84,15 @@ const SignupPage = () => {
 			setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
 		} else {
 			setPasswordError('');
+		}
+	};
+
+	const handleConfirmPasswordChange = (e) => {
+		setConfirmPassword(e.target.value);
+		if (!validateConfirmPassword(password, e.target.value)) {
+			setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
+		} else {
+			setConfirmPasswordError('');
 		}
 	};
 
@@ -127,68 +138,61 @@ const SignupPage = () => {
 		setIsAddressModalOpen(false);
 	};
 
-	const handleTelNumberConfirmClick = () => {
-		setIsVerificationFieldVisible(true);
-	};
-
 	const handleCloseSuccessModal = () => {
 		setIsSuccessModalOpen(false);
 	};
 
 	const handleSignup = async () => {
 		try {
-			if (password !== confirmPassword) {
-				setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
-				return;
-			} else {
-				setConfirmPasswordError('');
-			}
-
-			if (!validateVerificationCode(verificationCode)) {
-				setVerificationCodeError('유효한 인증 번호를 입력하세요.');
-				return;
-			} else {
-				setVerificationCodeError('');
-			}
-
-			// 입력값이 비어있는지 확인
-			if (
-				!name ||
-				!email ||
-				!password ||
-				!phone ||
-				!postcode ||
-				!address ||
-				!detailedAddress
-			) {
-				setError('모든 필드를 입력해주세요.');
-				return;
-			} else {
-				setError('');
-			}
-
-			// 회원가입을 위한 axios 호출
-			const response = await axios.post('/user/signup', {
+			const result = await signup(
+				gender,
 				name,
 				email,
 				password,
 				phone,
-				postcode,
 				address,
 				detailedAddress,
-			});
-
-			if (response.data.success) {
-				const token = response.data.token;
+				img
+			);
+			if (result.success) {
 				setIsSuccessModalOpen(true);
-				console.log('반환된 토큰:', token);
 			} else {
-				const message = response.data.message || '회원 가입에 실패하였습니다.';
-				setError(message);
+				setError(result.message);
 			}
-		} catch (error) {
-			console.error('API 호출 오류:', error.message);
-			setError('서버에 연결할 수 없습니다.');
+		} catch (err) {
+			setError('회원가입 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+		}
+	};
+
+	const handleSendSms = async () => {
+		try {
+			const result = await sendSms(phone);
+			if (!result.success) {
+				setPhoneError(result.message);
+			} else {
+				setIsVerificationFieldVisible(true);
+			}
+		} catch (err) {
+			setPhoneError(
+				'SMS 전송 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.'
+			);
+		}
+	};
+
+	const handleVerifySms = async () => {
+		try {
+			const result = await verifySms(phone, verificationCode);
+			if (!result.success) {
+				setVerificationCodeError(result.message);
+			} else {
+				setIsVerificationFieldVisible(false);
+				// 추가: 성공 메시지 또는 UI 변경으로 사용자에게 알려주기
+				alert('인증번호가 확인되었습니다!');
+			}
+		} catch (err) {
+			setVerificationCodeError(
+				'인증번호 확인 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.'
+			);
 		}
 	};
 
@@ -210,9 +214,9 @@ const SignupPage = () => {
 							id="input-file"
 						/>
 						<p>프로필 사진</p>
-						{profileImage && (
+						{img && (
 							<img
-								src={URL.createObjectURL(profileImage)}
+								src={URL.createObjectURL(img)}
 								alt="프로필 이미지 미리보기"
 							/>
 						)}
@@ -276,7 +280,7 @@ const SignupPage = () => {
 							type="password"
 							placeholder="비밀번호 확인"
 							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
+							onChange={handleConfirmPasswordChange}
 						/>
 						<div>
 							<FormError>{confirmPasswordError}</FormError>
@@ -322,9 +326,7 @@ const SignupPage = () => {
 								value={phone}
 								onChange={handlePhoneChange}
 							/>
-							<TelNumberSend onClick={handleTelNumberConfirmClick}>
-								휴대폰 인증
-							</TelNumberSend>
+							<TelNumberSend onClick={handleSendSms}>휴대폰 인증</TelNumberSend>
 						</TelNumWrap>
 						<div>
 							<FormError>{phoneError}</FormError>
@@ -341,13 +343,15 @@ const SignupPage = () => {
 							<div>
 								<FormError>{verificationCodeError}</FormError>
 							</div>
-							<TelNumberConfirm>인증번호 확인</TelNumberConfirm>
+							<TelNumberConfirm onClick={handleVerifySms}>
+								인증번호 확인
+							</TelNumberConfirm>
 						</div>
 					)}
 				</FormContainer>
 				<hr />
 				<SignUpButton onClick={handleSignup}>가입하기</SignUpButton>
-				<FormError>{setError}</FormError>
+
 				{isSuccessModalOpen && (
 					<ModalOverlay>
 						<ModalContent>
