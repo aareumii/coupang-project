@@ -1,7 +1,12 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import { UserType } from "../../types";
 
-const BuyerInfo: FC = () => {
+type UserProps = {
+  userdata: UserType;
+};
+
+const BuyerInfo: FC<UserProps> = ({ userdata }) => {
   return (
     <Wrap>
       <Title>구매자정보</Title>
@@ -9,15 +14,15 @@ const BuyerInfo: FC = () => {
         <tbody>
           <tr>
             <th>이름</th>
-            <td>홍길동</td>
+            <td>{userdata.name}</td>
           </tr>
           <tr>
             <th>이메일</th>
-            <td>aaa@naver.com</td>
+            <td>{userdata.email}</td>
           </tr>
           <tr>
             <th>휴대폰 번호</th>
-            <td>010-1234-5678</td>
+            <td>{userdata.phone}</td>
           </tr>
         </tbody>
       </Table>

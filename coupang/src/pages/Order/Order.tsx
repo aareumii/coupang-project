@@ -1,5 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { MdArrowForwardIos } from "react-icons/md";
 import bakepang from "../../assets/headerImg/Bakepang.png";
@@ -7,8 +9,72 @@ import BuyerInfo from "./BuyerInfo";
 import ShipInfo from "./ShipInfo";
 import OrderList from "./OrderList";
 import Payment from "./Payment";
+import { UserType, CartItemType } from "../../types";
 
-const OrderPage: FC = () => {
+import { setItems } from "../../redux/slice/cartSlice";
+
+const Order: FC = () => {
+  // const dispatch = useDispatch();
+  const [userdata, setUserData] = useState<UserType | null>(null);
+
+  const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
+  const [totalOrderAmount, setTotalOrderAmount] = useState<number>(0);
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://3c2167fb-e55d-4327-8405-a650c719e040.mock.pstmn.io/user/profile"
+      )
+      .then((res) => {
+        const data = res.data;
+        console.log(data.profile);
+        setUserData(data.profile);
+      })
+      .catch((error) => {
+        console.error("사용자 정보를 불러오던 중 오류 발생", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const savedSelectedItems = sessionStorage.getItem("selectedItems");
+    if (savedSelectedItems) {
+      const parsedItems: CartItemType[] = JSON.parse(savedSelectedItems);
+      setSelectedItems(parsedItems);
+    }
+
+    const savedTotalOrderAmount = sessionStorage.getItem("totalOrderAmount");
+    if (savedTotalOrderAmount) {
+      const parsedTotalOrderAmount = JSON.parse(savedTotalOrderAmount);
+      setTotalOrderAmount(parsedTotalOrderAmount);
+    }
+  }, []);
+
+  //   const handleSubmit = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "https://3c2167fb-e55d-4327-8405-a650c719e040.mock.pstmn.io/payment",
+  //       {
+  //         userData: userdata,  // 주문자 정보
+  //         items: selectedItems // 주문 목록
+  //       }
+  //     );
+  //     if (response.status === 200) {
+  //       console.log("주문이 성공적으로 완료되었습니다.");
+  //       // 성공 시 다른 페이지로 이동하거나 사용자에게 메시지 표시 등의 후속 조치를 수행할 수 있습니다.
+  //     } else {
+  //       console.error("주문 실패:", response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("주문 중 오류 발생:", error);
+  //   }
+  // };
+
+  const handlePayment = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log("User Data:", userdata);
+    console.log("Selected Items:", selectedItems);
+  };
+
   return (
     <Wrap>
       <Logo>
@@ -33,15 +99,24 @@ const OrderPage: FC = () => {
               <span>02</span>
               <p>주문/결제</p>
             </OrderStep>
+            <span>
+              <MdArrowForwardIos color="#afafaf" />
+            </span>
+            <div>
+              <span>03</span>
+              <p>주문완료</p>
+            </div>
           </StepWrap>
         </HeaderWrap>
         <Form>
-          <ContentsWrap>
-            <BuyerInfo />
-            <ShipInfo />
-            <OrderList />
-            <Payment />
-          </ContentsWrap>
+          {userdata && (
+            <ContentsWrap>
+              <BuyerInfo userdata={userdata} />
+              <ShipInfo userdata={userdata} />
+              <OrderList selectedItems={selectedItems} />
+              <Payment userdata={userdata} />
+            </ContentsWrap>
+          )}
           <AgreeBox>
             <input type="checkbox" required />
             <span>
@@ -50,7 +125,7 @@ const OrderPage: FC = () => {
             </span>
           </AgreeBox>
           <ButtonWrap>
-            <PaymentButton>결제하기</PaymentButton>
+            <PaymentButton onClick={handlePayment}>결제하기</PaymentButton>
           </ButtonWrap>
         </Form>
       </Container>
@@ -58,7 +133,7 @@ const OrderPage: FC = () => {
   );
 };
 
-export default OrderPage;
+export default Order;
 
 const Wrap = styled.div`
   width: 100%;

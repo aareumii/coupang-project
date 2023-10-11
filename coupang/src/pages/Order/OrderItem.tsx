@@ -1,11 +1,16 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import { CartItemType } from "../../types";
 
-const OrderItem: FC = () => {
+type SelectedItemProps = {
+  item: CartItemType;
+};
+
+const OrderItem: FC<SelectedItemProps> = ({ item }) => {
   return (
     <TR>
-      <td>웰치 제로 샤인머스켓, 24개, 355ml</td>
-      <td>수량 5개 / 무료배송</td>
+      <td>{item.product_name}</td>
+      <td>수량 {item.amount}개</td>
     </TR>
   );
 };

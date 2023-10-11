@@ -1,7 +1,12 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import { UserType } from "../../types";
 
-const ShipInfo: FC = () => {
+type UserProps = {
+  userdata: UserType;
+};
+
+const ShipInfo: FC<UserProps> = ({ userdata }) => {
   return (
     <Wrap>
       <Title>받는사람정보</Title>
@@ -10,15 +15,15 @@ const ShipInfo: FC = () => {
           <tbody>
             <tr>
               <th>이름</th>
-              <td>홍길동</td>
+              <td>{userdata.name}</td>
             </tr>
             <tr>
               <th>연락처</th>
-              <td>010-1234-5678</td>
+              <td>{userdata.phone}</td>
             </tr>
             <tr>
               <th>배송주소</th>
-              <td>서울특별시 강남구 도곡로 1길</td>
+              <td>{userdata.address}</td>
             </tr>
             <tr>
               <th>배송 요청사항</th>
