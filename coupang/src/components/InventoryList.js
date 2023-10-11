@@ -5,6 +5,7 @@ import { StyledInventoryList } from "./InventoryList.styles";
 function InventoryList() {
   const [items, setItems] = useState([]); //재고
   const [itemQuantities, setItemQuantities] = useState({}); //재고 수량 조작 버튼
+  const [showInvent, setShowInvent] = useState("모든상품보기");
 
   //데이터 가져오기 로직
   const fetchData = async () => {
@@ -21,13 +22,14 @@ function InventoryList() {
       const loadedQuantities = {};
 
       for (const key in data) {
-        const quantity=parseInt(data[key].quantity,10)
+        const quantity = parseInt(data[key].quantity, 10);
         loadedItems.push({
           id: key,
           product: data[key].product,
           price: data[key].price,
           quantity: quantity,
           media1: data[key].media1,
+          endDate:data[key].endDate
         });
 
         loadedQuantities[key] = quantity;
@@ -70,7 +72,53 @@ function InventoryList() {
     }));
   };
 
-  
+  const formatDate = (date) => {
+    const parsedDate = Date.parse(date);
+    if (!isNaN(parsedDate)) {
+      const formattedDate = new Date(parsedDate);
+      return formattedDate.toISOString().split("T")[0];
+    }
+    return null;
+  };
+
+  //재고 필터
+  const filterItems = () => {
+    switch (showInvent) {
+      case "모든상품보기":
+        return items;
+      case "판매중 상품보기":
+        return items.filter((item) => {
+          if (!item.endDate) {
+            console.error(`판매 종료일 없음: ${item.product}`);
+            return false; // 판매 종료일 없는 항목 제외
+          }
+          const endDate = new Date(item.endDate);
+          const today = new Date();
+          if (isNaN(endDate.getTime())) {
+            console.error(`올바르지 않은 날짜 형식: ${item.endDate}`);
+            return false; // 올바르지 않은 날짜 형식을 가진 항목 제외
+          }
+          return endDate >= today;
+        });
+      case "판매완료 상품보기":
+        return items.filter((item) => {
+          if (!item.endDate) {
+            console.error(`판매 종료일 없음: ${item.product}`);
+            return false; // 판매 종료일 없는 항목 제외
+          }
+          const endDate = new Date(item.endDate);
+          const today = new Date();
+          if (isNaN(endDate.getTime())) {
+            console.error(`올바르지 않은 날짜 형식: ${item.endDate}`);
+            return false; // 올바르지 않은 날짜 형식을 가진 항목 제외
+          }
+          return endDate < today;
+        });
+      default:
+        return items;
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -78,6 +126,11 @@ function InventoryList() {
   return (
     <StyledInventoryList>
       <h4>상품 목록 및 재고관리</h4>
+      <select onChange={(e) => setShowInvent(e.target.value)}>
+        <option value="모든상품보기">모든상품보기</option>
+        <option value="판매중 상품보기">판매중 상품보기</option>
+        <option value="판매완료 상품보기">판매완료 상품보기</option>
+      </select>
       <table>
         <thead>
           <tr>
@@ -85,10 +138,11 @@ function InventoryList() {
             <th>미디어</th>
             <th>가격</th>
             <th>재고관리</th>
+            <th>판매종료일</th>
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
+          {filterItems().map((item) => (
             <tr key={item.id}>
               <td>{item.product}</td>
               <td>{item.media1}</td>
@@ -104,6 +158,7 @@ function InventoryList() {
                   </button>
                 </div>
               </td>
+              <td>{item.endDate}</td>
             </tr>
           ))}
         </tbody>

@@ -18,7 +18,7 @@ function RegisterForm({ onAddItem }) {
 
   const [showCategory, setShowCategory] = useState(false);
 
-  const categoryOption = ["빵", "디저트/케익류", "음료", "베이킹재료 및 기타"];
+  const categoryOption = ["빵", "디저트/케익류", "음료", "기타"];
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
