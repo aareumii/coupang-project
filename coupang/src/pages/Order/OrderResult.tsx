@@ -5,6 +5,9 @@ import { MdArrowForwardIos } from "react-icons/md";
 import bakepang from "../../assets/headerImg/Bakepang.png";
 
 const OrderResult: FC = () => {
+  // URL 파라미터에서 success 값을 가져옴
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const isSuccess = urlSearchParams.get("success");
   return (
     <Wrap>
       <Logo>
@@ -39,8 +42,11 @@ const OrderResult: FC = () => {
           </StepWrap>
         </HeaderWrap>
         <ResultWrap>
-          <p className="success">고객님의 상품 주문이 완료되었습니다.</p>
-          <p className="failure">고객님의 주문을 완료할 수 없습니다.</p>
+          {isSuccess === "true" ? (
+            <p className="success">고객님의 상품 주문이 완료되었습니다.</p>
+          ) : (
+            <p className="failure">고객님의 주문을 완료할 수 없습니다.</p>
+          )}
           <ButtonWrap>
             <Link to={"/"}>
               <ContinueButton>홈화면으로</ContinueButton>

@@ -1,17 +1,28 @@
 import React, { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { UserType } from "../../types";
+import { CartItemType, UserType } from "../../types";
 import tosspay from "../../assets/tosspay.png";
+
+import { loadTossPayments } from "@tosspayments/payment-sdk";
 
 type UserProps = {
   userdata: UserType;
+  selectedItems: CartItemType[];
+  totalOrderAmount: number;
 };
 
-const Payment: FC<UserProps> = ({ userdata }) => {
+const Payment: FC<UserProps> = ({
+  userdata,
+  selectedItems,
+  totalOrderAmount,
+}) => {
   const [selectedPayment, setSelectedPayment] = useState("계좌이체");
 
   const [accountNumber, setAccountNumber] = useState("");
   const [accountValid, setAccountValid] = useState(true);
+
+  const navigate = useNavigate();
 
   const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPayment(e.target.value);
@@ -41,6 +52,125 @@ const Payment: FC<UserProps> = ({ userdata }) => {
     }
   };
 
+  // // 토스 onclick으로 해보기
+  // const handleTossPay = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+
+  //   const tossClientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
+
+  //   if (!tossClientKey) {
+  //     console.error("토스 클라이언트 키가 설정되지 않았습니다.");
+  //     return;
+  //   }
+
+  //   const tossPayment = await loadTossPayments(tossClientKey);
+
+  //   tossPayment
+  //     .requestPayment("카드", {
+  //       amount: totalOrderAmount,
+  //       orderId: Math.random().toString(36).slice(2),
+  //       orderName: "주문",
+  //       customerName: userdata.name,
+  //     })
+  //     .then(async function (data) {
+  //       // 결제 승인 API 호출
+  //       const { orderId, paymentKey, amount } = data;
+  //       const secretKey = process.env.REACT_APP_TOSS_SECRET_KEY;
+
+  //       const url = `https://api.tosspayments.com/v1/payments/confirm`;
+  //       const basicToken = Buffer.from(`${secretKey}:`, "utf-8").toString(
+  //         "base64"
+  //       );
+
+  //       const confirmResponse = fetch(url, {
+  //         method: "post",
+  //         body: JSON.stringify({
+  //           amount,
+  //           orderId,
+  //           paymentKey,
+  //         }),
+  //         headers: {
+  //           Authorization: `Basic ${basicToken}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }).then((response) => response.json());
+  //       console.log("confirmResponse", confirmResponse);
+
+  //       // const today = new Date();
+  //       // const date = today.toDateString();
+
+  //       // const paymentData = {
+  //       //   userId: userdata.id,
+  //       //   userEmail: userdata.email,
+  //       //   order_date: date,
+  //       //   orderAmount: amount,
+  //       //   orderStatus: "주문수락",
+  //       //   OrderItem: selectedItems,
+  //       // };
+  //     })
+  //     .catch((error) => {
+  //       console.error("토스 결제 중 오류발생,", error);
+  //       if (error.code === "USER_CANCEL") {
+  //         console.error("결제창이 닫아졌습니다.");
+  //       }
+  //     });
+  // };
+  const handleTossPay = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const tossClientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
+
+    if (!tossClientKey) {
+      console.error("토스 클라이언트 키가 설정되지 않았습니다.");
+      return;
+    }
+
+    const tossPayment = await loadTossPayments(tossClientKey);
+
+    tossPayment
+      .requestPayment("카드", {
+        amount: totalOrderAmount,
+        orderId: Math.random().toString(36).slice(2),
+        orderName: "주문",
+        customerName: userdata.name,
+      })
+      .then(async function (data) {
+        // 결제 승인 API 호출
+        const { orderId, paymentKey, amount } = data;
+        const secretKey = process.env.REACT_APP_TOSS_SECRET_KEY;
+
+        const url = `https://api.tosspayments.com/v1/payments/confirm`;
+        const basicToken = btoa(`${secretKey}:`);
+
+        const confirmResponse = fetch(url, {
+          method: "post",
+          body: JSON.stringify({
+            amount,
+            orderId,
+            paymentKey,
+          }),
+          headers: {
+            Authorization: `Basic ${basicToken}`,
+            "Content-Type": "application/json",
+          },
+        }).then((response) => response.json());
+        console.log("confirmResponse", confirmResponse);
+        // 결제 성공
+        navigate("/order/result?success=true");
+      })
+      .catch((error) => {
+        console.error("토스 결제 중 오류발생,", error);
+        if (error.code === "USER_CANCEL") {
+          console.error("결제창이 닫아졌습니다.");
+        }
+        // 결제 실패
+        navigate("/order/result?success=false");
+      });
+
+    sessionStorage.removeItem("totalOrderAmount");
+    sessionStorage.removeItem("selectedItems");
+  };
+
   return (
     <Wrap>
       <Title>결제정보</Title>
@@ -56,7 +186,7 @@ const Payment: FC<UserProps> = ({ userdata }) => {
           </tr> */}
           <tr>
             <th>총결제금액</th>
-            <td>53000원</td>
+            <td>{totalOrderAmount}원</td>
           </tr>
           <tr>
             <th>결제방법</th>
@@ -130,7 +260,7 @@ const Payment: FC<UserProps> = ({ userdata }) => {
 
                 {selectedPayment === "tosspay" && (
                   <div className="tosspay">
-                    <button>
+                    <button onClick={handleTossPay}>
                       <img src={tosspay} alt="tosspay" />
                     </button>
                   </div>
