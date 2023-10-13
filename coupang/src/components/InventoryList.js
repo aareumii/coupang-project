@@ -14,7 +14,7 @@ function InventoryList() {
       const response = await axios.get(
         "https://post-test-f8c2d-default-rtdb.firebaseio.com/items.json"
       );
-      if (response.status !==200) {
+      if (response.status !== 200) {
         throw new Error("데이터 불러오기 실패");
       }
       const data = await response.data;
@@ -30,7 +30,7 @@ function InventoryList() {
           price: data[key].price,
           quantity: quantity,
           media1: data[key].media1,
-          endDate:data[key].endDate
+          endDate: data[key].endDate,
         });
 
         loadedQuantities[key] = quantity;
@@ -65,7 +65,7 @@ function InventoryList() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   //재고 수량 변경 로직
   const handleQuantityChange = (productId, change) => {
@@ -152,13 +152,21 @@ function InventoryList() {
               <td>{item.price}원</td>
               <td>
                 <div className="quantity">
-                  <button onClick={() => handleQuantityChange(item.id, -1)}>
-                    -
-                  </button>
-                  <p>{itemQuantities[item.id] || 0}개</p>
-                  <button onClick={() => handleQuantityChange(item.id, 1)}>
-                    +
-                  </button>
+                  <p>{itemQuantities[item.id] || 0}</p>
+                  <div className="quantity-button">
+                    <button
+                      className="button"
+                      onClick={() => handleQuantityChange(item.id, 1)}
+                    >
+                      +
+                    </button>
+                    <button
+                      className="button"
+                      onClick={() => handleQuantityChange(item.id, -1)}
+                    >
+                -
+                    </button>
+                  </div>
                 </div>
               </td>
               <td>{item.endDate}</td>

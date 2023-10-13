@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyledRegisterForm, StyledForm } from "./styles";
+import { StyledRegisterForm, StyledForm } from "./RegisterForm.styles.js";
 
 function RegisterForm({ onAddItem }) {
   const [formData, setFormData] = useState({
