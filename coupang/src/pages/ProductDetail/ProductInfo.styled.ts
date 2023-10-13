@@ -73,22 +73,3 @@ export const ButtonWrapper = styled.div`
   flex-direction: row;
   gap: 1rem;
 `;
-
-type ButtonProps = {
-  variant?: 'cart' | 'buy';
-}
-
-export const Button = styled.button<ButtonProps>`
-  padding: 10px 30px;
-  border: 1px solid #346AFF;
-  color: ${props => props.variant === 'cart' ? '#346AFF' : '#fff'};
-  background-color: ${props => props.variant === 'cart' ? '#fff' : '#346AFF'};
-  &:hover {
-        background-color: ${props => {
-      if (props.variant === 'cart') {
-        return 'rgba(0, 0, 0, 0.1)';
-      }
-      return 'rgba(52, 106, 255, 0.9)';
-    }};
-  }
-`;
