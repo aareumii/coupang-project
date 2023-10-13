@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import RegisterForm from "./RegisterForm";
 import { StyledInventoryList } from "./InventoryList.styles";
+import axios from "axios";
 
 function InventoryList() {
   const [items, setItems] = useState([]); //재고
@@ -10,13 +11,13 @@ function InventoryList() {
   //데이터 가져오기 로직
   const fetchData = async () => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         "https://post-test-f8c2d-default-rtdb.firebaseio.com/items.json"
       );
-      if (!response.ok) {
-        throw new Error("데이터를 불러오는 중 문제가 발생했습니다.");
+      if (response.status !==200) {
+        throw new Error("데이터 불러오기 실패");
       }
-      const data = await response.json();
+      const data = await response.data;
 
       const loadedItems = [];
       const loadedQuantities = {};
@@ -43,26 +44,28 @@ function InventoryList() {
 
   //상품 추가 로직
   const onAddItem = async (item) => {
-    const response = await fetch(
-      "https://post-test-f8c2d-default-rtdb.firebaseio.com/items.json",
-      {
-        method: "POST",
-        body: JSON.stringify(item),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    try {
+      const response = await axios.post(
+        "https://post-test-f8c2d-default-rtdb.firebaseio.com/items.json",
+        item,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = response.data;
+        console.log("리스트에 추가된 데이터:", data);
+        setItems((prevItems) => [...prevItems, { id: data.name, ...item }]);
+      } else {
+        console.error("리스트 추가 실패");
       }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      console.log("리스트 추가된 데이터:", data);
-
-      setItems((prevItems) => [...prevItems, { id: data.name, ...item }]);
-    } else {
-      console.error("리스트 추가 실패");
+    } catch (error) {
+      console.error(error);
     }
-  };
+  }
 
   //재고 수량 변경 로직
   const handleQuantityChange = (productId, change) => {
