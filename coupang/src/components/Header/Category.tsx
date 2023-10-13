@@ -23,15 +23,15 @@ const Category = () => {
               </li>
               <li>
                 <img src={bread} />
-                <a href="#">식빵·빵류</a>
+                <a href="/Bread">식빵·빵류</a>
               </li>
               <li>
                 <img src={jam} />
-                <a href="#">잼·버터·스프레드</a>
+                <a href="/Jam">잼·버터·스프레드</a>
               </li>
               <li>
                 <img src={cake} />
-                <a href="#">케이크·파이·디저트</a>
+                <a href="/Cake">케이크·파이·디저트</a>
               </li>
             </Contents>
           </CategoryModal>
@@ -50,7 +50,7 @@ export default Category;
 
 const CategoryWrap = styled.div`
   align-self: flex-start;
-  position: fixed;
+  /* position: fixed; */
   top: 30px;
   z-index: 1;
 `;
@@ -66,6 +66,11 @@ const CategoryBox = styled.div`
     .categoryWarp {
       display: block;
     }
+  }
+  @media screen and (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
   }
 `;
 
@@ -83,11 +88,19 @@ const CategoryBtn = styled.div`
     margin-bottom: 8px;
 
     align-items: center;
+    @media screen and (max-width: 768px) {
+      width: 25px;
+      height: 25px;
+      padding-left: 1px;
+    }
   }
   > p {
     color: white;
     font-size: 0.6rem;
     text-align: center;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
 `;
 

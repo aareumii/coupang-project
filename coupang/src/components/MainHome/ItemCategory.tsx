@@ -11,19 +11,19 @@ const ItemCategory = () => {
         <h1>카테고리</h1>
         <CategoryGrid>
           <div className="content">
-            <a href="#">
+            <a href="/Bread">
               <img src={빵} id="bread" />
               <p>식빵·빵류</p>
             </a>
           </div>
           <div className="content">
-            <a href="#">
+            <a href="/Jam">
               <img src={잼} id="jam" />
               <p>잼·버터·스프레드</p>
             </a>
           </div>
           <div className="content">
-            <a href="#">
+            <a href="/Cake">
               <img src={케이크} id="cake" />
               <p>케이크·파이·디저트</p>
             </a>
@@ -45,6 +45,12 @@ const ItemCategoryWrap = styled.div`
     font-weight: bold;
     font-size: 2rem;
     margin-bottom: 40px;
+    @media screen and (max-width: 1024px) {
+      font-size: 1.6rem;
+    }
+    @media screen and (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -63,16 +69,46 @@ const CategoryGrid = styled.div`
     height: 100px;
     margin-top: 15%;
     margin-bottom: 40px;
+    @media screen and (max-width: 1024px) {
+      width: 80px;
+      height: 70px;
+      margin-bottom: 47px;
+    }
+    @media screen and (max-width: 768px) {
+      width: 50px;
+      height: 40px;
+      margin-bottom: 47px;
+    }
   }
   #jam {
     width: 140px;
     height: 130px;
     margin-top: 1%;
+    @media screen and (max-width: 1024px) {
+      width: 110px;
+      height: 100px;
+      margin-bottom: 37px;
+    }
+    @media screen and (max-width: 768px) {
+      width: 80px;
+      height: 70px;
+      margin-bottom: 28px;
+    }
   }
   #cake {
     width: 120px;
     height: 100px;
     margin-top: 20%;
+    @media screen and (max-width: 1024px) {
+      width: 90px;
+      height: 70px;
+      margin-bottom: 40px;
+    }
+    @media screen and (max-width: 768px) {
+      width: 60px;
+      height: 40px;
+      margin-bottom: 40px;
+    }
   }
   img {
     margin-bottom: 30px;
@@ -85,12 +121,24 @@ const CategoryGrid = styled.div`
     border-radius: 50%;
     margin-bottom: 10px;
     text-align: center;
+
+    @media screen and (max-width: 1024px) {
+      width: 130px;
+      height: 130px;
+    }
+    @media screen and (max-width: 768px) {
+      width: 90px;
+      height: 90px;
+    }
   }
   a {
     color: #404040;
     text-decoration: none;
     outline: none;
     font-weight: 600;
+    @media screen and (max-width: 1024px) {
+      font-size: 0.2rem;
+    }
   }
   p {
   }

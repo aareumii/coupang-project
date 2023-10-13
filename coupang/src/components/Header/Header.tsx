@@ -30,6 +30,7 @@ const HeaderWapper = styled.div`
   background-color: #f0f0f0;
   display: flex;
   align-items: center;
+  border-bottom: 0.7px solid #d7d7d7;
 `;
 
 const HeaderNav = styled.div`

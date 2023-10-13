@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import 평점 from "../../assets/mainImg/평점.png";
 import 로켓 from "../../assets/mainImg/로켓배송.png";
@@ -6,42 +7,20 @@ interface propsType {
   id: number;
   name: string;
   price: number | string;
-
+  stockQuantity: number;
+  categoryId: number;
   categoryName: string;
   registerDate: string;
   img1: string;
+  img2: string;
+  img3: string;
 }
 
-const ItemList = (props: propsType) => {
-  // const [product, setProduct] = useState<Product[]>([]);
-  // const [loading, setLoading] = useState(true); // 로딩중인지 아닌지를 담기위한 state
-
-  // const getProducts = () => {
-  //   setLoading(true);
-
-  //   const backendUrl =
-  //     "https://beddadd9-0132-40eb-89ec-91621065a7c6.mock.pstmn.io/products";
-
-  //   axios
-  //     .get(backendUrl)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       setProduct(response.data.product.slice(0, 20));
-  //     })
-  //     .catch((error) => {
-  //       // Error 핸들링
-  //       console.log(error);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getProducts();
-  // }, []);
-
+const CateItem = (props: propsType) => {
   return (
-    <>
-      <ItemCardWrap key={props.name}>
-        <ItemCard key={props.categoryName}>
+    <div>
+      <ItemCardWrap key={props.id}>
+        <ItemCard key={props.categoryId}>
           <div className="item__img">
             <img src={props.img1} />
           </div>
@@ -61,15 +40,15 @@ const ItemList = (props: propsType) => {
           </div>
         </ItemCard>
       </ItemCardWrap>
-    </>
+    </div>
   );
 };
 
-export default ItemList;
+export default CateItem;
 
 const ItemCardWrap = styled.div`
   margin-top: 30px;
-  width: 25%;
+  width: 100%;
   height: 100%;
 
   border-bottom: 1px solid #f0f0f0;
@@ -85,10 +64,19 @@ const ItemCard = styled.div`
   padding: 0 10px;
   .itme__contents {
     padding-left: 10%;
-    padding-right: 5%;
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    margin-top: 15px;
+  }
+
+  a {
+    text-decoration: none;
+    outline: none;
+  }
+
+  a:visited,
+  a:active {
+    color: #000;
   }
   span {
     margin: 10px 10px;
@@ -96,7 +84,7 @@ const ItemCard = styled.div`
   .item__img {
     text-align: center;
     img {
-      margin-top: 10px;
+      margin-top: 20px;
       width: 80%;
       height: 200px;
       @media screen and (max-width: 1024px) {
@@ -112,28 +100,31 @@ const ItemCard = styled.div`
     font-size: 0.8rem;
 
     color: green;
-    @media screen and (max-width: 768px) {
-      font-size: 0.6rem;
-    }
   }
 
   .item__name {
-    font-size: 0.8rem;
+    font-size: 1rem;
     @media screen and (max-width: 768px) {
       font-size: 0.1rem;
     }
   }
   .item__price {
-    font-size: 1rem;
-    margin: 5px 0px;
-    color: #a90000;
+    font-size: 1.2rem;
+    margin: 10px 0px;
+
     font-weight: bold;
-    @media screen and (max-width: 1024px) {
-      font-size: 0.8rem;
-    }
-    @media screen and (max-width: 768px) {
-      font-size: 0.6rem;
-    }
+  }
+  .png__star {
+    width: 70px;
+    padding-top: 3px;
+  }
+  .png__rocket {
+    padding-right: 47%;
+  }
+  .item__flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .star {
     display: flex;
@@ -149,21 +140,5 @@ const ItemCard = styled.div`
     @media screen and (max-width: 768px) {
       width: 40px;
     }
-  }
-  .png__rocket {
-    padding-right: 35%;
-    width: 60px;
-    @media screen and (max-width: 1024px) {
-      padding-right: 10%;
-    }
-    @media screen and (max-width: 768px) {
-      padding-right: 10%;
-      width: 40px;
-    }
-  }
-  .item__flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
 `;
