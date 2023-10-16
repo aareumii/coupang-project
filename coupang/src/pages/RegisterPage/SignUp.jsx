@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Bakepang from '../../assets/headerImg/Bakepang.png';
 import DaumPostcode from 'react-daum-postcode';
-import signup from '../../api/auth';
-import { sendSms, verifySms } from '../../api/sms';
+
+// import { sendSms, verifySms } from '../../api/sms';
 
 const SignupPage = () => {
+	const navigate = useNavigate();
 	const [img, setImg] = useState(null);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -18,7 +19,7 @@ const SignupPage = () => {
 	const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 	const [detailedAddress, setDetailedAddress] = useState('');
 	const [phone, setPhone] = useState('');
-	const [verificationCode, setVerificationCode] = useState('');
+	const [certificationNumber, setCertificationNumber] = useState('');
 
 	// 각 필드의 에러 상태
 	const [emailError, setEmailError] = useState('');
@@ -26,11 +27,8 @@ const SignupPage = () => {
 	const [confirmPasswordError, setConfirmPasswordError] = useState('');
 	const [nameError, setNameError] = useState('');
 	const [phoneError, setPhoneError] = useState('');
-	const [verificationCodeError, setVerificationCodeError] = useState('');
-	const [isVerificationFieldVisible, setIsVerificationFieldVisible] =
-		useState(false);
+	const [certificationNumberError, setCertificationNumberError] = useState('');
 	const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-	const [error, setError] = useState('');
 
 	const handleImageChange = (e) => {
 		const selectedImage = e.target.files[0];
@@ -38,7 +36,8 @@ const SignupPage = () => {
 	};
 
 	const handleGenderChange = (e) => {
-		setGender(e.target.value);
+		const selectedGender = e.target.value;
+		setGender(selectedGender); // gender 값을 설정
 	};
 
 	// 유효성 검사 함수들...
@@ -48,7 +47,12 @@ const SignupPage = () => {
 	};
 
 	const validatePassword = (password) => {
-		return password.length >= 8;
+		return (
+			password.length >= 8 &&
+			password.length <= 20 &&
+			/[a-z]/.test(password) &&
+			/\d/.test(password)
+		);
 	};
 
 	const validateConfirmPassword = (password, confirmPassword) => {
@@ -64,8 +68,8 @@ const SignupPage = () => {
 		return phoneRegex.test(phone);
 	};
 
-	const validateVerificationCode = (code) => {
-		return code.length === 6;
+	const certificationNumberCode = (code) => {
+		return code.length === 4;
 	};
 
 	// 각 입력값 변경 핸들러
@@ -115,11 +119,11 @@ const SignupPage = () => {
 	};
 
 	const handleVerificationCodeChange = (e) => {
-		setVerificationCode(e.target.value);
-		if (!validateVerificationCode(e.target.value)) {
-			setVerificationCodeError('유효한 인증 번호를 입력하세요.');
+		setCertificationNumber(e.target.value);
+		if (!certificationNumberCode(e.target.value)) {
+			setCertificationNumberError('유효한 인증 번호를 입력하세요.');
 		} else {
-			setVerificationCodeError('');
+			setCertificationNumberError('');
 		}
 	};
 
@@ -140,59 +144,42 @@ const SignupPage = () => {
 
 	const handleCloseSuccessModal = () => {
 		setIsSuccessModalOpen(false);
+		navigate('/login'); // 로그인 경로로 이동
 	};
 
 	const handleSignup = async () => {
 		try {
-			const result = await signup(
-				gender,
-				name,
-				email,
-				password,
-				phone,
-				address,
-				detailedAddress,
-				img
+			const response = await fetch(
+				'http://43.201.30.126:8080/api/user/signup',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						name,
+						email,
+						password,
+						gender,
+						postcode,
+						address,
+						detailedAddress,
+						phone,
+						certificationNumber,
+					}),
+				}
 			);
-			if (result.success) {
-				setIsSuccessModalOpen(true);
-			} else {
-				setError(result.message);
-			}
-		} catch (err) {
-			setError('회원가입 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
-		}
-	};
 
-	const handleSendSms = async () => {
-		try {
-			const result = await sendSms(phone);
-			if (!result.success) {
-				setPhoneError(result.message);
-			} else {
-				setIsVerificationFieldVisible(true);
-			}
-		} catch (err) {
-			setPhoneError(
-				'SMS 전송 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.'
-			);
-		}
-	};
+			const data = await response.json();
 
-	const handleVerifySms = async () => {
-		try {
-			const result = await verifySms(phone, verificationCode);
-			if (!result.success) {
-				setVerificationCodeError(result.message);
+			if (data.status === 'success') {
+				setIsSuccessModalOpen(true); // 가입 성공 시 모달을 표시
 			} else {
-				setIsVerificationFieldVisible(false);
-				// 추가: 성공 메시지 또는 UI 변경으로 사용자에게 알려주기
-				alert('인증번호가 확인되었습니다!');
+				alert('가입 실패: ' + data.message);
 			}
-		} catch (err) {
-			setVerificationCodeError(
-				'인증번호 확인 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.'
-			);
+		} catch (error) {
+			console.error('API 호출 오류:', error.message);
+			alert('서버에 연결할 수 없습니다.');
 		}
 	};
 
@@ -211,7 +198,7 @@ const SignupPage = () => {
 							type="file"
 							accept="image/*"
 							onChange={handleImageChange}
-							id="input-file"
+							id="img"
 						/>
 						<p>프로필 사진</p>
 						{img && (
@@ -220,13 +207,13 @@ const SignupPage = () => {
 								alt="프로필 이미지 미리보기"
 							/>
 						)}
-						<label className="input-file-button" for="input-file">
+						<label className="input-file-button" htmlFor="img">
 							업로드
 						</label>
 					</ProfileImgWrap>
 				</ProfileWrap>
 				<GenderWrap>
-					<label>성별</label>
+					<label htmlFor="gender">성별</label>
 					<SelectWrap>
 						<div>
 							<GenderSelect
@@ -248,6 +235,7 @@ const SignupPage = () => {
 							placeholder="이름"
 							value={name}
 							onChange={handleNameChange}
+							id="name"
 						/>
 						<div>
 							<FormError>{nameError}</FormError>
@@ -259,6 +247,7 @@ const SignupPage = () => {
 							placeholder="아이디(이메일)"
 							value={email}
 							onChange={handleEmailChange}
+							id="email"
 						/>
 						<div>
 							<FormError>{emailError}</FormError>
@@ -270,6 +259,7 @@ const SignupPage = () => {
 							placeholder="비밀번호"
 							value={password}
 							onChange={handlePasswordChange}
+							id="password"
 						/>
 						<div>
 							<FormError>{passwordError}</FormError>
@@ -281,6 +271,7 @@ const SignupPage = () => {
 							placeholder="비밀번호 확인"
 							value={confirmPassword}
 							onChange={handleConfirmPasswordChange}
+							id="confirmPassword"
 						/>
 						<div>
 							<FormError>{confirmPasswordError}</FormError>
@@ -288,13 +279,13 @@ const SignupPage = () => {
 					</div>
 					<AddressWrap>
 						<label>우편번호</label>
-						<input type="text" value={postcode} readOnly />
+						<input type="text" value={postcode} id="postcode" readOnly />
 						<PostCodeButton onClick={handleOpenAddressModal}>
 							우편번호 찾기
 						</PostCodeButton>
 						<br />
-						<label>주소</label>
-						<input type="text" value={address} readOnly />
+						<label htmlFor="address">주소</label>
+						<input type="text" value={address} id="address" readOnly />
 						{/* 모달 상태에 따라 DaumPostcode 컴포넌트를 조건부 렌더링 */}
 						{isAddressModalOpen && (
 							<ModalOverlay
@@ -309,12 +300,13 @@ const SignupPage = () => {
 							</ModalOverlay>
 						)}
 						<br />
-						<label>상세 주소</label>
+						<label htmlFor="detaildeAddress">상세 주소</label>
 						<input
 							type="text"
 							value={detailedAddress}
 							onChange={(e) => setDetailedAddress(e.target.value)}
 							placeholder="상세 주소를 입력하세요"
+							id="detailedAddress"
 						/>
 					</AddressWrap>
 					<div>
@@ -325,29 +317,28 @@ const SignupPage = () => {
 								placeholder="휴대폰 번호"
 								value={phone}
 								onChange={handlePhoneChange}
+								id="phone"
 							/>
-							<TelNumberSend onClick={handleSendSms}>휴대폰 인증</TelNumberSend>
+							<TelNumberSend>휴대폰 인증</TelNumberSend>
 						</TelNumWrap>
 						<div>
 							<FormError>{phoneError}</FormError>
 						</div>
 					</div>
-					{isVerificationFieldVisible && (
+
+					<div>
+						<input
+							type="text"
+							placeholder="휴대폰 번호 인증"
+							value={certificationNumber}
+							onChange={handleVerificationCodeChange}
+							id="certificationNumber"
+						/>
 						<div>
-							<input
-								type="text"
-								placeholder="휴대폰 번호 인증"
-								value={verificationCode}
-								onChange={handleVerificationCodeChange}
-							/>
-							<div>
-								<FormError>{verificationCodeError}</FormError>
-							</div>
-							<TelNumberConfirm onClick={handleVerifySms}>
-								인증번호 확인
-							</TelNumberConfirm>
+							<FormError>{certificationNumberError}</FormError>
 						</div>
-					)}
+						<TelNumberConfirm>인증번호 확인</TelNumberConfirm>
+					</div>
 				</FormContainer>
 				<hr />
 				<SignUpButton onClick={handleSignup}>가입하기</SignUpButton>
@@ -360,11 +351,7 @@ const SignupPage = () => {
 						</ModalContent>
 					</ModalOverlay>
 				)}
-				{error && (
-					<ErrorContainer>
-						<p>{error}</p>
-					</ErrorContainer>
-				)}
+
 				<p>
 					이미 계정이 있습니까? &nbsp;
 					<Link

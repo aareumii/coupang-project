@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import tokenReducer from '../slice/tokenSlice'; // 토큰 관련 리듀서
+import loginReducer from '../slice/loginSlice'; // 기존 loginSlice.js
+import logoutReducer from '../slice/logoutSlice'; // 새로 생성한 logoutSlice.js
 
 const store = configureStore({
 	reducer: {
-		token: tokenReducer, // 토큰 관련 리듀서 등록
-		// 다른 리듀서들도 필요한 경우 추가
+		login: loginReducer,
+		logout: logoutReducer, // logoutReducer를 추가합니다.
 	},
 });
 

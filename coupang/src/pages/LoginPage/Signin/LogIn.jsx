@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import Bakepang from '../../../assets/headerImg/Bakepang.png';
-
-const axiosInstance = axios.create({
-	baseURL: '/api',
-});
+import axios from 'axios';
+import LogoutButton from './LogoutButton';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
@@ -14,6 +11,8 @@ const Login = () => {
 	const [emailError, setEmailError] = useState('');
 	const [loginError, setLoginError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
+	const [showModal, setShowModal] = useState(''); // 모달 상태 추가
+
 	const navigate = useNavigate();
 
 	const isEmailValid = (email) => {
@@ -21,10 +20,12 @@ const Login = () => {
 		return emailPattern.test(email);
 	};
 
-	const isPasswordValid = (password) => {
-		const passwordPattern =
-			/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-		return passwordPattern.test(password);
+	const isPasswordValid = (password) =>
+		/^(?=.*[a-z])(?=.*\d).{8,20}$/.test(password);
+
+	const handleCloseModal = () => {
+		setShowModal(true);
+		navigate('/');
 	};
 
 	const handleLogin = async (e) => {
@@ -50,48 +51,32 @@ const Login = () => {
 			setPasswordError('');
 		}
 
-		if (!emailError && !passwordError) {
-			try {
-				const response = await axiosInstance.post('/login', {
-					email,
-					password,
-				});
+		try {
+			const url = `http://43.201.30.126:8080/api/user/login`;
+			const response = await axios.post(url, {
+				email: email,
+				password: password,
+			});
 
-				if (response.data.success) {
-					// 로그인 성공 시, 토큰을 localStorage에 저장
-					localStorage.setItem('token', response.data.token);
-					// 홈 화면으로 이동
-					navigate('/');
-				} else {
-					// 로그인 실패 시 에러 메시지 처리
-					if (response.data.message) {
-						setLoginError(response.data.message);
-					} else {
-						setLoginError('로그인에 실패했습니다.');
-					}
-				}
-			} catch (error) {
-				console.error('API 호출 오류:', error.message);
-				setLoginError('서버에 연결할 수 없습니다.');
-			}
-		}
-	};
+			if (response.data && response.data.token) {
+				localStorage.setItem('isLoggedIn', response.data.token);
+				console.log('로그인 성공');
 
-	const handleFieldBlur = (fieldName, value) => {
-		if (!value) {
-			if (fieldName === 'email')
-				setEmailError('아이디(이메일)를 입력해주세요.');
-			if (fieldName === 'password')
-				setPasswordError('비밀번호를 입력해주세요.');
-		} else {
-			if (fieldName === 'email' && !isEmailValid(value)) {
-				setEmailError('올바른 이메일 형식이 아닙니다.');
-			} else if (fieldName === 'password' && !isPasswordValid(value)) {
-				setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
+				// 로그인 성공 시 showModal을 true로 설정하여 모달을 표시
+				setShowModal(true);
+
+				// 로그인 성공 시 홈 화면으로 이동
+				navigate('/'); // 홈 화면 경로로 변경
+
+				// 결과값 반환 (필요한 경우)
+				return response.data;
 			} else {
-				setEmailError('');
-				setPasswordError('');
+				const message = response.data.message || '로그인에 실패하였습니다.';
+				setLoginError(message);
 			}
+		} catch (error) {
+			console.error('API 호출 오류:', error.message);
+			setLoginError('서버에 연결할 수 없습니다.');
 		}
 	};
 
@@ -103,45 +88,48 @@ const Login = () => {
 						<img src={Bakepang} alt="로고" />
 					</Link>
 				</h1>
-				<LoginWrap>
-					<div>
-						<a href="#">이메일 로그인</a>
-						<a href="#">간편 로그인</a>
-					</div>
-				</LoginWrap>
 				<FormContainer>
-					<div>
+					<LoginWrap>
 						<input
+							id="email"
 							type="email"
 							placeholder="아이디(이메일)"
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
-							onBlur={() => handleFieldBlur('email', email)}
 						/>
 						<div>
 							<FormError>{emailError}</FormError>
 						</div>
-					</div>
-					<div>
+					</LoginWrap>
+					<PasswordWrap>
 						<input
 							type="password"
 							placeholder="비밀번호"
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
-							onBlur={() => handleFieldBlur('password', password)}
 						/>
 						<div>
 							<FormError>{passwordError}</FormError>
 						</div>
-					</div>
+					</PasswordWrap>
+					{showModal && (
+						<Modal>
+							<ModalContent>
+								<ModalMessage>로그인이 완료되었습니다.</ModalMessage>
+								<CloseButton onClick={handleCloseModal}>닫기</CloseButton>
+							</ModalContent>
+						</Modal>
+					)}
 					<button type="submit" onClick={handleLogin}>
 						로그인
 					</button>
-					<FormError>{loginError}</FormError> {/* 로그인 에러 메시지 */}
+					<FormError>{loginError}</FormError>
 				</FormContainer>
+				<LogoutButton />
+
 				<hr />
 				<Link to={'/signup'}>
-					<SignupButton>회원가입 </SignupButton>
+					<SignupButton>회원가입</SignupButton>
 				</Link>
 			</Container>
 		</div>
@@ -184,8 +172,34 @@ const Container = styled.div`
 `;
 
 const LoginWrap = styled.div`
-	position: relative;
 	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-bottom: 10px;
+
+	div {
+		width: 100%;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 19px;
+		margin-top: 24px;
+		display: flex;
+		justify-content: space-around;
+
+		a {
+			padding: 14px 0;
+			color: #454f5b;
+			text-align: center;
+			text-decoration: none;
+		}
+	}
+`;
+
+const PasswordWrap = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-bottom: 10px;
 
 	div {
 		width: 100%;
@@ -210,12 +224,12 @@ const FormContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	div {
+	/* div {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 		margin-bottom: 10px;
-	}
+	} */
 	input {
 		margin: 0;
 		height: 48px;
@@ -282,4 +296,48 @@ const SignupButton = styled.button`
 	text-decoration: none;
 	color: #454f5b;
 	font-weight: bold;
+`;
+const Modal = styled.div`
+	position: fixed;
+	top: 25%;
+	left: 23%;
+	width: 50%;
+	height: 50%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+const ModalContent = styled.div`
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+	text-align: center;
+`;
+
+const ModalMessage = styled.div`
+	font-size: 18px;
+	margin-bottom: 20px;
+`;
+
+const CloseButton = styled.button`
+	background-color: #ff4b4b;
+	color: #fff;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+
+	&:hover {
+		background-color: #ff3333;
+	}
+`;
+
+const LogoutMessage = styled.div`
+	color: green; /* 원하는 스타일로 설정하세요 */
+	text-align: center;
+	margin-top: 10px;
 `;

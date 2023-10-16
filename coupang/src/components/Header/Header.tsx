@@ -1,12 +1,14 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import LogoutButton from '../../pages/LoginPage/Signin/LogoutButton';
 
 interface HeaderProps {
 	isLoggedIn: boolean;
 	onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ isLoggedIn }) => {
 	return (
 		<>
 			<HeaderWapper>
@@ -17,7 +19,10 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
 					</HeaderNav>
 					<MembershipNav>
 						{isLoggedIn ? (
-							<p onClick={onLogout}>로그아웃</p>
+							<>
+								{/* 로그아웃 버튼에 onClick 프로퍼티 추가 */}
+								<LogoutButton />
+							</>
 						) : (
 							<>
 								<p>
@@ -47,7 +52,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLogout }) => {
 };
 
 export default Header;
-
 const HeaderWapper = styled.div`
 	width: 100vw;
 	/* margin: auto; */
