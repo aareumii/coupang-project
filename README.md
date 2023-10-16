@@ -1,5 +1,4 @@
 # coupang-project
-![image](https://github.com/aareumii/coupang-project/assets/130023446/67f24c76-06c5-4491-a667-5a78b0ad22ad)
 
 
 ## 🖥️ 프로젝트 소개
