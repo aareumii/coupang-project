@@ -1,21 +1,32 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Main from './pages/Main/Main';
-import LoginPage from './pages/LoginPage/Signin/LogIn';
-import SignUpPage from './pages/RegisterPage/SignUp';
-import Cartpage from './pages/CartPage/Cartpage';
+import React from "react";
+
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Main from "./pages/Main/Main";
+import Bread from "./pages/Category/Bread";
+import Jam from "./pages/Category/Jam";
+import Cake from "./pages/Category/Cake";
 
 function App() {
-	return (
-		<Router>
-			<Routes>
-				<Route path="/" element={<Main />} />
-				<Route path="/login" element={<LoginPage />} />
-				<Route path="/signup" element={<SignUpPage />} />
-				<Route path="/cart" element={<Cartpage />} />
-			</Routes>
-		</Router>
-	);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Main />,
+    },
+    {
+      path: "/Bread",
+      element: <Bread />,
+    },
+    {
+      path: "/Jam",
+      element: <Jam />,
+    },
+    {
+      path: "/Cake",
+      element: <Cake />,
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
 export default App;
