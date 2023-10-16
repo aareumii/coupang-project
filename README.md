@@ -57,8 +57,9 @@
 ### 🧑‍🤝‍🧑 맴버구성
 |이름|주특기|깃허브 주소|
 |---|---|---|
-|하솔리나|FE|<https://github.com/anirlos>|
 |김아름|FE|<https://github.com/aareumii>|
+|김보민|FE||
 |김희라|FE|<https://github.com/Mia7351>|
 |박금정|FE|<https://github.com/justkeepgoin>|
 |조예린|FE|<https://github.com/aw0605>|
+|하솔리나|FE|<https://github.com/anirlos>|
