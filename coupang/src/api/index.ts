@@ -23,7 +23,7 @@ axiosClient.interceptors.response.use(
 
 axiosClient.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem('accessToken'); // 로컬 스토리지에서 토큰 가져오기
+		const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
 
 		config.headers['Content-Type'] = 'application/json; charset=utf-8';
 

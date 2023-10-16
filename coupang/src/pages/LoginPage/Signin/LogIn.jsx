@@ -28,7 +28,7 @@ const Login = () => {
 		navigate('/');
 	};
 
-	const handleLogin = async (e) => {
+	const handleLogin = (e) => {
 		e.preventDefault();
 
 		if (!email) {
@@ -51,33 +51,38 @@ const Login = () => {
 			setPasswordError('');
 		}
 
-		try {
-			const url = `http://43.201.30.126:8080/api/user/login`;
-			const response = await axios.post(url, {
+		const url = `http://43.201.30.126:8080/api/user/login`;
+
+		axios
+			.post(url, {
 				email: email,
 				password: password,
+			})
+			.then((response) => {
+				const token = response.data.token;
+				if (token) {
+					// 토큰을 localStorage에 저장
+					localStorage.setItem('token', token);
+
+					console.log('로그인 성공');
+
+					// 로그인 성공 시 showModal을 true로 설정하여 모달을 표시
+					setShowModal(true);
+
+					// 로그인 성공 시 홈 화면으로 이동
+					navigate('/'); // 홈 화면 경로로 변경
+
+					// 결과값 반환 (필요한 경우)
+					return response.data;
+				} else {
+					const message = response.data.message || '로그인에 실패하였습니다.';
+					setLoginError(message);
+				}
+			})
+			.catch((error) => {
+				console.error('API 호출 오류:', error.message);
+				setLoginError('서버에 연결할 수 없습니다.');
 			});
-
-			if (response.data && response.data.token) {
-				localStorage.setItem('isLoggedIn', response.data.token);
-				console.log('로그인 성공');
-
-				// 로그인 성공 시 showModal을 true로 설정하여 모달을 표시
-				setShowModal(true);
-
-				// 로그인 성공 시 홈 화면으로 이동
-				navigate('/'); // 홈 화면 경로로 변경
-
-				// 결과값 반환 (필요한 경우)
-				return response.data;
-			} else {
-				const message = response.data.message || '로그인에 실패하였습니다.';
-				setLoginError(message);
-			}
-		} catch (error) {
-			console.error('API 호출 오류:', error.message);
-			setLoginError('서버에 연결할 수 없습니다.');
-		}
 	};
 
 	return (

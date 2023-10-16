@@ -31,14 +31,12 @@ async function signup({
 			const token = response.data.token;
 			console.log('반환된 토큰:', token);
 			return {
-				success: true,
 				token: token,
 				message: '성공적으로 회원가입되었습니다.',
 			};
 		} else {
 			const message = response.data.message || '회원 가입에 실패하였습니다.';
 			return {
-				success: false,
 				message: message,
 			};
 		}
