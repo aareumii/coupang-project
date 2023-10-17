@@ -19,7 +19,7 @@ const Category = () => {
             <Contents>
               <li>
                 <img src={market} />
-                <a href="#">전체보기</a>
+                <a href="/">전체보기</a>
               </li>
               <li>
                 <img src={bread} />
@@ -49,10 +49,17 @@ export default Category;
 // `;
 
 const CategoryWrap = styled.div`
-  align-self: flex-start;
+  /* align-self: flex-start; */
+
   /* position: fixed; */
+
   top: 30px;
   z-index: 1;
+  &:hover {
+    .categoryWarp {
+      display: block;
+    }
+  }
 `;
 
 const CategoryBox = styled.div`
@@ -62,11 +69,6 @@ const CategoryBox = styled.div`
   position: relative;
   cursor: pointer;
 
-  &:hover {
-    .categoryWarp {
-      display: block;
-    }
-  }
   @media screen and (max-width: 768px) {
     width: 50px;
     height: 50px;
@@ -84,7 +86,7 @@ const CategoryBtn = styled.div`
   > img {
     width: 35px;
     height: 35px;
-    padding-left: 5px;
+    padding-left: 3px;
     margin-bottom: 8px;
 
     align-items: center;
@@ -96,7 +98,7 @@ const CategoryBtn = styled.div`
   }
   > p {
     color: white;
-    font-size: 0.6rem;
+    font-size: 0.68rem;
     text-align: center;
     @media screen and (max-width: 768px) {
       display: none;

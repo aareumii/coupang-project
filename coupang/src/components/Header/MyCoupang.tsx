@@ -45,7 +45,7 @@ const MypageBox = styled.div`
 
 const IconWrapper = styled.div`
   /* position: absolute; */
-  margin-left: 10px;
+  margin-left: 15px;
   img {
     width: 50px;
     height: 30px;
