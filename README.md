@@ -75,7 +75,7 @@
 |---|---|---|
 |김아름|FE|<https://github.com/aareumii>|
 |김보민|FE|<https://github.com/kim8omin>|
-|김희라|FE|<https://github.com/Mia7351>|
+|경희라|FE|<https://github.com/Mia7351>|
 |박금정|FE|<https://github.com/justkeepgoin>|
 |조예린|FE|<https://github.com/aw0605>|
 |하솔리나|FE|<https://github.com/anirlos>|
