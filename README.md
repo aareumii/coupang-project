@@ -6,11 +6,12 @@
 <br>
 
 ## 📜 Overview 
-- [Demo](#id-section1)
-- [개발 기간](#id-section2)
-- [주요 기능](#id-section4)
-- [Tech Stacks](#id-section5)
-- [Team Members](#id-section6)
+1. [Demo](#id-section1)
+2. [개발 기간](#id-section2)
+3. [ERD](#id-section3)
+4. [주요 기능](#id-section4)
+5. [Tech Stacks](#id-section5)
+6. [Team Members](#id-section6)
 
 <br>
 
@@ -28,6 +29,13 @@
 
 <br>
 
+<div id='id-section3'/>
+
+## 🎨 ERD
+![캡처 PNG](https://github.com/aareumii/coupang-project/assets/130023446/51c62795-8cdb-4f4a-a5cd-68835591a89a)
+
+
+<br>
 <div id='id-section4'/>
   
 ## 📌 주요 기능
@@ -50,12 +58,18 @@
 - typescript
 - Redux Toolkit
 - styled-components
+- axios
 
 <br>
 
+
+
+
 <div id='id-section6'/>
 
-### 🧑‍🤝‍🧑 맴버구성
+## 🧑‍🤝‍🧑 맴버구성
+
+
 |이름|주특기|깃허브 주소|
 |---|---|---|
 |김아름|FE|<https://github.com/aareumii>|
