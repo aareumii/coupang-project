@@ -3,10 +3,11 @@ import { Provider } from 'react-redux';
 import store from './Store';
 import App from '../../App';
 
-const Root = () => (
+const Root = ({ children }) => (
   <Provider store={store}>
-    <App />
+    {children}
   </Provider>
 );
+
 
 export default Root;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import Header from '../../components/Header/Header';
 import ItemList from '../../components/MainHome/ItemList';
 import Category from '../../components/Header/Header';
@@ -7,19 +7,16 @@ import Pagination from '../../components/Header/Pagination';
 import coupang from '../../assets/headerImg/베이크팡.png';
 import MyCoupang from '../../components/Header/MyCoupang';
 import Cart from '../../components/Header/Cart';
-import ItemCategory from '../../components/MainHome/ItemCategory';
-import ItemFilter from '../../components/MainHome/ItemFilter';
-import Banner from '../../components/MainHome/Banner';
-import axios from 'axios';
-import { StMain } from './stMain';
+import ProductInfo from './ProductInfo';
+import { StMain } from '../Main/stMain';
 import styled from 'styled-components';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/item';
-import { GET_PRODUCT_API } from '../../api/Products';
 import Footer from '../../components/footer/Footer';
 
-const Main = () => {
+
+const ProductDetail = () => {
 	const [products, setProducts] = useState<Product[]>([]);
 	const [userInput, setUserInput] = useState('');
 
@@ -37,20 +34,6 @@ const Main = () => {
 	//       console.log(error);
 	//     });
 	// };
-
-	useEffect(() => {
-		axios
-			.get(`${GET_PRODUCT_API}`)
-			.then((response) => {
-				console.log('통신결과:', response);
-				setProducts(response.data.product);
-				console.log(response.data.product);
-			})
-			.catch((error) => {
-				// Error 핸들링
-				console.log(error);
-			});
-	}, []);
 
 	const getValue = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setUserInput(e.target.value);
@@ -89,21 +72,13 @@ const Main = () => {
 								<FaSearch className="search__icon" />
 							</div>
 						</SearchBox>
-
 						<MyCoupang />
 						<Cart />
 					</HeaderBottom>
 				</header>
-				<Banner />
-				<main className="main">
-					<ItemCategory />
-					<ItemFilter />
-					<ItemListWrap>
-						{searched.map((item: any) => (
-							<ItemList {...item} />
-						))}
-					</ItemListWrap>
 
+				<main className="main">
+                    <ProductInfo />
 					<Pagination />
 				</main>{' '}
 				<footer className="footer">
@@ -114,7 +89,7 @@ const Main = () => {
 	);
 };
 
-export default Main;
+export default ProductDetail;
 
 const Container = styled.div`
 	width: 100vw;
@@ -157,12 +132,4 @@ const SearchBox = styled.div`
 		display: flex;
 		justify-content: space-evenly;
 	}
-`;
-const ItemListWrap = styled.div`
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin-top: 20px;
-	width: 100%;
-	/* height: 330px; */
 `;

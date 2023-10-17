@@ -1,13 +1,4 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';  // createAsyncThunk import 추가
-import { addToCartAPI } from '../../api/productApi';
-
-export const addProductToCart = createAsyncThunk(
-    'product/addToCart',
-    async (product: Product) => {  
-      const response = await addToCartAPI(product);
-      return response.data;
-    }
-);
 
 type Product = {
     id: number;
@@ -41,10 +32,6 @@ const productSlice = createSlice({
         setProductInfo: (state, action: PayloadAction<Product>) => {
             state.productInfo = action.payload;
         }
-    },
-    extraReducers: (builder) => {
-        builder.addCase(addProductToCart.fulfilled, (state, action) => {
-        });
     }
 });
 

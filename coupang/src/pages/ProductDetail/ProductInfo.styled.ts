@@ -15,8 +15,8 @@ export const ProductInfoBox = styled.div`
 `;
 
 export const ProductImage = styled.img`
-  width: 410px;
-  height: 410px;
+  width: 310px;
+  height: 310px;
   object-fit: cover;
   margin-bottom: 20px;
 `;
@@ -40,15 +40,6 @@ export const ProductPrice = styled.span`
   margin-bottom: 20px;
   `;
 
-  export const SelectWrapper = styled.div`
-  margin-bottom: 20px;
-  width: 100%; 
-
-  select {
-    width: 100%; // select의 너비를 100%로 설정
-    padding: 0.5rem;
-  }
-`;
 
 export const QuantityCounter = styled.div`
   display: flex;

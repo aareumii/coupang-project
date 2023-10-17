@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import 평점 from "../../assets/mainImg/평점.png";
 import 로켓 from "../../assets/mainImg/로켓배송.png";
+import { fetchProductDetails } from '../../api/getProductApi';
+import { Link } from 'react-router-dom';
+
 
 interface propsType {
   id: number;
@@ -38,12 +41,23 @@ const ItemList = (props: propsType) => {
   //   getProducts();
   // }, []);
 
+  const handleProductClick = async () => {
+    try {
+      const productDetails = await fetchProductDetails(props.name);
+      console.log(productDetails);  // 이 부분에서 원하는 동작을 수행하십시오.
+    } catch (error) {
+      console.error("Error fetching product details on click:", error);
+    }
+  };
+
   return (
     <>
       <ItemCardWrap key={props.name}>
         <ItemCard key={props.categoryName}>
           <div className="item__img">
+          <Link to={`/product/${props.name}`}>
             <img src={props.img1} />
+          </Link>
           </div>
           <div className="itme__contents">
             <a href="#" className="item__name">

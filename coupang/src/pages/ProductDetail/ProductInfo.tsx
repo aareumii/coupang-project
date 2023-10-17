@@ -5,16 +5,17 @@ import {
   ProductImage,
   ProductName,
   ProductPrice,
-  SelectWrapper,
   QuantityCounter,
   ButtonWrapper,
   ProductTextWapper
 } from './ProductInfo.styled';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slice/productSlice';
-import { getProductInfo } from '../../api/productApi';
 import AddToCartButton from './AddToCartButton';
 import AddToOrderButton from './AddToOrderButton';
+import { fetchProductDetails } from '../../api/getProductApi'; 
+import { updateCartProduct } from '../../api/getProductApi';
+import { useParams } from 'react-router-dom';
 
 
 type ProductType = {
@@ -30,16 +31,32 @@ const ProductInfo: React.FC = () => {
   const [product, setProduct] = useState<ProductType | null>(null);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
+  // const { productName } = useParams<{ productName: string }>();
+  const productName = "smartphone22";
 
   useEffect(() => {
-    getProductInfo(1)
-      .then(data => {
-        setProduct(data);
-      })
-      .catch(error => {
-        console.error("Failed to fetch product info: ", error);
-      });
-  }, []);
+    const getProductDetails = async () => {
+      try {
+        const data = productName ? await fetchProductDetails(productName) : null;
+        
+        if (data) { // 여기서 data의 유효성 검사를 추가합니다.
+            setProduct({
+              img: data.img1,
+              productName: data.name,
+              amount: data.stockQuantity,
+              price: data.price
+            });
+        } else {
+            console.error("Received data is null or undefined");
+        }
+
+      } catch (error) {
+        console.error("Error fetching product details from the component:", error);
+      }
+    }
+    
+    getProductDetails();
+}, [productName]);
 
   useEffect(() => {
     if (product) {
@@ -64,14 +81,6 @@ const ProductInfo: React.FC = () => {
       <ProductPrice>{totalPrice}원</ProductPrice>
       </ProductTextWapper>
 
-      <SelectWrapper>
-        <select>
-          <option value="option1">상품선택</option>
-          <option value="option2">상품선택2</option>
-          // 다른 옵션들 추가...
-        </select>
-      </SelectWrapper>
-
       <QuantityCounter>
         <button onClick={() => setQuantity(q => q > 0 ? q - 1 : 0)}>-</button>
         <span>{quantity}</span>
@@ -79,27 +88,27 @@ const ProductInfo: React.FC = () => {
       </QuantityCounter>
 
       <ButtonWrapper>
-      <AddToCartButton onClick={() => {
-            console.log("Current price:", totalPrice); // 현재의 price 상태 값을 출력
+      <AddToCartButton onClick={async () => {
+    console.log("Current price:", totalPrice);
 
-        // console.log("Button clicked!"); 
-        if (product) {
-            // console.log("Before dispatching the action");
-            
-            const action = addToCart({
-                // img: product.img,
-                productName: product.productName,
-                amount: quantity,
-                price: totalPrice,
-                id: 1
-            });
+    if (product) {
+        const userId = 1; // 여기서 사용자 ID를 가져옵니다.
+        const cartProductId = 1; // 장바구니 제품 ID를 설정합니다.
 
-            // 액션 객체 출력
-            console.log(action);
+        // PUT 메소드로 수량과 가격 업데이트
+        await updateCartProduct(userId, cartProductId, quantity);
 
-            dispatch(action);
-        }
-    }} />
+        const action = addToCart({
+            productName: product.productName,
+            amount: quantity,
+            price: totalPrice,
+            id: 1
+        });
+
+        console.log(action);
+        dispatch(action);
+    }
+}} />
       <AddToOrderButton onClick={() => {
         // Redux action으로 장바구니에 제품 정보 추가
     }} />
