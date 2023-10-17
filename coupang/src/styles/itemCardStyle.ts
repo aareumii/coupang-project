@@ -7,6 +7,10 @@ export const StItemContent = styled.div`
   margin-top: 20px;
   height: 350px;
   padding-top: 10px;
+  @media screen and (max-width: 1024px) {
+    width: 12rem;
+    height: 250px;
+  }
 
   &:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -67,7 +71,7 @@ export const StItemContent = styled.div`
       font-size: 0.8rem;
 
       @media screen and (max-width: 768px) {
-        font-size: 0.1rem;
+        font-size: 0.6rem;
       }
     }
     .item__price {

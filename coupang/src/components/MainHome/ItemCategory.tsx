@@ -138,7 +138,7 @@ const CategoryGrid = styled.div`
     outline: none;
     font-weight: 600;
     @media screen and (max-width: 1024px) {
-      font-size: 0.2rem;
+      font-size: 0.8rem;
     }
   }
   p {
