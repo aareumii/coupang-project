@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StMain = styled.div`
   position: relative;
   .header {
-    width: 70vw;
+    width: 75vw;
     margin: auto;
     display: flex;
     /* gap: 50px; */

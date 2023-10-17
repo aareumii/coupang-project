@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const StSearchBox = styled.div`
   position: relative;
-  width: 700px;
+  width: 800px;
   height: 40px;
   margin: 0 5px;
   border: 0.1rem solid #4285f4;

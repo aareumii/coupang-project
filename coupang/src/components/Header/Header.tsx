@@ -54,7 +54,7 @@ const MembershipNav = styled.div`
 `;
 
 const HeaderContainer = styled.div`
-  width: 60vw;
+  width: 65vw;
   margin: auto;
   display: flex;
 
