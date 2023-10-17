@@ -24,6 +24,10 @@ export const StFilter = styled.div`
       font-size: 0.8rem;
       margin-left: 10px;
       padding-right: 10px;
+
+      &:hover {
+        font-weight: 600;
+      }
     }
     .bar {
       border-right: 1px solid #d2d0d0;
