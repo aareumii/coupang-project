@@ -8,12 +8,13 @@ import { FaSearch } from "react-icons/fa";
 import MyCoupang from "../../components/Header/MyCoupang";
 import Cart from "../../components/Header/Cart";
 import { useNavigate } from "react-router-dom"; // useNavigate로 수정
-import ItemList from "../../components/MainHome/ItemList";
 import { GET_PRODUCT_API } from "../../api/Products";
 import axios from "axios";
 import { Product } from "../../types/item";
 import CateItem from "../../components/category/CateItem";
 import CategoryFilter from "../../components/category/CategoryFilter";
+import { StFilter } from "../../styles/ItemFilterStyle";
+import { StSearchBox } from "../../styles/searchStyle";
 
 const Bread = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,7 +29,7 @@ const Bread = () => {
       .get(`${GET_PRODUCT_API}`)
       .then((response) => {
         console.log(response.data);
-        setProducts(response.data.product);
+        setProducts(response.data);
       })
       .catch((error) => {
         // Error 핸들링
@@ -37,7 +38,8 @@ const Bread = () => {
   }, []);
 
   const category = products.filter(
-    (item: { categoryId: number }) => item.categoryId === 1
+    (item: { category: { categoryId: number } }) =>
+      item.category.categoryId === 1
   );
 
   return (
@@ -46,7 +48,7 @@ const Bread = () => {
       <header className="header">
         <Category />
         <img className="logo" src={coupang} onClick={linktoMain} />
-        <SearchBox>
+        <StSearchBox>
           <div className="form">
             <input
               className="input"
@@ -54,7 +56,7 @@ const Bread = () => {
             />
             <FaSearch className="search__icon" />
           </div>
-        </SearchBox>
+        </StSearchBox>
 
         <MyCoupang />
         <Cart />
@@ -64,7 +66,20 @@ const Bread = () => {
       </GrayBar>
       <main>
         <div className="cate__title">식빵·빵류</div>
-        <CategoryFilter />
+        <StFilter>
+          <div className="filter">
+            <button className="bar" value="lowPrice">
+              낮은가격순
+            </button>
+            <button className="bar" value="highPrice">
+              높은가격순
+            </button>
+            <button className="bar" value="new">
+              최신순
+            </button>
+            <button value="click">조회수순</button>
+          </div>
+        </StFilter>
 
         <ItemListWrap>
           {category.map((item: any) => (
@@ -78,36 +93,6 @@ const Bread = () => {
 
 export default Bread;
 
-const SearchBox = styled.div`
-  position: relative;
-
-  width: 640px;
-  height: 30px;
-  margin: 0 5px;
-
-  border: 0.1rem solid #4285f4;
-  .input {
-    width: 90%;
-    height: 90%;
-    border: none;
-    display: block;
-
-    &:focus {
-      outline: none;
-    }
-  }
-  .search__icon {
-    color: #4285f4;
-    height: 100%;
-  }
-  .form {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-evenly;
-  }
-`;
-
 const GrayBar = styled.div`
   width: 100vw;
   /* margin: auto; */
@@ -118,16 +103,16 @@ const GrayBar = styled.div`
   border-top: 0.5px solid #d7d7d7;
   border-bottom: 0.5px solid #d7d7d7;
   p {
-    width: 70vw;
+    width: 60vw;
     margin: auto;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
   }
 `;
 const ItemListWrap = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin: auto;
   width: 100%;
-  height: 400px;
+  height: 350px;
 `;

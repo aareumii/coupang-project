@@ -39,7 +39,7 @@ const HeaderNav = styled.div`
   cursor: pointer;
   > p {
     color: black;
-    font-size: 0.1rem;
+    font-size: 0.6rem;
   }
 `;
 
@@ -49,12 +49,12 @@ const MembershipNav = styled.div`
   cursor: pointer;
   > p {
     color: black;
-    font-size: 0.1rem;
+    font-size: 0.6rem;
   }
 `;
 
 const HeaderContainer = styled.div`
-  width: 70vw;
+  width: 60vw;
   margin: auto;
   display: flex;
 

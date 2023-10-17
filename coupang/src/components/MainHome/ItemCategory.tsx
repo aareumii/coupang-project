@@ -38,6 +38,7 @@ export default ItemCategory;
 
 const ItemCategoryWrap = styled.div`
   width: 60vw;
+  margin: 30px 0 100px 0;
 
   h1 {
     color: black;
