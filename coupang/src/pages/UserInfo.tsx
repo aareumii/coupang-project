@@ -1,11 +1,15 @@
-// TestInfo.tsx
-import React, { useState, useEffect } from "react";
+// UserInfo.tsx
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
 const Container = styled.div`
   max-width: 600px;
-  margin: 50px auto;
-  margin-top: 12rem;
+  margin: 10px auto;
+  // margin-top: 12rem;
   padding: 20px;
   border: 1px solid #eaeaea;
   border-radius: 5px;
@@ -27,11 +31,6 @@ const Input = styled.input`
   margin-bottom: 10px;
   border: 1px solid #eaeaea;
   border-radius: 3px;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 2px;
 `;
 
 const Table = styled.table`
@@ -60,9 +59,14 @@ const Button = styled.button`
   background-color: #0077b6;
   color: white;
   cursor: pointer;
+
   &:hover {
     background-color: #005694;
   }
+`;
+
+const RightAlignedButton = styled(Button)`
+  margin-left: 62%;
 `;
 
 const ErrorText = styled.p`
@@ -89,21 +93,53 @@ const ModalContent = styled.div`
   border-radius: 5px;
 `;
 
+type UserInfoType = {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  detailedAddress: string;
+  zipCode: string;
+};
+
 const UserInfo: React.FC = () => {
-  const [user, setUser] = useState({
-    ID: "",
+  const [user, setUser] = useState<UserInfoType>({
+    name: "",
     email: "",
-    phoneNumber: "",
+    phone: "",
     address: "",
-    addressDetail: "",
+    detailedAddress: "",
+    zipCode: "",
   });
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const detailAddressRef = useRef<HTMLInputElement>(null);
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data: any) {
+        setUser((prev) => ({
+          ...prev,
+          address: data.address,
+          zipCode: data.zonecode,
+        }));
+        if (detailAddressRef.current) {
+          detailAddressRef.current.focus();
+        }
+      },
+    }).open();
+  };
 
   useEffect(() => {
-    // Here, fetch data from backend user info API and set to user state
-    // setUser({ ID: 'fetchedID', email: 'fetchedEmail', ... });
+    // 주소 API 스크립트 동적 로딩
+    const script = document.createElement("script");
+    script.src =
+      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    script.async = true;
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
   }, []);
 
   const handleUpdate = () => {
@@ -111,8 +147,8 @@ const UserInfo: React.FC = () => {
       setShowModal(true);
       return;
     }
-    if (newPassword.length < 6 || newPassword.length > 12) {
-      alert("비밀번호는 6-12자리여야 합니다.");
+    if (newPassword.length < 8 || newPassword.length > 12) {
+      alert("비밀번호는 8-12자리여야 합니다.");
       return;
     }
     // Update backend with the new data
@@ -158,9 +194,9 @@ const UserInfo: React.FC = () => {
             </InputCell>
           </tr>
           <tr>
-            <LabelCell>ID</LabelCell>
+            <LabelCell>name</LabelCell>
             <InputCell>
-              <Input defaultValue={user.ID} disabled />
+              <Input defaultValue={user.name} disabled />
             </InputCell>
           </tr>
           <tr>
@@ -172,7 +208,13 @@ const UserInfo: React.FC = () => {
           <tr>
             <LabelCell>전화번호</LabelCell>
             <InputCell>
-              <Input defaultValue={user.phoneNumber} disabled />
+              <Input defaultValue={user.phone} disabled />
+            </InputCell>
+          </tr>
+          <tr>
+            <LabelCell>우편번호</LabelCell>
+            <InputCell>
+              <Input defaultValue={user.zipCode} disabled />
             </InputCell>
           </tr>
           <tr>
@@ -180,21 +222,28 @@ const UserInfo: React.FC = () => {
             <InputCell>
               <Input defaultValue={user.address} />
             </InputCell>
-            <Button style={{ marginLeft: "-20px" }}>변경</Button>
+            <InputCell>
+              <Button
+                onClick={handleAddressSearch}
+                style={{ marginLeft: "-20px" }}
+              >
+                변경
+              </Button>
+            </InputCell>
           </tr>
           <tr>
-            {" "}
             <LabelCell>상세 주소</LabelCell>
             <InputCell>
               <Input
-                defaultValue={user.addressDetail}
+                ref={detailAddressRef}
+                defaultValue={user.detailedAddress}
                 onChange={(e) => {
-                  const newUser = { ...user, addressDetail: e.target.value };
+                  const newUser = { ...user, detailedAddress: e.target.value };
                   setUser(newUser);
                 }}
               />
             </InputCell>
-          </tr>{" "}
+          </tr>
           <tr>
             <LabelCell>새 비밀번호</LabelCell>
             <InputCell>
@@ -224,7 +273,9 @@ const UserInfo: React.FC = () => {
         newPassword.length > 12) && <ErrorText>다시 확인해주세요</ErrorText>}
       <Button onClick={handleUpdate}>수정</Button>
       <Button onClick={handleCancel}>취소</Button>
-      <Button onClick={handleWithdrawal}>회원 탈퇴</Button>
+      <RightAlignedButton onClick={handleWithdrawal}>
+        회원 탈퇴
+      </RightAlignedButton>
       {showModal && (
         <Modal onClick={() => setShowModal(false)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>

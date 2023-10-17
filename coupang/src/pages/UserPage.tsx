@@ -3,16 +3,21 @@
 import React from "react";
 import styled from "styled-components";
 import {
-  BrowserRouter as Router,
+  // BrowserRouter as Router,
   Routes,
   Route,
   Link,
   NavLink,
+  useNavigate,
 } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import PaymentManagement from "./PaymentManagement";
 import SalesListPage from "./SalesListPage";
 import PurchaseListPage from "./PurchaseListPage";
+import CartPage from "./CartPage";
+import NotFound from "./NotFound";
+import Login from "../LoginPage/Login";
+import LogoutButton from "../LoginPage/LogoutButton";
 
 const Container = styled.div`
   display: grid;
@@ -144,9 +149,14 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-// TestPage 컴포넌트
+// UserPage 컴포넌트
 const UserPage: React.FC = () => {
   const profileImageUrl = "https://via.placeholder.com/100";
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
 
   return (
     <Container>
@@ -160,6 +170,9 @@ const UserPage: React.FC = () => {
           <h3>My 쇼핑</h3>
         </ListItem>
         <ListItem>
+          <StyledLink to="cart">장바구니 목록</StyledLink>
+        </ListItem>
+        <ListItem>
           <StyledLink to="sales">판매 목록</StyledLink>
         </ListItem>
         <ListItem addUnderline>
@@ -169,10 +182,14 @@ const UserPage: React.FC = () => {
           <h3>My 정보</h3>
         </ListItem>
         <ListItem>
-          <StyledLink to="/userinfo">개인정보확인/수정</StyledLink>
+          <StyledLink to="userinfo">개인정보확인/수정</StyledLink>
         </ListItem>
         <ListItem addUnderline>
           <StyledLink to="bakepay">결제수단·페이관리</StyledLink>
+        </ListItem>
+        <ListItem>
+          <button onClick={handleLoginClick}>로그인</button>
+          <LogoutButton />
         </ListItem>
       </MenuBar>
       <Sidebar>
@@ -211,6 +228,9 @@ const UserPage: React.FC = () => {
           <Route path="bakepay" element={<PaymentManagement />} />
           <Route path="order" element={<PurchaseListPage />} />
           <Route path="sales" element={<SalesListPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Content>
     </Container>
