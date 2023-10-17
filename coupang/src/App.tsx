@@ -1,6 +1,4 @@
-import React from 'react';
-
-import './App.css';
+import React, { useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Main from './pages/Main/Main';
 import Bread from './pages/Category/Bread';
@@ -36,6 +34,7 @@ function App() {
 			element: <SignupPage />, // 회원가입 페이지 컴포넌트
 		},
 	]);
+
 	return <RouterProvider router={router} />;
 }
 

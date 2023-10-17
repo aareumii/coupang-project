@@ -1,6 +1,12 @@
+import React from 'react';
 import userAPI from '../../../api/user';
+import styled from 'styled-components';
 
-const LogoutButton = () => {
+interface LogoutButtonProps {
+	onLogout: () => void;
+}
+
+const LogoutButton: React.FC<LogoutButtonProps> = ({ onLogout }) => {
 	const handleLogout = async () => {
 		try {
 			const response = await userAPI.logout();
@@ -24,7 +30,30 @@ const LogoutButton = () => {
 		}
 	};
 
-	return <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>;
+	return (
+		<Logout>
+			<button onClick={handleLogout}>
+				<p>로그아웃</p>
+			</button>
+		</Logout>
+	);
 };
 
 export default LogoutButton;
+
+const Logout = styled.div`
+	display: flex;
+	gap: 10px;
+
+	button {
+		border: none;
+		padding: 0;
+		margin: 0;
+		cursor: pointer;
+
+		p {
+			color: black;
+			font-size: 0.6rem;
+		}
+	}
+`;

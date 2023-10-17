@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const StMain = styled.div`
 	position: relative;
+	overflow-x: hidden;
 	.header {
 		width: 75vw;
 		margin: auto;

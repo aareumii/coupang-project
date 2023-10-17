@@ -3,7 +3,7 @@ import Header from '../../components/Header/Header';
 import ItemList from '../../components/MainHome/ItemList';
 import Category from '../../components/Header/Category';
 import Pagination from '../../components/Header/Pagination';
-import coupang from '../../assets/headerImg/베이크팡.png';
+import bakepang from '../../assets/headerImg/베이크팡.png';
 import MyCoupang from '../../components/Header/MyCoupang';
 import Cart from '../../components/Header/Cart';
 import ItemCategory from '../../components/MainHome/ItemCategory';
@@ -17,6 +17,7 @@ import { Product } from '../../types/item';
 import { GET_PRODUCT_API } from '../../api/Products';
 import { StFilter } from '../../styles/ItemFilterStyle';
 import { StSearchBox } from '../../styles/searchStyle';
+import Footer from '../../components/footer/Footer';
 
 const Main = () => {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -63,7 +64,7 @@ const Main = () => {
 			<header className="header">
 				<Category />
 				<a href="/">
-					<img className="logo" src={coupang} />
+					<img className="logo" src={bakepang} alt="베이크팡" />
 				</a>
 
 				<StSearchBox>
@@ -130,7 +131,9 @@ const Main = () => {
 
 				<Pagination />
 			</main>
-			<footer></footer>
+			<footer>
+				<Footer />
+			</footer>
 		</StMain>
 	);
 };

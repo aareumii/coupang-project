@@ -24,10 +24,10 @@ const Footer = () => {
 					<b>개인정보 처리방침</b>
 				</a>
 				<a href="https://rocketpay.coupang.com/rocketpay/operationTerms/coupangPcFooter">
-					쿠팡페이 이용약관
+					베이크팡페이 이용약관
 				</a>
 				<a href="https://privacy.coupang.com/ko/land/coupay">
-					<b>쿠팡페이 개인정보처리방침</b>
+					<b>베이크팡페이개인정보처리방침</b>
 				</a>
 				<a href="/np/safety">신뢰관리센터</a>
 				<a href="https://partners.coupang.com/" target="_blank">
@@ -38,20 +38,13 @@ const Footer = () => {
 				</a>
 			</FooterLayer_01>
 			<FooterLayer_02>
-				<h1>
-					<a href="/" title="COUPANG">
-						COUPANG
-					</a>
-				</h1>
 				<FooterContent>
 					<address>
-						상호명 및 호스팅 서비스 제공 : 쿠팡(주)
+						상호명 및 호스팅 서비스 제공 : 베이크팡(주)
 						<br />
-						대표이사 : 강한승,박대준
+						대표이사 : 슈퍼코딩
 						<br />
-						서울시 송파구 송파대로 570 <br />
-						사업자 등록번호 : 120-88-00767 <br />
-						통신판매업신고 : 2017-서울송파-0680
+						통신판매업신고 : 2023-슈퍼코딩-1021
 						<br />
 						<a href="#">사업자정보 확인 &gt;</a>
 					</address>
@@ -63,10 +56,9 @@ const Footer = () => {
 						>
 							<strong>365고객센터</strong> | 전자금융거래분쟁처리담당
 							<br />
-							<em>1577-7011 (유료)</em>
-							서울시 송파구 송파대로 570
+							<em>1234-5678 (유료)</em>
 							<br />
-							<span className="contact-fax">email : help@coupang.com</span>
+							<span className="contact-fax">email : help@bakepang.com</span>
 						</a>
 					</div>
 					<SafeService>
@@ -84,43 +76,29 @@ const Footer = () => {
 					</SafeService>
 				</FooterContent>
 			</FooterLayer_02>
-			<div className="footer-layer3 slide-unit">
-				<div
-					className="certification-list"
-					style={{
-						width: '968px',
-						height: '80px',
-						margin: '0 auto',
-						background:
-							'url(//static.coupangcdn.com/image/coupang/common/footer_asset_v12.png) no-repeat',
-						backgroundPosition: '-44px -92px',
-						position: 'relative',
-					}}
-				></div>
-			</div>
 
 			<FooterLayer_04>
 				<CoupangCopyright>
 					<p className="info" style={{ paddingTop: '9px' }}>
-						사이버몰 내 판매되는 상품 중에는 쿠팡에 등록한 개별 판매자가
+						사이버몰 내 판매되는 상품 중에는 베이크팡에 등록한 개별 판매자가
 						판매하는 마켓플레이스(오픈마켓) 상품이 포함되어 있습니다.
-						<br /> 마켓플레이스(오픈마켓) 상품의 경우 쿠팡은 통신판매중개자이며
-						통신판매의 당사자가 아닙니다. <br />
-						쿠팡은 마켓플레이스(오픈마켓) 상품, 거래정보 및 거래 등에 대하여
-						책임을 지지 않습니다. <br /> 쿠팡은 소비자 보호와 안전거래를 위해
-						신뢰관리센터(CM112@coupang.com)를 운영하고 있으며, 관련 분쟁이
-						발생할 경우 별도의 분쟁 처리절차에 의거 분쟁이 처리됩니다.
-						<br /> Copyright © Coupang Corp. 2010-2022 All Rights Reserved.
+						<br /> 마켓플레이스(오픈마켓) 상품의 경우 베이크팡은
+						통신판매중개자이며 통신판매의 당사자가 아닙니다. <br />
+						베이크팡은 마켓플레이스(오픈마켓) 상품, 거래정보 및 거래 등에 대하여
+						책임을 지지 않습니다. <br /> 베이크팡은 소비자 보호와 안전거래를
+						위해 신뢰관리센터(test123@bakepang.com)를 운영하고 있으며, 관련
+						분쟁이 발생할 경우 별도의 분쟁 처리절차에 의거 분쟁이 처리됩니다.
+						<br /> Copyright © bakepang Corp. 2010-2022 All Rights Reserved.
 					</p>
-					<SnsLink>
+					{/* <SnsLink>
 						<li>
 							<a
 								href="https://www.facebook.com/Coupang.korea"
 								target="_blank"
 								className="facebook"
-								title="쿠팡 페이스북"
+								title="bakepang 페이스북"
 							>
-								쿠팡 페이스북
+								bakepang 페이스북
 							</a>
 						</li>
 						<li>
@@ -128,9 +106,9 @@ const Footer = () => {
 								href="https://news.coupang.com/"
 								target="_blank"
 								className="blog"
-								title="쿠팡 뉴스룸"
+								title="bakepang 뉴스룸"
 							>
-								쿠팡 뉴스룸
+								bakepang 뉴스룸
 							</a>
 						</li>
 						<li>
@@ -138,12 +116,12 @@ const Footer = () => {
 								href="https://www.instagram.com/coupang"
 								target="_blank"
 								className="instagram"
-								title="쿠팡 인스타그램"
+								title="bakepang 인스타그램"
 							>
-								쿠팡 인스타그램
+								bakepang 인스타그램
 							</a>
 						</li>
-					</SnsLink>
+					</SnsLink> */}
 				</CoupangCopyright>
 			</FooterLayer_04>
 		</footer>
