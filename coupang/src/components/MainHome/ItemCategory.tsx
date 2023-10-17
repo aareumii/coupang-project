@@ -38,6 +38,7 @@ export default ItemCategory;
 
 const ItemCategoryWrap = styled.div`
   width: 60vw;
+  margin: 30px 0 100px 0;
 
   h1 {
     color: black;
@@ -137,7 +138,7 @@ const CategoryGrid = styled.div`
     outline: none;
     font-weight: 600;
     @media screen and (max-width: 1024px) {
-      font-size: 0.2rem;
+      font-size: 0.8rem;
     }
   }
   p {
