@@ -4,7 +4,7 @@ import 평점 from "../../assets/mainImg/평점.png";
 import 로켓 from "../../assets/mainImg/로켓배송.png";
 import { StItemContent } from "../../styles/itemCardStyle";
 
-export interface propsType {
+interface propsType {
   id: number;
   name: string;
   category: {
@@ -21,11 +21,12 @@ export interface propsType {
   click: number;
 }
 
-const CateItem = (props: propsType) => {
+const ItemCard = (props: propsType) => {
+  console.log(props);
   return (
-    <div>
-      <StItemContent key={props.id}>
-        <div className="item" key={props.category.categoryId}>
+    <>
+      <StItemContent key={props.name}>
+        <div className="item" key={props.category.categoryName}>
           <div className="item__img">
             <img src={props.img1} />
           </div>
@@ -40,13 +41,13 @@ const CateItem = (props: propsType) => {
             <p>무료배송</p>
             <div className="star">
               <img src={평점} className="star__png" />
-              (999+)
+              {props.click}+
             </div>
           </div>
         </div>
       </StItemContent>
-    </div>
+    </>
   );
 };
 
-export default CateItem;
+export default ItemCard;

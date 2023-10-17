@@ -55,29 +55,29 @@ const HeaderWapper = styled.div`
 `;
 
 const HeaderNav = styled.div`
-	display: flex;
-	gap: 10px;
-	cursor: pointer;
-	> p {
-		color: black;
-		font-size: 0.1rem;
-	}
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  > p {
+    color: black;
+    font-size: 0.6rem;
+  }
 `;
 
 const MembershipNav = styled.div`
-	display: flex;
-	gap: 10px;
-	cursor: pointer;
-	> p {
-		color: black;
-		font-size: 0.1rem;
-	}
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  > p {
+    color: black;
+    font-size: 0.6rem;
+  }
 `;
 
 const HeaderContainer = styled.div`
-	width: 70vw;
-	margin: auto;
-	display: flex;
+  width: 65vw;
+  margin: auto;
+  display: flex;
 
 	justify-content: space-between;
 `;

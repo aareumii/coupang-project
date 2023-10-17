@@ -38,6 +38,7 @@ export default ItemCategory;
 
 const ItemCategoryWrap = styled.div`
   width: 60vw;
+  margin: 30px 0 100px 0;
 
   h1 {
     color: black;
@@ -96,13 +97,14 @@ const CategoryGrid = styled.div`
     }
   }
   #cake {
-    width: 120px;
-    height: 100px;
+    width: 110px;
+    height: 90px;
     margin-top: 20%;
+    margin-bottom: 40px;
     @media screen and (max-width: 1024px) {
       width: 90px;
       height: 70px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
     @media screen and (max-width: 768px) {
       width: 60px;
@@ -121,6 +123,9 @@ const CategoryGrid = styled.div`
     border-radius: 50%;
     margin-bottom: 10px;
     text-align: center;
+    &:hover {
+      background-color: #fcdec7;
+    }
 
     @media screen and (max-width: 1024px) {
       width: 130px;
@@ -137,7 +142,7 @@ const CategoryGrid = styled.div`
     outline: none;
     font-weight: 600;
     @media screen and (max-width: 1024px) {
-      font-size: 0.2rem;
+      font-size: 0.8rem;
     }
   }
   p {

@@ -1,12 +1,16 @@
 export interface Product {
-  id: string;
+  id: number;
   name: string;
-  price: number | string;
-  stockQuantity: string;
-  categoryId: number;
-  categoryName: string;
-  registerDate: string;
+  category: {
+    categoryId: number;
+    categoryName: string;
+  };
   img1: string;
   img2: string;
   img3: string;
+  price: number;
+  stockQuantity: number;
+  registerDate: string;
+  fieldPredictedSaleEndDate: string;
+  click: number;
 }

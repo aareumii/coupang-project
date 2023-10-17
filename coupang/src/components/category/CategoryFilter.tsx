@@ -22,7 +22,7 @@ const FilterWrap = styled.div`
   /* margin: auto; */
 
   height: 1.6rem;
-  background-color: #f0f0f0;
+  background-color: #fafafa;
   display: flex;
   align-items: center;
   margin-top: 30px;
@@ -34,7 +34,7 @@ const FilterContainer = styled.div`
   cursor: pointer;
   > .filter {
     color: black;
-    font-size: 0.1rem;
+    font-size: 0.8rem;
     margin-left: 10px;
     padding-right: 10px;
   }
