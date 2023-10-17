@@ -1,88 +1,76 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Bakepang from '../../../assets/headerImg/Bakepang.png';
-import axios from 'axios';
-import LogoutButton from './LogoutButton';
+import Bakepang from '../../../assets/headerImg/베이크팡.png';
+import userAPI from '../../../api/user';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [emailError, setEmailError] = useState('');
-	const [loginError, setLoginError] = useState('');
 	const [passwordError, setPasswordError] = useState('');
-	const [showModal, setShowModal] = useState(''); // 모달 상태 추가
-
 	const navigate = useNavigate();
 
-	const isEmailValid = (email) => {
-		const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		return emailPattern.test(email);
-	};
-
+	const isEmailValid = (email) =>
+		/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 	const isPasswordValid = (password) =>
 		/^(?=.*[a-z])(?=.*\d).{8,20}$/.test(password);
 
 	const handleCloseModal = () => {
-		setShowModal(true);
 		navigate('/');
 	};
 
-	const handleLogin = (e) => {
+	const handleLogin = async (e) => {
 		e.preventDefault();
 
-		if (!email) {
-			setEmailError('아이디(이메일)를 입력해주세요.');
-			return;
-		} else if (!isEmailValid(email)) {
+		let isValid = true;
+
+		if (!email || !isEmailValid(email)) {
 			setEmailError('올바른 이메일 형식이 아닙니다.');
-			return;
+			isValid = false;
 		} else {
 			setEmailError('');
 		}
 
-		if (!password) {
-			setPasswordError('비밀번호를 입력해주세요.');
-			return;
-		} else if (!isPasswordValid(password)) {
+		if (!password || !isPasswordValid(password)) {
 			setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
-			return;
+			isValid = false;
 		} else {
 			setPasswordError('');
 		}
 
-		const url = `http://43.201.30.126:8080/api/user/login`;
+		if (!isValid) return;
 
-		axios
-			.post(url, {
-				email: email,
-				password: password,
-			})
-			.then((response) => {
-				const token = response.data.token;
-				if (token) {
-					// 토큰을 localStorage에 저장
-					localStorage.setItem('token', token);
+		try {
+			await userAPI.login(email, password);
+			console.log('로그인 성공');
+			handleCloseModal();
+		} catch (error) {
+			console.error('API 호출 오류:', error.message);
+			setEmailError('서버에 연결할 수 없습니다.');
+		}
+	};
 
-					console.log('로그인 성공');
+	const handleEmailChange = (e) => {
+		const newEmail = e.target.value;
+		setEmail(newEmail);
 
-					// 로그인 성공 시 showModal을 true로 설정하여 모달을 표시
-					setShowModal(true);
+		if (!newEmail || !isEmailValid(newEmail)) {
+			setEmailError('올바른 이메일 형식이 아닙니다.');
+		} else {
+			setEmailError('');
+		}
+	};
 
-					// 로그인 성공 시 홈 화면으로 이동
-					navigate('/'); // 홈 화면 경로로 변경
+	const handlePasswordChange = (e) => {
+		const newPassword = e.target.value;
+		setPassword(newPassword);
 
-					// 결과값 반환 (필요한 경우)
-					return response.data;
-				} else {
-					const message = response.data.message || '로그인에 실패하였습니다.';
-					setLoginError(message);
-				}
-			})
-			.catch((error) => {
-				console.error('API 호출 오류:', error.message);
-				setLoginError('서버에 연결할 수 없습니다.');
-			});
+		if (!newPassword || !isPasswordValid(newPassword)) {
+			setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
+		} else {
+			setPasswordError('');
+		}
 	};
 
 	return (
@@ -93,45 +81,30 @@ const Login = () => {
 						<img src={Bakepang} alt="로고" />
 					</Link>
 				</h1>
-				<FormContainer>
-					<LoginWrap>
+				<FormContainer onSubmit={handleLogin}>
+					<div>
 						<input
 							id="email"
 							type="email"
 							placeholder="아이디(이메일)"
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							onChange={handleEmailChange}
 						/>
-						<div>
-							<FormError>{emailError}</FormError>
-						</div>
-					</LoginWrap>
-					<PasswordWrap>
+						<FormError>{emailError}</FormError>
+					</div>
+					<div>
 						<input
 							type="password"
 							placeholder="비밀번호"
 							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							onChange={handlePasswordChange}
 						/>
-						<div>
-							<FormError>{passwordError}</FormError>
-						</div>
-					</PasswordWrap>
-					{showModal && (
-						<Modal>
-							<ModalContent>
-								<ModalMessage>로그인이 완료되었습니다.</ModalMessage>
-								<CloseButton onClick={handleCloseModal}>닫기</CloseButton>
-							</ModalContent>
-						</Modal>
-					)}
+						<FormError>{passwordError}</FormError>
+					</div>
 					<button type="submit" onClick={handleLogin}>
 						로그인
 					</button>
-					<FormError>{loginError}</FormError>
 				</FormContainer>
-				<LogoutButton />
-
 				<hr />
 				<Link to={'/signup'}>
 					<SignupButton>회원가입</SignupButton>
@@ -150,25 +123,25 @@ const Container = styled.div`
 	margin: 0 auto;
 
 	h1 {
-		margin: 0 auto;
-
+		margin: 10px auto;
 		text-align: center;
 		img {
 			position: relative;
 			display: block;
 			width: 100%;
-			max-width: 195px;
-			max-height: 46px;
+			max-width: 280px;
+			max-height: 83px;
 			margin: 0 auto;
 			background-position: 50% 50%;
 			padding-top: 10%;
-			background-size: cover;
+			background-size: contain;
 		}
 	}
 	hr {
 		height: 1px;
 		border: 0;
 		background-color: #c8d1d8;
+		margin: 30px 0;
 	}
 	input:focus {
 		outline: none; /* 기본 포커스 효과 제거 */
@@ -176,65 +149,61 @@ const Container = styled.div`
 	}
 `;
 
-const LoginWrap = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	margin-bottom: 10px;
+// const LoginWrap = styled.div`
+// 	position: relative;
+// 	display: flex;
 
-	div {
-		width: 100%;
-		font-weight: 400;
-		font-size: 16px;
-		line-height: 19px;
-		margin-top: 24px;
-		display: flex;
-		justify-content: space-around;
+// 	div {
+// 		width: 100%;
+// 		font-weight: 400;
+// 		font-size: 16px;
+// 		line-height: 19px;
+// 		margin-top: 24px;
+// 		display: flex;
+// 		justify-content: space-around;
 
-		a {
-			padding: 14px 0;
-			color: #454f5b;
-			text-align: center;
-			text-decoration: none;
-		}
-	}
-`;
+// 		a {
+// 			padding: 14px 0;
+// 			color: #454f5b;
+// 			text-align: center;
+// 			text-decoration: none;
+// 		}
+// 	}
+// `;
 
-const PasswordWrap = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	margin-bottom: 10px;
+// const PasswordWrap = styled.div`
+// 	display: flex;
+// 	position: relative;
 
-	div {
-		width: 100%;
-		font-weight: 400;
-		font-size: 16px;
-		line-height: 19px;
-		margin-top: 24px;
-		display: flex;
-		justify-content: space-around;
+// 	div {
+// 		width: 100%;
+// 		font-weight: 400;
+// 		font-size: 16px;
+// 		line-height: 19px;
+// 		margin-top: 24px;
+// 		display: flex;
+// 		justify-content: space-around;
 
-		a {
-			padding: 14px 0;
-			color: #454f5b;
-			text-align: center;
-			text-decoration: none;
-		}
-	}
-`;
+// 		a {
+// 			padding: 14px 0;
+// 			color: #454f5b;
+// 			text-align: center;
+// 			text-decoration: none;
+// 		}
+// 	}
+// `;
 
 const FormContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	/* div {
+	div {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 		margin-bottom: 10px;
-	} */
+	}
 	input {
 		margin: 0;
 		height: 48px;
@@ -279,7 +248,7 @@ const FormContainer = styled.div`
 const FormError = styled.span`
 	color: #e52528;
 	display: block;
-	margin: 9px 12px 0;
+	margin: 9px 15px 0;
 	padding: 0;
 	font-family: dotum, sans-serif;
 	font-size: 12px;
@@ -297,52 +266,52 @@ const SignupButton = styled.button`
 	background: #fff;
 	cursor: pointer;
 	border: 1px solid #919eab;
-	margin-top: 16px;
+
 	text-decoration: none;
 	color: #454f5b;
 	font-weight: bold;
 `;
-const Modal = styled.div`
-	position: fixed;
-	top: 25%;
-	left: 23%;
-	width: 50%;
-	height: 50%;
-	background-color: rgba(0, 0, 0, 0.5);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-`;
+// const Modal = styled.div`
+// 	position: fixed;
+// 	top: 25%;
+// 	left: 23%;
+// 	width: 50%;
+// 	height: 50%;
+// 	background-color: rgba(0, 0, 0, 0.5);
+// 	display: flex;
+// 	justify-content: center;
+// 	align-items: center;
+// `;
 
-const ModalContent = styled.div`
-	background-color: #fff;
-	padding: 20px;
-	border-radius: 5px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-	text-align: center;
-`;
+// const ModalContent = styled.div`
+// 	background-color: #fff;
+// 	padding: 20px;
+// 	border-radius: 5px;
+// 	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+// 	text-align: center;
+// `;
 
-const ModalMessage = styled.div`
-	font-size: 18px;
-	margin-bottom: 20px;
-`;
+// const ModalMessage = styled.div`
+// 	font-size: 18px;
+// 	margin-bottom: 20px;
+// `;
 
-const CloseButton = styled.button`
-	background-color: #ff4b4b;
-	color: #fff;
-	padding: 10px 20px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	font-size: 16px;
+// const CloseButton = styled.button`
+// 	background-color: #ff4b4b;
+// 	color: #fff;
+// 	padding: 10px 20px;
+// 	border: none;
+// 	border-radius: 5px;
+// 	cursor: pointer;
+// 	font-size: 16px;
 
-	&:hover {
-		background-color: #ff3333;
-	}
-`;
+// 	&:hover {
+// 		background-color: #ff3333;
+// 	}
+// `;
 
-const LogoutMessage = styled.div`
-	color: green; /* 원하는 스타일로 설정하세요 */
-	text-align: center;
-	margin-top: 10px;
-`;
+// const LogoutMessage = styled.div`
+// 	color: green; /* 원하는 스타일로 설정하세요 */
+// 	text-align: center;
+// 	margin-top: 10px;
+// `;

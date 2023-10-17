@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import Bakepang from '../../assets/headerImg/Bakepang.png';
+import bakepang from '../../assets/headerImg/베이크팡.png';
 import DaumPostcode from 'react-daum-postcode';
 
 // import { sendSms, verifySms } from '../../api/sms';
@@ -188,7 +188,7 @@ const SignupPage = () => {
 			<Container>
 				<h1>
 					<Link to={'/'}>
-						<img src={Bakepang} alt="로고" />
+						<img src={bakepang} alt="로고" />
 					</Link>
 				</h1>
 				<p>회원정보를 입력해주세요</p>
@@ -382,8 +382,8 @@ const Container = styled.div`
 			position: relative;
 			display: block;
 			width: 100%;
-			max-width: 195px;
-			max-height: 46px;
+			max-width: 280px;
+			max-height: 83px;
 			margin: 0 auto;
 			background-position: 50% 50%;
 			padding-top: 10%;
