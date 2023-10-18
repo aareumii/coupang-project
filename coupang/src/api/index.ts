@@ -1,7 +1,11 @@
 import axios, { AxiosInstance } from "axios";
 
 const axiosClient: AxiosInstance = axios.create({
+<<<<<<< HEAD
   baseURL: process.env.REACT_APP_BASE_URL, // REACT_APP_BASE_URL =   "http://43.201.30.126:8080/api"
+=======
+	baseURL: process.env.REACT_APP_BASE_URL, // REACT_APP_BASE_URL = "http://43.201.30.126:8080/api"
+>>>>>>> 303cb8ef3703d2ffa7e1034a93bd1d7251eb1293
 });
 
 axiosClient.interceptors.response.use(
@@ -26,6 +30,7 @@ axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
 
+<<<<<<< HEAD
     config.headers["Content-Type"] = "application/json; charset=utf-8";
 
     if (token) {
@@ -35,6 +40,11 @@ axiosClient.interceptors.request.use(
         config.headers["Authorization"] = `Bearer ${token}`; // 그 외 요청에 대해서는 "Bearer"를 포함하여 토큰을 넣어줍니다.
       }
     }
+=======
+		if (token) {
+			config.headers['Authorization'] = `Bearer ${token}`;
+		}
+>>>>>>> 303cb8ef3703d2ffa7e1034a93bd1d7251eb1293
 
     return config;
   },
