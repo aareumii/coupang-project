@@ -16,6 +16,9 @@ export const StMain = styled.div`
     z-index: 20;
     position: relative;
     /* margin-bottom: 30px; */
+    @media screen and (max-width: 768px) {
+      width: 90vw;
+    }
   }
   .logo {
     margin-left: 20px;
@@ -24,8 +27,10 @@ export const StMain = styled.div`
     height: 50px;
     cursor: pointer;
     @media screen and (max-width: 768px) {
-      width: 100px;
-      height: 50px;
+      width: 60px;
+      height: 30px;
+      margin-left: 5px;
+      padding-right: 2px;
     }
   }
   .main {
@@ -36,33 +41,10 @@ export const StMain = styled.div`
     @media screen and (max-width: 1024px) {
       width: 70vw;
     }
+    @media screen and (max-width: 768px) {
+      width: 70vw;
+      padding-top: 20px;
+      padding-left: 30px;
+    }
   }
 `;
-
-// const SearchBox = styled.div`
-//   position: relative;
-//   text-align: center;
-//   width: 640px;
-//   height: 30px;
-//   margin: 0 5px;
-//   border: 0.1rem solid #4285f4;
-
-//   .input {
-//     padding-top: 7px;
-
-//     width: 100%;
-//     border: none;
-//     &:focus {
-//       outline: none;
-//     }
-//   }
-// `;
-
-// const ItemListWrap = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   flex-wrap: wrap;
-//   margin-top: 20px;
-//   width: 100%;
-//   height: 330px;
-// `;

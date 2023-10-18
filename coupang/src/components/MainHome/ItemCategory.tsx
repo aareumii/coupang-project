@@ -76,9 +76,9 @@ const CategoryGrid = styled.div`
       margin-bottom: 47px;
     }
     @media screen and (max-width: 768px) {
-      width: 50px;
-      height: 40px;
-      margin-bottom: 47px;
+      width: 60px;
+      height: 50px;
+      margin-bottom: 35px;
     }
   }
   #jam {
@@ -92,8 +92,8 @@ const CategoryGrid = styled.div`
     }
     @media screen and (max-width: 768px) {
       width: 80px;
-      height: 70px;
-      margin-bottom: 28px;
+      height: 80px;
+      margin-bottom: 18px;
     }
   }
   #cake {
@@ -107,9 +107,9 @@ const CategoryGrid = styled.div`
       margin-bottom: 40px;
     }
     @media screen and (max-width: 768px) {
-      width: 60px;
-      height: 40px;
-      margin-bottom: 40px;
+      width: 70px;
+      height: 50px;
+      margin-bottom: 30px;
     }
   }
   img {
@@ -143,6 +143,9 @@ const CategoryGrid = styled.div`
     font-weight: 600;
     @media screen and (max-width: 1024px) {
       font-size: 0.8rem;
+    }
+    @media screen and (max-width: 768px) {
+      font-size: 0.6rem;
     }
   }
   p {

@@ -28,6 +28,9 @@ export const StFilter = styled.div`
       &:hover {
         font-weight: 600;
       }
+      @media screen and (max-width: 768px) {
+        font-size: 0.6rem;
+      }
     }
     .bar {
       border-right: 1px solid #d2d0d0;

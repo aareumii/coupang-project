@@ -23,7 +23,8 @@ const Banner = () => {
         pagination={{ clickable: true }}
         observer={true}
         observeParents={true}
-        navigation
+        // navigation
+
         modules={[Autoplay, Pagination, Navigation]}
       >
         <SwiperSlide>

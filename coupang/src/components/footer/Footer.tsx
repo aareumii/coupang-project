@@ -57,6 +57,10 @@ const FooterContent = styled.div`
   margin-top: 20px;
   display: flex;
   justify-content: space-around;
+  @media screen and (max-width: 768px) {
+    width: 90vw;
+  }
+
   a {
     text-decoration: none;
     color: #555;

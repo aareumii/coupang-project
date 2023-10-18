@@ -45,15 +45,25 @@ const MypageBox = styled.div`
 
 const IconWrapper = styled.div`
   /* position: absolute; */
-  margin-left: 15px;
+
   img {
+    margin-left: 15px;
     width: 50px;
     height: 30px;
     padding-bottom: 5px;
+    @media screen and (max-width: 768px) {
+      width: 50px;
+      height: 30px;
+      margin-left: 0px;
+      margin: 0;
+    }
   }
   p {
     font-size: 0.6rem;
     text-align: center;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
 `;
 
