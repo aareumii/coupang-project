@@ -20,6 +20,7 @@ export const StSearchBox = styled.div`
     font-size: 1rem;
     @media screen and (max-width: 768px) {
       font-size: 0.6rem;
+      height: 80%;
     }
   }
   .search__icon {

@@ -59,7 +59,7 @@ function isLoggedIn() {
 export default Header;
 
 const HeaderWrapper = styled.div`
-  width: 100vw;
+  width: 100%;
   /* margin: auto; */
   height: 2rem;
   background-color: #f0f0f0;

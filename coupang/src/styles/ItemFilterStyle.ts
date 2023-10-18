@@ -7,6 +7,9 @@ export const StFilter = styled.div`
   display: flex;
   align-items: center;
   margin-top: 30px;
+  @media screen and (max-width: 768px) {
+    height: 1.2rem;
+  }
   .filter {
     display: flex;
     gap: 10px;

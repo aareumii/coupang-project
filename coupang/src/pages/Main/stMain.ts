@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const StMain = styled.div`
   position: relative;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  /* overflow-x: hidden;
+  overflow-y: hidden; */
 
   .header {
     width: 75vw;
