@@ -40,7 +40,7 @@ const CateItem = (props: propsType) => {
             <p>무료배송</p>
             <div className="star">
               <img src={평점} className="star__png" />
-              (999+)
+              {props.click}+
             </div>
           </div>
         </div>

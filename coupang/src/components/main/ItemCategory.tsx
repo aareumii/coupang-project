@@ -111,7 +111,7 @@ const CategoryGrid = styled.div`
     @media screen and (max-width: 1024px) {
       width: 90px;
       height: 70px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
     @media screen and (max-width: 768px) {
       width: 60px;
@@ -130,6 +130,9 @@ const CategoryGrid = styled.div`
     border-radius: 50%;
     margin-bottom: 10px;
     text-align: center;
+    &:hover {
+      background-color: #fcdec7;
+    }
 
     &:hover {
       background-color: #fac99c;

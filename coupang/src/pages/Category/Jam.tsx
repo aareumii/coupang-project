@@ -15,6 +15,7 @@ import { Product } from "../../types/item";
 import CateItem from "../../components/category/CateItem";
 import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
+import Footer from "../../components/footer/Footer";
 
 const Jam = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -86,6 +87,9 @@ const Jam = () => {
           ))}
         </ItemListWrap>
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </StCategory>
   );
 };

@@ -15,6 +15,7 @@ import CateItem from "../../components/category/CateItem";
 import CategoryFilter from "../../components/category/CategoryFilter";
 import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
+import Footer from "../../components/footer/Footer";
 
 const Bread = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -87,6 +88,9 @@ const Bread = () => {
           ))}
         </ItemListWrap>
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </StCategory>
   );
 };
