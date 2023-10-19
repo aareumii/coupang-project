@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface ButtonProps {
-  bgColor?: "white" | "blue";
+  bgcolor?: "white" | "blue";
 }
 
 const Wrap = styled.div`
@@ -115,13 +115,13 @@ const Button = styled.button<ButtonProps>`
   transition: all 0.2s ease-in-out;
 
   background-color: ${(props) =>
-    props.bgColor === "white" ? "#fff" : "#0073e9"};
-  color: ${(props) => (props.bgColor === "white" ? "#0073e9" : "#fff")};
+    props.bgcolor === "white" ? "#fff" : "#0073e9"};
+  color: ${(props) => (props.bgcolor === "white" ? "#0073e9" : "#fff")};
 
   &:hover {
     background-color: ${(props) =>
-      props.bgColor === "white" ? "#0073e9" : "#0067D1"};
-    color: ${(props) => (props.bgColor === "white" ? "#fff" : "#fff")};
+      props.bgcolor === "white" ? "#0073e9" : "#0067D1"};
+    color: ${(props) => (props.bgcolor === "white" ? "#fff" : "#fff")};
   }
 `;
 

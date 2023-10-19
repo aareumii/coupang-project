@@ -26,7 +26,6 @@ const Order: FC = () => {
   useEffect(() => {
     getUserData()
       .then((res) => {
-        console.log(res);
         setUserData(res);
       })
       .catch((error) => {
@@ -146,7 +145,7 @@ const Order: FC = () => {
             </span>
           </AgreeBox>
           <st.ButtonWrap>
-            <st.Button bgColor="blue" type="submit">
+            <st.Button bgcolor="blue" type="submit">
               결제하기
             </st.Button>
           </st.ButtonWrap>

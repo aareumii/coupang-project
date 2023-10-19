@@ -50,7 +50,7 @@ const OrderResult: FC = () => {
           )}
           <ExtendedButtonWrap>
             <Link to={"/"}>
-              <st.Button bgColor="blue">홈화면으로</st.Button>
+              <st.Button bgcolor="blue">홈화면으로</st.Button>
             </Link>
           </ExtendedButtonWrap>
         </ResultWrap>

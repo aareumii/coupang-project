@@ -62,7 +62,7 @@ const Cart: FC = () => {
     try {
       await deleteCartItems({ cartProductIdList: cartProductIds });
       dispatch(deleteSelected());
-      console.log("상품 삭제 성공:", cartProductIds);
+      console.log("상품 삭제 성공");
     } catch (error) {
       console.error("상품 삭제 중 오류발생:", error);
     }
@@ -173,9 +173,9 @@ const Cart: FC = () => {
             </PriceWrap>
             <st.ButtonWrap>
               <Link to={"/"}>
-                <ExtendedButton bgColor="white">계속 쇼핑하기</ExtendedButton>
+                <ExtendedButton bgcolor="white">계속 쇼핑하기</ExtendedButton>
               </Link>
-              <ExtendedButton bgColor="blue" onClick={handleBuyButtonClick}>
+              <ExtendedButton bgcolor="blue" onClick={handleBuyButtonClick}>
                 구매하기
               </ExtendedButton>
             </st.ButtonWrap>

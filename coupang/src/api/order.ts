@@ -2,7 +2,6 @@ import axiosClient from "./index";
 
 export const getUserData = async () => {
   const response = await axiosClient.get("/user/myPage/userInfo");
-  console.log(response.data);
   return response.data;
 };
 
