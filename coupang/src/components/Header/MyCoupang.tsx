@@ -36,6 +36,8 @@ const MypageBox = styled.div`
   position: relative;
   display: inline-block;
   cursor: pointer;
+  margin-left: 10px;
+
   &:hover {
     .mypageWrap {
       display: block;
@@ -47,7 +49,6 @@ const IconWrapper = styled.div`
   /* position: absolute; */
 
   img {
-    margin-left: 15px;
     width: 50px;
     height: 30px;
     padding-bottom: 5px;

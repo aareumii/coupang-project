@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import coupang from "../../assets/headerImg/베이크팡.png";
 import { StCategory } from "./stCategory";
-import Header from "../../components/Header/Header";
-import Category from "../../components/Header/Category";
+import Header from "../../components/header/Header";
+import Category from "../../components/header/Category";
 import { FaSearch } from "react-icons/fa";
-import MyCoupang from "../../components/Header/MyCoupang";
-import Cart from "../../components/Header/Cart";
+import MyCoupang from "../../components/header/MyCoupang";
+import Cart from "../../components/header/Cart";
 import { useNavigate } from "react-router-dom"; // useNavigate로 수정
 // import ItemList from '../../components/MainHome/ItemList';
 import { GET_PRODUCT_API } from "../../api/Products";
 import axios from "axios";
 import { Product } from "../../types/item";
 import CateItem from "../../components/category/CateItem";
-import { StFilter } from "../../styles/ItemFilterStyle";
-import { StSearchBox } from "../../styles/searchStyle";
+import { StFilter } from "../../styles/ItemFilter.styled";
+import { StSearchBox } from "../../styles/Search.Styled";
+import Footer from "../../components/footer/Footer";
+import { Link } from "react-router-dom";
+
 
 const Cake = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -39,7 +42,7 @@ const Cake = () => {
 
   const category = products.filter(
     (item: { category: { categoryId: number } }) =>
-      item.category.categoryId === 1
+      item.category.categoryId === 3
   );
 
   return (
@@ -81,11 +84,18 @@ const Cake = () => {
           </div>
         </StFilter>
         <ItemListWrap>
-          {category.map((item: any) => (
-            <CateItem {...item} />
-          ))}
+        {category.map((item: any) => (
+          <div key={item.category.categoryName}> {/* 각 상품에 대한 key는 상위 div에 적용합니다. */}
+            <Link to={`/product/detail/${item.name}`}>
+              <CateItem {...item} />
+            </Link>
+          </div>
+        ))}
         </ItemListWrap>
       </main>
+      <footer>
+        <Footer />
+      </footer>
     </StCategory>
   );
 };
@@ -117,5 +127,4 @@ const ItemListWrap = styled.div`
   flex-wrap: wrap;
   margin: auto;
   width: 100%;
-  height: 350px;
 `;

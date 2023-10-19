@@ -20,7 +20,7 @@ const IconWrapper = styled.div`
   cursor: pointer;
 
   img {
-    margin-left: 10px;
+    /* margin-left: 10px; */
 
     width: 50px;
     height: 30px;
