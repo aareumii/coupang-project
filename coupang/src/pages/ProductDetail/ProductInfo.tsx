@@ -10,18 +10,15 @@ import {
   ProductTextWapper
 } from './ProductInfo.styled';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/slice/productSlice';
+import { Product, addToCart } from '../../redux/slice/productSlice';
 import AddToCartButton from './AddToCartButton';
 import AddToOrderButton from './AddToOrderButton';
 import { fetchProductDetails } from '../../api/getProductApi'; 
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { AxiosError } from 'axios';
-import { setDirectOrder } from '../../redux/slice/cartSlice';
-
 
 type ProductType = {
+  id: number;
   img: string;
   productName: string;
   amount: number;
@@ -37,7 +34,7 @@ const ProductInfo: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   const { productName } = useParams<{ productName: string }>();
-  // const productName = "smartphone22";
+  
 
   useEffect(() => {
     const getProductDetails = async () => {
@@ -46,6 +43,7 @@ const ProductInfo: React.FC = () => {
         
         if (data) { // data의 유효성 검사 추가합니다.
             setProduct({
+              id: data.id,
               img: data.img1,
               productName: data.name,
               amount: data.stockQuantity,
@@ -78,23 +76,20 @@ const ProductInfo: React.FC = () => {
   }
 
   const handleAddToCartClick = async () => {
-    if (!product) return;  // 제품이 없는 경우 무시
+    if (!product) return;
   
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('사용자가 로그인하지 않았습니다.');
-        // 사용자가 로그인하지 않았을 때의 처리 (예: 로그인 페이지로 이동)
-        return;
-      }
+      const addedProduct: Product = {
+        id: product.id,
+        productName: product.productName,
+        price: product.price,
+        amount: quantity,
+        cartItems: [] // 이 필드에 대한 추가 정보가 필요합니다.
+      };
   
-      const response = await addToCart({
-        productId: product.productName,
-        quantity: quantity
-      });
+      dispatch(addToCart(addedProduct));
   
-      console.log('장바구니 추가 응답:', response);
-  
+      console.log('장바구니에 제품 추가:', addedProduct);
     } catch (error) {
       console.error('장바구니에 추가하는 도중 오류 발생:', error);
     }
@@ -104,7 +99,7 @@ const ProductInfo: React.FC = () => {
 
   return (
     <Container>
-    {product?.img ? <ProductImage src={product.img} alt="Product" /> : null}
+      {product?.img ? <ProductImage src={product.img} alt="Product" /> : null}
       <ProductInfoBox>
       <ProductTextWapper>
       <ProductName>{product?.productName}</ProductName>

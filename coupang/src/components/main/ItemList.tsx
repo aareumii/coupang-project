@@ -69,6 +69,8 @@ const ItemList = (props: propsType) => {
           })
           .filter((item: { name: string }) => item.name.includes(props.search))
           .map((product: any) => <ItemCard {...product} />)}
+
+      {/* {검색에러} */}
     </>
   );
 };

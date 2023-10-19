@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import Category from '../../components/Header/Header';
-// import SearchBar from "../../components/Header/SearchBar";
-import Pagination from '../../components/Header/Pagination';
-import coupang from '../../assets/headerImg/베이크팡.png';
-import MyCoupang from '../../components/Header/MyCoupang';
-import Cart from '../../components/Header/Cart';
+import Header from "../../components/header/Header";
+import Category from "../../components/header/Category";
+import Pagination from '../../components/header/Pagination';
+import bakepang from '../../assets/headerImg/베이크팡.png';
+import MyCoupang from '../../components/header/MyCoupang';
+import Cart from '../../components/header/Cart';
 import ProductInfo from './ProductInfo';
 import { StMain } from '../Main/stMain';
 import styled from 'styled-components';
@@ -12,7 +12,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/item';
 import Footer from '../../components/footer/Footer';
-import { StSearchBox } from "../../styles/searchStyle";
+import { StSearchBox } from "../../styles/Search.Styled";
 
 
 
@@ -56,11 +56,12 @@ const ProductDetail = () => {
 
 	return (
 		<StMain>
-		<header>
-		  <Category />
-		  <HeaderBottom>
+		<Header />
+		<header className="header">
+		<Category />
+
 		  <a href="/">
-			<img className="logo" src={coupang} />
+          	<img className="logo" src={bakepang} alt="베이크팡" />
 		  </a>
   
 		  <StSearchBox>
@@ -75,27 +76,20 @@ const ProductDetail = () => {
 			</div>
 		  </StSearchBox>
   
-						  <MyCoupang />
-						  <Cart />
-					  </HeaderBottom>
-				  </header>
+			<MyCoupang />
+			<Cart />
+			</header>
 
-				<main className="main">
-                    <ProductInfo />
-					<Pagination />
-				</main>{' '}
-				<footer className="footer">
-					<Footer />
-				</footer>
+			<main className="main">
+                <ProductInfo />
+				<Pagination />
+			</main>{' '}
+			<footer className="footer">
+				<Footer />
+			</footer>
 			</StMain>
 	);
 };
 
 export default ProductDetail;
 
-const HeaderBottom = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;        
-`;

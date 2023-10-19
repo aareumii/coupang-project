@@ -4,20 +4,20 @@ const BASE_URL = "http://43.201.30.126:8080";
 
 // 제품 상세 정보를 가져오는 함수
 export const fetchProductDetails = async (name: string) => {
-  const GET_PRODUCT_API = `${BASE_URL}/api/product/detail/${name}`;
-  
-  try {
-    const response = await axios.get(GET_PRODUCT_API);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching product details:", error);
-    throw error;
-  }
-};
+    const PRODUCT_API = `${BASE_URL}/api/product/detail/${name}`;
+    
+    try {
+      const response = await axios.get(PRODUCT_API);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+      throw error;
+    }
+  };
 
 export const isAuthenticated = (): boolean => {
     const token = localStorage.getItem('accessToken');
-    return !!token;  // 토큰이 있는 경우 true를 반환하고, 없는 경우 false를 반환합니다.
+    return !!token;  // 토큰이 있는 경우 true 반환, 없는 경우 false 반환
 }
 
 export const getAccessToken = (): string | null => {
@@ -26,7 +26,7 @@ export const getAccessToken = (): string | null => {
 
 
 // 장바구니에 제품을 추가하는 함수
-export const addToCart = async (product: any, quantity: number) => {
+export const fetchAddToCart = async (product: any, quantity: number) => {
     if (!isAuthenticated()) {
         console.error("로그인이 필요합니다.");
         throw new Error("로그인이 필요합니다.");
@@ -36,7 +36,7 @@ export const addToCart = async (product: any, quantity: number) => {
         const token = getAccessToken();
         
         const response = await axios.post(`${BASE_URL}/api/users/cart/products`, {
-            productId: product.productName,
+            productId: product.id, // 제품의 고유 ID로 수정
             quantity: quantity
         }, {
             headers: {
@@ -64,3 +64,4 @@ export const addToCart = async (product: any, quantity: number) => {
         throw e;
     }
 };
+

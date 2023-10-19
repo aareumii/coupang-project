@@ -1,42 +1,40 @@
-import axios, { AxiosInstance } from 'axios';
-
-// 환경 구성 파일 또는 상수 파일에서 BASE_URL 가져오기
-import { BASE_URL } from '../env/development';
+import axios, { AxiosInstance } from "axios";
 
 const axiosClient: AxiosInstance = axios.create({
-	baseURL: BASE_URL,
+  baseURL: process.env.REACT_APP_BASE_URL, // REACT_APP_BASE_URL = "http://43.201.30.126:8080/api"
 });
 
 axiosClient.interceptors.response.use(
-	(response) => {
-		if (response.headers['authorization']) {
-			const accessToken = response.headers['authorization'];
-			localStorage.setItem('accessToken', accessToken);
-		}
-		return response.data;
-	},
-	(error) => {
-		// 여기서 오류 처리를 수행할 수 있습니다.
-		return Promise.reject(error);
-	}
+  (response) => {
+    if (response.headers["authorization"]) {
+      let accessToken = response.headers["authorization"];
+
+      if (accessToken.startsWith("Bearer ")) {
+        accessToken = accessToken.slice(7);
+      }
+
+      localStorage.setItem("accessToken", accessToken);
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 axiosClient.interceptors.request.use(
-	(config) => {
-		const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
+  (config) => {
+    const token = localStorage.getItem("accessToken");
 
-		config.headers['Content-Type'] = 'application/json; charset=utf-8';
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
-		// 로그인 이후의 요청에서 토큰이 있는 경우 해당 토큰을 사용하여 요청을 합니다.
-		if (token) {
-			config.headers['Authorization'] = `Bearer ${token}`;
-		}
-
-		return config;
-	},
-	(error) => {
-		// 여기서 오류 처리를 수행할 수 있습니다.
-		return Promise.reject(error);
-	}
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
+
 export default axiosClient;

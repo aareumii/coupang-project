@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../components/Header/Header";
-import ItemList from "../../components/MainHome/ItemList";
-import Category from "../../components/Header/Category";
-import Pagination from "../../components/Header/Pagination";
-import coupang from "../../assets/headerImg/베이크팡.png";
-import MyCoupang from "../../components/Header/MyCoupang";
-import Cart from "../../components/Header/Cart";
-import ItemCategory from "../../components/MainHome/ItemCategory";
-import Banner from "../../components/MainHome/Banner";
+import Header from "../../components/header/Header";
+import ItemList from "../../components/main/ItemList";
+import Category from "../../components/header/Category";
+import Pagination from "../../components/header/Pagination";
+import bakepang from "../../assets/headerImg/베이크팡.png";
+import MyCoupang from "../../components/header/MyCoupang";
+import Cart from "../../components/header/Cart";
+import ItemCategory from "../../components/main/ItemCategory";
+import Banner from "../../components/main/Banner";
 import axios from "axios";
 import { StMain } from "./stMain";
 import styled from "styled-components";
@@ -15,8 +15,8 @@ import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Product } from "../../types/item";
 import { GET_PRODUCT_API } from "../../api/Products";
-import { StFilter } from "../../styles/ItemFilterStyle";
-import { StSearchBox } from "../../styles/searchStyle";
+import { StFilter } from "../../styles/ItemFilter.styled";
+import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
 
 const Main = () => {
@@ -27,7 +27,7 @@ const Main = () => {
   const [sort, setSort] = useState();
   const [callbackSearch, setcallbackSearch] = useState("");
 
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -63,9 +63,8 @@ const Main = () => {
       <Header />
       <header className="header">
         <Category />
-		<HeaderBottom>
         <a href="/">
-          <img className="logo" src={coupang} />
+          <img className="logo" src={bakepang} alt="베이크팡" />
         </a>
 
         <StSearchBox>
@@ -80,11 +79,10 @@ const Main = () => {
           </div>
         </StSearchBox>
 
-						<MyCoupang />
-						<Cart />
-					</HeaderBottom>
-				</header>
-				<Banner />
+        <MyCoupang />
+        <Cart />
+      </header>
+      <Banner />
 
       <main className="main">
         <ItemCategory />
@@ -133,7 +131,9 @@ const Main = () => {
 
         <Pagination />
       </main>
-      <Footer/>
+      <footer>
+        <Footer />
+      </footer>
     </StMain>
   );
 };
@@ -144,8 +144,4 @@ const ItemListWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-`;
-
-const HeaderBottom = styled.div`
-	display: flex;
 `;

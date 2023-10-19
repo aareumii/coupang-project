@@ -14,6 +14,9 @@ export const StCategory = styled.div`
     z-index: 20;
     position: relative;
     /* margin-bottom: 30px; */
+    @media screen and (max-width: 768px) {
+      width: 90vw;
+    }
   }
   a {
     text-decoration: none;
@@ -32,8 +35,10 @@ export const StCategory = styled.div`
     height: 50px;
     cursor: pointer;
     @media screen and (max-width: 768px) {
-      width: 50px;
-      height: 10px;
+      width: 60px;
+      height: 30px;
+      margin-left: 5px;
+      padding-right: 2px;
     }
   }
   main {
@@ -44,9 +49,17 @@ export const StCategory = styled.div`
     @media screen and (max-width: 1024px) {
       width: 80vw;
     }
+    @media screen and (max-width: 768px) {
+      width: 70vw;
+      padding-top: 20px;
+      padding-left: 20px;
+    }
   }
   .cate__title {
     font-size: large;
     font-weight: 600;
+    @media screen and (max-width: 768px) {
+      font-size: medium;
+    }
   }
 `;

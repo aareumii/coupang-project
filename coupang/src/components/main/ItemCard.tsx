@@ -2,9 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import 평점 from "../../assets/mainImg/평점.png";
 import 로켓 from "../../assets/mainImg/로켓배송.png";
-import { StItemContent } from "../../styles/itemCardStyle";
-import { useNavigate } from 'react-router-dom';
-
+import { StItemContent } from "../../styles/ItemCard.styled";
+import { Link } from "react-router-dom";
 
 interface propsType {
   id: number;
@@ -25,21 +24,19 @@ interface propsType {
 
 const ItemCard = (props: propsType) => {
   console.log(props);
-  const navigate = useNavigate();
-  const handleImageClick = () => {
-    navigate(`/productInfo/${props.name}`);
-  };
   return (
     <>
       <StItemContent key={props.name}>
         <div className="item" key={props.category.categoryName}>
-          <div className="item__img" onClick={handleImageClick}>
+          <div className="item__img">
+          <Link to={`/product/detail/${props.name}`}>
             <img src={props.img1} />
+            </Link>
           </div>
           <div className="itme__contents">
-            <a href="#" className="item__name">
+          <Link to={`/product/${props.name}`} className="item__name">
               {props.name}
-            </a>
+            </Link>
             <div className="item__flex">
               <span className="item__price">{props.price}원</span>
               <img src={로켓} className="png__rocket" />
