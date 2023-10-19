@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface ButtonProps {
-  type?: "white" | "blue";
+  bgColor?: "white" | "blue";
 }
 
 const Wrap = styled.div`
@@ -64,12 +64,6 @@ const TitleWrap = styled.div`
   font-size: 1.6rem;
   font-weight: 500;
   font-weight: bold;
-  /* letter-spacing: -2px;
-  .cart-icon {
-    font-size: 1.85rem;
-    color: #656565;
-    margin-right: 5px;
-  } */
 `;
 
 const StepWrap = styled.div`
@@ -101,82 +95,11 @@ const CurrentStep = styled.div`
   }
 `;
 
-const EmptyCartWrap = styled.div`
-  width: 100%;
-  min-height: 215px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 60px 0;
-  text-align: center;
-  margin-bottom: 30px;
-  background-color: #f4f6fa;
-  p {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: #55575f;
-  }
-`;
-
-const ShoppingButton = styled.button`
-  font-size: 1.25rem;
-  font-weight: 700;
-  display: inline-block;
-  margin: 30px auto 0;
-  width: 200px;
-  line-height: 18px;
-  border: 2px solid #0073e9;
-  border-radius: 4px;
-  padding: 15px 0;
-  text-align: center;
-  background-color: #0073e9;
-  color: #fff;
-  cursor: pointer;
-`;
-
-const TableWrap = styled.div`
-  background: #fafafa;
-`;
-
 const ButtonWrap = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  /* padding: 80px 0 20px; */
 `;
-
-// const ContinueButton = styled.button`
-//   font-size: 1.375rem;
-//   font-weight: 700;
-//   display: inline-block;
-//   margin: 10px;
-//   width: 216px;
-//   line-height: 18px;
-//   border: 2px solid #0073e9;
-//   border-radius: 4px;
-//   padding: 22px 0 19px;
-//   text-align: center;
-//   background-color: #fff;
-//   color: #0073e9;
-//   cursor: pointer;
-// `;
-
-// const BuyButton = styled.button`
-//   font-size: 1.375rem;
-//   font-weight: 700;
-//   display: inline-block;
-//   margin: 10px;
-//   width: 216px;
-//   line-height: 18px;
-//   border: 2px solid #0073e9;
-//   border-radius: 4px;
-//   padding: 22px 0 19px;
-//   text-align: center;
-//   background-color: #0073e9;
-//   color: #fff;
-//   cursor: pointer;
-// `;
 
 const Button = styled.button<ButtonProps>`
   font-size: 1.375rem;
@@ -189,7 +112,27 @@ const Button = styled.button<ButtonProps>`
   padding: 22px 0 19px;
   text-align: center;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 
-  background-color: ${(props) => (props.type === "white" ? "#fff" : "#0073e9")};
-  color: ${(props) => (props.type === "white" ? "#0073e9" : "#fff")};
+  background-color: ${(props) =>
+    props.bgColor === "white" ? "#fff" : "#0073e9"};
+  color: ${(props) => (props.bgColor === "white" ? "#0073e9" : "#fff")};
+
+  &:hover {
+    background-color: ${(props) =>
+      props.bgColor === "white" ? "#0073e9" : "#0067D1"};
+    color: ${(props) => (props.bgColor === "white" ? "#fff" : "#fff")};
+  }
 `;
+
+export {
+  Wrap,
+  Logo,
+  Container,
+  HeaderWrap,
+  TitleWrap,
+  StepWrap,
+  CurrentStep,
+  ButtonWrap,
+  Button,
+};

@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
 import {
   setItems,
   toggleSelectAll,
@@ -13,8 +12,11 @@ import { getCartItems, deleteCartItems } from "../../api/cart";
 import { MdArrowForwardIos } from "react-icons/md";
 import { TiShoppingCart } from "react-icons/ti";
 import bakepang from "../../assets/bakepang.png";
+import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";
 import CartErrorModal from "./CartErrorModal";
+import styled from "styled-components";
+import * as st from "./CartOrder.style";
 
 const Cart: FC = () => {
   const navigate = useNavigate();
@@ -57,7 +59,6 @@ const Cart: FC = () => {
 
   const handleDeleteSelected = async () => {
     const cartProductIds = selectedItems.map((item) => item.cartProductId);
-
     try {
       await deleteCartItems({ cartProductIdList: cartProductIds });
       dispatch(deleteSelected());
@@ -77,23 +78,23 @@ const Cart: FC = () => {
   }, [navigate, selectedItems.length]);
 
   return (
-    <Wrap>
-      <Logo>
+    <st.Wrap>
+      <st.Logo>
         <Link to={"/"}>
           <img src={bakepang} alt="로고" />
         </Link>
-      </Logo>
-      <Container>
-        <HeaderWrap>
-          <TitleWrap>
+      </st.Logo>
+      <st.Container>
+        <st.HeaderWrap>
+          <ExtendedTitleWrap>
             <TiShoppingCart className="cart-icon" />
             <h2>장바구니</h2>
-          </TitleWrap>
-          <StepWrap>
-            <CartStep>
+          </ExtendedTitleWrap>
+          <st.StepWrap>
+            <st.CurrentStep>
               <span>01</span>
               <p>장바구니</p>
-            </CartStep>
+            </st.CurrentStep>
             <span>
               <MdArrowForwardIos color="#afafaf" />
             </span>
@@ -108,17 +109,12 @@ const Cart: FC = () => {
               <span>03</span>
               <p>주문완료</p>
             </div>
-          </StepWrap>
-        </HeaderWrap>
+          </st.StepWrap>
+        </st.HeaderWrap>
 
         {items && items.length === 0 ? (
           // 장바구니 상품 개수가 0인 경우
-          <EmptyCartWrap>
-            <p>장바구니에 담긴 상품이 없습니다.</p>
-            <Link to={"/"}>
-              <ShoppingButton>쇼핑하러 가기</ShoppingButton>
-            </Link>
-          </EmptyCartWrap>
+          <EmptyCart />
         ) : (
           <>
             <TableWrap>
@@ -175,12 +171,14 @@ const Cart: FC = () => {
                 <p>원</p>
               </TotalSumPriceWrap>
             </PriceWrap>
-            <ButtonWrap>
+            <st.ButtonWrap>
               <Link to={"/"}>
-                <ContinueButton>계속 쇼핑하기</ContinueButton>
+                <ExtendedButton bgColor="white">계속 쇼핑하기</ExtendedButton>
               </Link>
-              <BuyButton onClick={handleBuyButtonClick}>구매하기</BuyButton>
-            </ButtonWrap>
+              <ExtendedButton bgColor="blue" onClick={handleBuyButtonClick}>
+                구매하기
+              </ExtendedButton>
+            </st.ButtonWrap>
             {showModal && (
               <CartErrorModal
                 message={modalMessage}
@@ -189,141 +187,20 @@ const Cart: FC = () => {
             )}
           </>
         )}
-      </Container>
-    </Wrap>
+      </st.Container>
+    </st.Wrap>
   );
 };
 
 export default Cart;
 
-const Wrap = styled.div`
-  width: calc(100vw-(100vw - 100%));
-  height: 100%;
-  padding: 10px 0;
-  margin: 0 auto;
-  background-color: #f2f2f2;
-  @media screen and (max-width: 768px) {
-    padding: 0;
-    background-color: transparent;
-    overflow-x: hidden;
-  }
-`;
-
-const Logo = styled.div`
-  width: calc(72vw + 80px);
-  margin: 0 auto;
-  padding: 20px 0 10px;
-  img {
-    width: 140px;
-    margin-left: 20px;
-  }
-  @media screen and (max-width: 1024px) {
-    width: calc(80vw + 80px);
-  }
-  @media screen and (max-width: 768px) {
-    width: 100vw;
-  }
-`;
-const Container = styled.div`
-  width: 72vw;
-  border: 1px solid #e0e0e0;
-  margin: 0 auto 70px;
-  padding: 40px 39px;
-  background: #fff;
-  @media screen and (max-width: 1024px) {
-    width: 80vw;
-  }
-  @media screen and (max-width: 768px) {
-    width: 87vw;
-    border: none;
-    border-top: 1px solid #e0e0e0;
-  }
-`;
-
-const HeaderWrap = styled.div`
-  width: 100%;
-  padding: 20px 0 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-`;
-
-const TitleWrap = styled.div`
-  display: flex;
-  align-items: center;
-  color: #2f2f2f;
-  font-size: 1.6rem;
-  font-weight: 500;
-  font-weight: bold;
+const ExtendedTitleWrap = styled(st.TitleWrap)`
   letter-spacing: -2px;
   .cart-icon {
     font-size: 1.85rem;
     color: #656565;
     margin-right: 5px;
   }
-`;
-
-const StepWrap = styled.div`
-  display: flex;
-  color: #d4d4d4;
-  span {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0 2px;
-  }
-  p {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: bold;
-  }
-`;
-
-const CartStep = styled.div`
-  span {
-    font-size: 1rem;
-    color: #299fe0;
-    font-weight: bold;
-  }
-  p {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #000;
-  }
-`;
-
-const EmptyCartWrap = styled.div`
-  width: 100%;
-  min-height: 215px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 60px 0;
-  text-align: center;
-  margin-bottom: 30px;
-  background-color: #f4f6fa;
-  p {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: #55575f;
-  }
-`;
-
-const ShoppingButton = styled.button`
-  font-size: 1.25rem;
-  font-weight: 700;
-  display: inline-block;
-  margin: 30px auto 0;
-  width: 200px;
-  line-height: 18px;
-  border: 2px solid #0073e9;
-  border-radius: 4px;
-  padding: 15px 0;
-  text-align: center;
-  background-color: #0073e9;
-  color: #fff;
-  cursor: pointer;
 `;
 
 const TableWrap = styled.div`
@@ -346,7 +223,6 @@ const CartAmount = styled.div`
 const CartItemTable = styled.table`
   width: 100%;
   text-align: center;
-
   thead {
     height: 40px;
     line-height: 40px;
@@ -364,7 +240,6 @@ const CartItemTable = styled.table`
   }
   tbody {
     background-color: #fff;
-
     tr {
       border-top: 1px solid #eaeaea;
       border-bottom: 1px solid #eaeaea;
@@ -440,45 +315,6 @@ const SumPrice = styled.div`
   margin-left: 10px;
 `;
 
-const ButtonWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 80px 0 20px;
-`;
-
-const ContinueButton = styled.button`
-  font-size: 1.375rem;
-  font-weight: 700;
-  display: inline-block;
+const ExtendedButton = styled(st.Button)`
   margin: 10px;
-  width: 216px;
-  line-height: 18px;
-  border: 2px solid #0073e9;
-  border-radius: 4px;
-  padding: 22px 0 19px;
-  text-align: center;
-  background-color: #fff;
-  color: #0073e9;
-  cursor: pointer;
 `;
-
-const BuyButton = styled.button`
-  font-size: 1.375rem;
-  font-weight: 700;
-  display: inline-block;
-  margin: 10px;
-  width: 216px;
-  line-height: 18px;
-  border: 2px solid #0073e9;
-  border-radius: 4px;
-  padding: 22px 0 19px;
-  text-align: center;
-  background-color: #0073e9;
-  color: #fff;
-  cursor: pointer;
-`;
-
-// const ExtendedButton = styled(Button)`
-//   margin: 10px;
-// `;

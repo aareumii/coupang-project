@@ -1,6 +1,7 @@
 import React, { FC } from "react";
-import styled from "styled-components";
 import { UserType } from "../../types/user";
+import styled from "styled-components";
+import * as st from "./OrderInfo.style";
 
 type UserProps = {
   userData: UserType;
@@ -8,10 +9,10 @@ type UserProps = {
 
 const ShipInfo: FC<UserProps> = ({ userData }) => {
   return (
-    <Wrap>
-      <Title>받는사람정보</Title>
+    <st.Wrap>
+      <st.Title>받는사람정보</st.Title>
       <div className="table-div">
-        <Table>
+        <ExtendedTable>
           <tbody>
             <tr>
               <th>이름</th>
@@ -39,46 +40,15 @@ const ShipInfo: FC<UserProps> = ({ userData }) => {
               </td>
             </tr>
           </tbody>
-        </Table>
+        </ExtendedTable>
       </div>
-    </Wrap>
+    </st.Wrap>
   );
 };
 
 export default ShipInfo;
 
-const Wrap = styled.div`
-  width: 100%;
-  margin-bottom: 30px;
-`;
-
-const Title = styled.p`
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #373b3f;
-  margin-bottom: 10px;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-top: 2px solid #cecece;
-  font-size: 0.875rem;
-  tr {
-    border-top: 1px solid #ebebeb;
-    border-bottom: 1px solid #ebebeb;
-  }
-  th {
-    width: 120px;
-    font-weight: bold;
-    text-align: right;
-    padding: 14px 10px;
-    border-right: 1px solid #ebebeb;
-    background-color: #f4f4f4;
-  }
-  td {
-    text-align: left;
-    padding: 14px 10px;
-  }
+const ExtendedTable = styled(st.Table)`
   select {
     padding: 3px;
   }
