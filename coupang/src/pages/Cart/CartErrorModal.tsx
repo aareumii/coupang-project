@@ -20,7 +20,7 @@ const CartErrorModal: React.FC<CartErrorModalProps> = ({
         </div>
       </ModalContent>
     </ModalWrapper>,
-    document.getElementById("cartmodal-root")! // HTML에서 modal-root라는 id를 가진 엘리먼트에 렌더링됩니다.
+    document.getElementById("cartmodal-root")! // null 또는 undefined아님을 보장
   );
 };
 

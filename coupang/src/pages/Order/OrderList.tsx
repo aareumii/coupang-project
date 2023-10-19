@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import OrderItem from "./OrderItem";
-import { CartItemType } from "../../types";
+import { CartItemType } from "../../types/cart";
 
 type SelectedItemProps = {
   selectedItems: CartItemType[];
@@ -10,12 +10,11 @@ type SelectedItemProps = {
 const OrderList: FC<SelectedItemProps> = ({ selectedItems }) => {
   return (
     <Wrap>
-      {/* cart에서 선택된 상품들 length로 배송 건수 나타내기 */}
       <Title>배송 {selectedItems.length}건</Title>
       <Table>
         <tbody>
           {selectedItems.map((item) => (
-            <OrderItem key={item.product_id} item={item} />
+            <OrderItem key={item.productId} item={item} />
           ))}
         </tbody>
       </Table>

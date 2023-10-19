@@ -1,114 +1,60 @@
-import React, { FC } from "react";
-import axios from "axios";
+import React, { FC, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
-import { CartItemType } from "../../types";
-
 import {
   toggleSelectItem,
   deleteItem,
   updateItemAmount,
 } from "../../redux/slice/cartSlice";
 import { RootState } from "../../redux/store/store";
+import { deleteCartItems, changeCartItems } from "../../api/cart";
+import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
+import { CartItemType } from "../../types/cart";
 
 type CartItemProps = {
   item: CartItemType;
 };
 
 const CartItem: FC<CartItemProps> = ({ item }) => {
-  const isSoldOut = item.amount > item.stock_quantity;
-
   const dispatch = useDispatch();
 
+  const isSoldOut = item.amount > item.stockQuantity;
   const isSelected = useSelector((state: RootState) =>
     state.cart.selectedItems.some(
-      (selectedItem) => selectedItem.product_id === item.product_id
+      (selectedItem) => selectedItem.productId === item.productId
     )
   );
 
-  //해당 상품을 선택하거나 선택 취소합니다.
-  const handleItemSelect = () => {
+  const handleItemSelect = useCallback(() => {
     dispatch(toggleSelectItem(item));
+  }, [dispatch, item]);
+
+  const handleDelete = async (itemId: number) => {
+    try {
+      await deleteCartItems({ cartProductIdList: [item.cartProductId] });
+      console.log("상품 삭제 성공");
+      dispatch(deleteItem(itemId));
+    } catch (error) {
+      console.error("상품 삭제 중 오류 발생", error);
+    }
   };
 
-  // const handleDelete = async (itemId: number) => {
-  //   try {
-  //     await axios.delete(`YOUR_API_ENDPOINT_HERE/${itemId}`);
-  //     dispatch(deleteItem(itemId));
-  //   } catch (error) {
-  //     console.error("Error deleting the item:", error);
-  //   }
-  // };
-  const handleDelete = (itemId: number) => {
-    console.log("Before delete:", item); // 삭제 전 상태
-    dispatch(deleteItem(itemId));
-    console.log("After delete:", item); // 삭제 후 상태
-  };
-
-  // const handleAmountChange = async (changeType: "increment" | "decrement") => {
-  //   const updatedAmount = changeType === "increment" ? item.amount + 1 : item.amount - 1;
-
-  //   if(updatedAmount > 0) {
-  //     try {
-  //       await axios.put(`/api/users/${USER_ID_HERE}/cart`, {
-  //         id: item.id,
-  //         amount: updatedAmount
-  //       });
-  //       dispatch(updateItemAmount({ id: item.id, amount: updatedAmount }));
-  //     } catch (error) {
-  //       console.error(`Error ${changeType}ing the item amount:`, error);
-  //     }
-  //   }
-  // };
-
-  // // 감소시켜서 수량 0이되면 장바구니이ㅔ서 삭제되도록
-  // const handleAmountChange = async (changeType: "increment" | "decrement") => {
-  //   const updatedAmount = changeType === "increment" ? item.amount + 1 : item.amount - 1;
-
-  //   if (updatedAmount > 0) {
-  //     try {
-  //       await axios.put(`/api/users/${USER_ID_HERE}/cart`, {
-  //         id: item.id,
-  //         amount: updatedAmount
-  //       });
-  //       dispatch(updateItemAmount({ id: item.id, amount: updatedAmount }));
-  //     } catch (error) {
-  //       console.error(`Error ${changeType}ing the item amount:`, error);
-  //     }
-  //   } else {
-  //     try {
-  //       // 수량이 0이 되면, 해당 아이템을 삭제
-  //       await axios.delete(`/api/users/${USER_ID_HERE}/cart/${item.id}`);
-  //       dispatch(deleteItem(item.id));
-  //     } catch (error) {
-  //       console.error(`Error deleting the item:`, error);
-  //     }
-  //   }
-  // };
-
-  const handleAmountChange = (changeType: "increment" | "decrement") => {
+  const handleAmountChange = async (changeType: "increment" | "decrement") => {
     const updatedAmount =
       changeType === "increment" ? item.amount + 1 : item.amount - 1;
-
-    if (updatedAmount > 0) {
-      // API 호출 부분을 주석 처리하고
-      // await axios.put(`/api/users/${USER_ID_HERE}/cart`, {
-      //   id: item.id,
-      //   amount: updatedAmount
-      // });
-
-      dispatch(
-        updateItemAmount({
-          product_id: item.product_id,
-          amount: updatedAmount,
-        })
-      );
-
-      // 콘솔에 현재 수량과 변경 후 수량을 출력합니다.
-      console.log(
-        `Item ID: ${item.product_id}, Previous Amount: ${item.amount}, Updated Amount: ${updatedAmount}`
-      );
+    if (updatedAmount === 0) {
+      handleDelete(item.productId);
+      return;
+    }
+    try {
+      const payload = {
+        cartProductId: item.cartProductId,
+        amount: updatedAmount,
+      };
+      await changeCartItems(payload);
+      dispatch(updateItemAmount(payload));
+    } catch (error) {
+      console.error("상품 수량 변경 중 오류 발생", error);
     }
   };
 
@@ -125,28 +71,24 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
           />
         </td>
         <td rowSpan={2}>
-          <ProductImg src={item.img1} alt="임시 이미지" />
+          <ProductImg src={item.productImage} alt="임시 이미지" />
         </td>
-        <ProductInfo colSpan={3}>{item.product_name}</ProductInfo>
+        <ProductInfo colSpan={3}>{item.productName}</ProductInfo>
         <PriceInfo rowSpan={2}>
           {isSoldOut ? (
             <SoldOutText>품절</SoldOutText>
           ) : (
-            `${item.price * item.amount}원`
+            `${item.productPrice * item.amount}원`
           )}
         </PriceInfo>
-        {/* <PriceInfo rowSpan={2}>
-          {item.shippingprice === 0 ? "무료" : `${item.shippingprice}원`}
-        </PriceInfo> */}
       </tr>
       <tr>
-        <ProductInfo>{item.price}원</ProductInfo>
+        <ProductInfo>{item.productPrice}원</ProductInfo>
         <td>
           <AmountBox>
             <button onClick={() => handleAmountChange("increment")}>
               <MdKeyboardArrowUp />
             </button>
-            {/* <p>{item.amount}</p> */}
             <input type="number" value={item.amount} readOnly />
             <button onClick={() => handleAmountChange("decrement")}>
               <MdKeyboardArrowDown />
@@ -154,7 +96,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
           </AmountBox>
         </td>
         <td>
-          <DeleteButton onClick={() => handleDelete(item.product_id)}>
+          <DeleteButton onClick={() => handleDelete(item.productId)}>
             X
           </DeleteButton>
         </td>

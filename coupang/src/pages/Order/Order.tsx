@@ -1,21 +1,35 @@
 import React, { FC, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import {
+  resetOrder,
+  deleteSelected,
+  resetSelectedItems,
+  deleteOrderedItems,
+} from "../../redux/slice/cartSlice";
+import { RootState } from "../../redux/store/store";
 import { MdArrowForwardIos } from "react-icons/md";
-import bakepang from "../../assets/headerImg/Bakepang.png";
+import bakepang from "../../assets/bakepang.png";
 import BuyerInfo from "./BuyerInfo";
 import ShipInfo from "./ShipInfo";
 import OrderList from "./OrderList";
 import Payment from "./Payment";
-import { UserType, CartItemType } from "../../types";
-
-import { setItems } from "../../redux/slice/cartSlice";
+import { CartItemType } from "../../types/cart";
+import { UserType } from "../../types/user";
+import { postOrder } from "../../api/order"; //getUserData 추가
+import Footer from "../../components/footer/Footer";
 
 const Order: FC = () => {
   const dispatch = useDispatch();
-  const [userdata, setUserData] = useState<UserType | null>(null);
+  const navigate = useNavigate();
+
+  const [userData, setUserData] = useState<UserType | null>(null);
+  const directOrderItem = useSelector((state: RootState) => state.cart.order);
+  const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
+  const [totalOrderAmount, setTotalOrderAmount] = useState<number>(0);
+  const [hasOrdered, setHasOrdered] = useState(false);
 
   useEffect(() => {
     axios
@@ -24,68 +38,84 @@ const Order: FC = () => {
       )
       .then((res) => {
         const data = res.data;
-        console.log(data.profile);
-        setUserData(data.profile);
+        setUserData(data);
       })
       .catch((error) => {
-        console.error("사용자 정보를 불러오던 중 오류 발생", error);
+        console.error("사용자 정보 가져오는 중 오류발생", error);
       });
   }, []);
 
-  // const dispatch = useDispatch();
-
-  const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
-  const [totalOrderAmount, setTotalOrderAmount] = useState<number>(0);
-
-  useEffect(() => {
-    const savedSelectedItems = sessionStorage.getItem("selectedItems");
-    if (savedSelectedItems) {
-      const parsedItems: CartItemType[] = JSON.parse(savedSelectedItems);
-      setSelectedItems(parsedItems);
-    }
-
-    const savedTotalOrderAmount = sessionStorage.getItem("totalOrderAmount");
-    if (savedTotalOrderAmount) {
-      const parsedTotalOrderAmount = JSON.parse(savedTotalOrderAmount);
-      setTotalOrderAmount(parsedTotalOrderAmount);
-    }
-  }, []);
-
-  // const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   if (!userdata) {
-  //     console.error("사용자 데이터가 없습니다.");
-  //     return;
-  //   }
-
-  //   axios
-  //     .post(`/users/${userdata.id}/payments`, {
-  //       userId: userdata?.id,
-  //       address: userdata?.address,
-  //       OrderItem: selectedItems,
-  //       total_price: totalOrderAmount,
-  //     })
-  //     .then((Response) => {
-  //       // 주문 성공 시 처리
-  //       console.log("주문이 성공적으로 완료되었습니다.");
-
-  //       // 성공적으로 주문이 완료되면 selectedItems와 totalOrderAmount 초기화
-  //       dispatch(setItems([]));
+  // useEffect(() => {
+  //   getUserData()
+  //     .then((res) => {
+  //       // const data = res.data;
+  //       console.log(res);
+  //       setUserData(res);
   //     })
   //     .catch((error) => {
-  //       // 주문 실패 시 처리
-  //       console.error("주문을 처리하는 중 오류가 발생했습니다.", error);
+  //       console.error("사용자 정보를 불러오던 중 오류 발생", error);
   //     });
-  //    sessionStorage.removeItem("totalOrderAmount");
-  //    sessionStorage.removeItem("selectedItems");
-  //};
+  // }, []);
+
+  useEffect(() => {
+    if (directOrderItem.length > 0) {
+      setSelectedItems(directOrderItem);
+      const totalAmount = directOrderItem.reduce(
+        (acc, item) => acc + item.amount * item.productPrice,
+        0
+      );
+      setTotalOrderAmount(totalAmount);
+    } else {
+      const savedOrderItem = sessionStorage.getItem("directOrderItem");
+      const savedSelectedItems = sessionStorage.getItem("selectedItems");
+      const savedTotalOrderAmount = sessionStorage.getItem("totalOrderAmount");
+
+      if (savedOrderItem) {
+        const parsedOrderItem: CartItemType = JSON.parse(savedOrderItem);
+        setSelectedItems([parsedOrderItem]);
+        const totalAmount =
+          parsedOrderItem.amount * parsedOrderItem.productPrice;
+        setTotalOrderAmount(totalAmount);
+      } else if (savedSelectedItems) {
+        const parsedItems: CartItemType[] = JSON.parse(savedSelectedItems);
+        setSelectedItems(parsedItems);
+        if (savedTotalOrderAmount) {
+          const parsedTotalOrderAmount = JSON.parse(savedTotalOrderAmount);
+          setTotalOrderAmount(parsedTotalOrderAmount);
+        }
+      }
+    }
+  }, [directOrderItem]);
 
   const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("User Data:", userdata);
-    console.log("Selected Items:", selectedItems);
+    if (!userData) {
+      console.error("사용자 데이터가 없습니다.");
+      return;
+    }
+    console.log("Ordering the following items:", selectedItems);
+    postOrder(selectedItems.map((item) => item.cartProductId))
+      .then((res) => {
+        console.log(res, "주문 성공");
+        dispatch(resetOrder());
+        dispatch(deleteOrderedItems(selectedItems));
+        navigate("/order/result?success=true");
+      })
+      .catch((error) => {
+        console.error("주문 중 오류 발생", error);
+        navigate("/order/result?success=false");
+      });
+    setHasOrdered(true);
+    sessionStorage.clear();
   };
+
+  useEffect(() => {
+    return () => {
+      if (!hasOrdered) {
+        sessionStorage.removeItem("directOrderItem");
+      }
+    };
+  }, [hasOrdered]);
 
   return (
     <Wrap>
@@ -121,13 +151,13 @@ const Order: FC = () => {
           </StepWrap>
         </HeaderWrap>
         <Form onSubmit={handlePayment}>
-          {userdata && (
+          {userData && (
             <ContentsWrap>
-              <BuyerInfo userdata={userdata} />
-              <ShipInfo userdata={userdata} />
+              <BuyerInfo userData={userData} />
+              <ShipInfo userData={userData} />
               <OrderList selectedItems={selectedItems} />
               <Payment
-                userdata={userdata}
+                userData={userData}
                 selectedItems={selectedItems}
                 totalOrderAmount={totalOrderAmount}
               />
@@ -152,10 +182,15 @@ const Order: FC = () => {
 export default Order;
 
 const Wrap = styled.div`
-  width: 100%;
+  width: calc(100vw-(100vw - 100%));
+  height: 100%;
   padding: 10px 0;
   margin: 0 auto;
   background-color: #f2f2f2;
+  @media screen and (max-width: 768px) {
+    padding: 0;
+    background-color: transparent;
+  }
 `;
 
 const Logo = styled.div`
@@ -165,6 +200,12 @@ const Logo = styled.div`
   img {
     width: 140px;
   }
+  @media screen and (max-width: 1024px) {
+    width: calc(80vw + 80px);
+  }
+  @media screen and (max-width: 768px) {
+    width: 100vw;
+  }
 `;
 const Container = styled.div`
   width: 72vw;
@@ -172,6 +213,14 @@ const Container = styled.div`
   margin: 0 auto 70px;
   padding: 40px 39px;
   background: #fff;
+  @media screen and (max-width: 1024px) {
+    width: 80vw;
+  }
+  @media screen and (max-width: 768px) {
+    width: 87vw;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+  }
 `;
 
 const HeaderWrap = styled.div`

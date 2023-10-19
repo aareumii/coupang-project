@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import cartReducer from "../slice/cartSlice";
+import { sessionStorageMiddleware } from "../slice/sessionStorageMiddleware";
 
 export const rootReducer = combineReducers({
   cart: cartReducer,
@@ -7,6 +8,8 @@ export const rootReducer = combineReducers({
 
 const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(sessionStorageMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

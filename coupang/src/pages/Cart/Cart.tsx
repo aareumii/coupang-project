@@ -1,15 +1,7 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { MdArrowForwardIos } from "react-icons/md";
-import { TiShoppingCart } from "react-icons/ti";
-import bakepang from "../../assets/headerImg/Bakepang.png";
-import CartItem from "./CartItem";
-import CartErrorModal from "./CartErrorModal";
-import { CartItemType } from "../../types";
-
 import {
   setItems,
   toggleSelectAll,
@@ -17,13 +9,17 @@ import {
   resetSelectedItems,
 } from "../../redux/slice/cartSlice";
 import { RootState } from "../../redux/store/store";
+import { getCartItems, deleteCartItems } from "../../api/cart";
+import { MdArrowForwardIos } from "react-icons/md";
+import { TiShoppingCart } from "react-icons/ti";
+import bakepang from "../../assets/bakepang.png";
+import CartItem from "./CartItem";
+import CartErrorModal from "./CartErrorModal";
+import Footer from "../../components/footer/Footer";
 
 const Cart: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [cartdata, setCartData] = useState<CartItemType[] | null>(null);
-
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
@@ -32,79 +28,54 @@ const Cart: FC = () => {
     (state: RootState) => state.cart.selectedItems
   );
 
-  const isAllChecked = items.every(
+  const isAllChecked = items?.every(
     (item) =>
-      item.amount > item.stock_quantity ||
+      item.amount > item.stockQuantity ||
       selectedItems.some(
-        (selectedItem) => selectedItem.product_id === item.product_id
+        (selectedItem) => selectedItem.productId === item.productId
       )
   );
 
-  // 총 주문금액 계산
   const totalOrderAmount = selectedItems.reduce(
-    (acc, item) => acc + item.price * item.amount,
+    (acc, item) => acc + item.productPrice * item.amount,
     0
   );
 
   useEffect(() => {
-    // 선택한 아이템을 초기화
     dispatch(resetSelectedItems());
-    sessionStorage.removeItem("selectedItems");
-
-    axios
-      .get(
-        "https://3c2167fb-e55d-4327-8405-a650c719e040.mock.pstmn.io/user/carts"
-      )
-      .then((res) => {
-        const data = res.data;
-        console.log(data.carts);
-        setCartData(data.carts);
-        dispatch(setItems(data.carts));
+    getCartItems()
+      .then((data) => {
+        dispatch(setItems(data.productList));
       })
       .catch((error) => {
-        console.error("장바구니 상품을 불러오던 중 오류 발생", error);
+        console.error("장바구니 상품 가져오는 중 오류발생", error);
       });
   }, [dispatch]);
 
-  // sessionStorage에 저장
-  sessionStorage.setItem("selectedItems", JSON.stringify(selectedItems));
-  sessionStorage.setItem("totalOrderAmount", JSON.stringify(totalOrderAmount));
-
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     dispatch(toggleSelectAll());
-  };
+  }, [dispatch]);
 
-  console.log(selectedItems);
-
-  console.log(isAllChecked, selectedItems.length, items.length);
-
-  // const handleDeleteSelected = async () => {
-  //   try {
-  //     for (let item of selectedItems) {
-  //       await axios.delete(`YOUR_API_ENDPOINT_HERE/${item.id}`);
-  //     }
-
-  //     dispatch(deleteSelected());
-  //   } catch (error) {
-  //     console.error("선택한 상품 삭제 중 오류 발생", error);
-  //   }
-  // };
   const handleDeleteSelected = async () => {
-    console.log("Before delete selected items:", items); // 삭제 전
-    dispatch(deleteSelected());
-    console.log("After delete selected items:", items); // 삭제 후
+    const cartProductIds = selectedItems.map((item) => item.cartProductId);
+
+    try {
+      await deleteCartItems({ cartProductIdList: cartProductIds });
+      dispatch(deleteSelected());
+      console.log("상품 삭제 성공:", cartProductIds);
+    } catch (error) {
+      console.error("상품 삭제 중 오류발생:", error);
+    }
   };
 
-  const handleBuyButtonClick = () => {
+  const handleBuyButtonClick = useCallback(() => {
     if (selectedItems.length === 0) {
-      // 선택한 상품이 없을 때 모달 표시
       setModalMessage("상품을 선택해주세요.");
       setShowModal(true);
     } else {
-      // 선택한 상품이 있을 때 주문/결제 페이지로 이동
       navigate("/order");
     }
-  };
+  }, [navigate, selectedItems.length]);
 
   return (
     <Wrap>
@@ -141,8 +112,8 @@ const Cart: FC = () => {
           </StepWrap>
         </HeaderWrap>
 
-        {cartdata && cartdata.length === 0 ? (
-          // 조건 1: 장바구니 상품 개수가 0인 경우
+        {items && items.length === 0 ? (
+          // 장바구니 상품 개수가 0인 경우
           <EmptyCartWrap>
             <p>장바구니에 담긴 상품이 없습니다.</p>
             <Link to={"/"}>
@@ -153,8 +124,8 @@ const Cart: FC = () => {
           <>
             <TableWrap>
               <CartAmount>
-                {cartdata !== null && (
-                  <p>장바구니에 담긴 상품 &#40; {cartdata.length} &#41;</p>
+                {items !== null && (
+                  <p>장바구니에 담긴 상품 &#40; {items.length} &#41;</p>
                 )}
               </CartAmount>
               <CartItemTable>
@@ -165,7 +136,6 @@ const Cart: FC = () => {
                   <col width="10%" />
                   <col width="4%" />
                   <col width="15%" />
-                  {/* <col width="10%" /> */}
                 </colgroup>
                 <thead>
                   <tr>
@@ -180,12 +150,11 @@ const Cart: FC = () => {
                     </th>
                     <th colSpan={3}>상품정보</th>
                     <th>상품금액</th>
-                    {/* <th>배송비</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {cartdata?.map((item) => (
-                    <CartItem key={item.product_id} item={item} />
+                  {items?.map((item) => (
+                    <CartItem key={item.cartProductId} item={item} />
                   ))}
                 </tbody>
               </CartItemTable>
@@ -201,18 +170,6 @@ const Cart: FC = () => {
               <button onClick={handleDeleteSelected}>선택삭제</button>
             </SelectWrap>
             <PriceWrap>
-              {/* <TotalPriceWrap>
-            <p>총 상품가격</p>
-            <Price>14,000</Price>
-            <p>원</p>
-          </TotalPriceWrap>
-          <CalculateSign>+</CalculateSign>
-          <TotalShippingPriceWrap>
-            <p>총 배송비</p>
-            <Price>0</Price>
-            <p>원</p>
-          </TotalShippingPriceWrap>
-          <CalculateSign>=</CalculateSign> */}
               <TotalSumPriceWrap>
                 <p>총 주문금액</p>
                 <SumPrice>{totalOrderAmount}</SumPrice>
@@ -241,12 +198,15 @@ const Cart: FC = () => {
 export default Cart;
 
 const Wrap = styled.div`
-  width: 100%;
-  /* height: 100vh; */
+  width: calc(100vw-(100vw - 100%));
   height: 100%;
   padding: 10px 0;
   margin: 0 auto;
   background-color: #f2f2f2;
+  @media screen and (max-width: 768px) {
+    padding: 0;
+    background-color: transparent;
+  }
 `;
 
 const Logo = styled.div`
@@ -256,6 +216,12 @@ const Logo = styled.div`
   img {
     width: 140px;
   }
+  @media screen and (max-width: 1024px) {
+    width: calc(80vw + 80px);
+  }
+  @media screen and (max-width: 768px) {
+    width: 100vw;
+  }
 `;
 const Container = styled.div`
   width: 72vw;
@@ -263,6 +229,14 @@ const Container = styled.div`
   margin: 0 auto 70px;
   padding: 40px 39px;
   background: #fff;
+  @media screen and (max-width: 1024px) {
+    width: 80vw;
+  }
+  @media screen and (max-width: 768px) {
+    width: 87vw;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+  }
 `;
 
 const HeaderWrap = styled.div`
@@ -319,9 +293,13 @@ const CartStep = styled.div`
 
 const EmptyCartWrap = styled.div`
   width: 100%;
-  padding: 20px 0;
-  text-align: center;
+  min-height: 215px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 60px 0;
+  text-align: center;
   margin-bottom: 30px;
   background-color: #f4f6fa;
   p {
@@ -441,44 +419,6 @@ const PriceWrap = styled.div`
   text-align: center;
 `;
 
-// const TotalPriceWrap = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   margin-right: 10px;
-//   p {
-//     font-size: 0.875rem;
-//     line-height: 17px;
-//     color: #555;
-//     text-align: center;
-//   }
-// `;
-
-// const CalculateSign = styled.span`
-//   font-size: 1rem;
-//   font-weight: 700;
-//   color: #666;
-// `;
-
-// const Price = styled.div`
-//   padding: 0 4px 0 5px;
-//   font: 700 17px/17px tahoma;
-//   color: #111;
-// `;
-
-// const TotalShippingPriceWrap = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   margin-right: 10px;
-//   margin-left: 10px;
-//   p {
-//     font-size: 0.875rem;
-//     line-height: 17px;
-//     color: #555;
-//     text-align: center;
-//   }
-// `;
 const TotalSumPriceWrap = styled.div`
   display: flex;
   justify-content: center;

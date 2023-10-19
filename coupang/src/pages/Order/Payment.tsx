@@ -1,32 +1,39 @@
 import React, { FC, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { CartItemType, UserType } from "../../types";
+import {
+  resetOrder,
+  deleteSelected,
+  deleteOrderedItems,
+} from "../../redux/slice/cartSlice";
+import { loadTossPayments } from "@tosspayments/payment-sdk";
+import { CartItemType } from "../../types/cart";
+import { UserType } from "../../types/user";
 import tosspay from "../../assets/tosspay.png";
 
-import { loadTossPayments } from "@tosspayments/payment-sdk";
+import { postOrder } from "../../api/order";
 
 type UserProps = {
-  userdata: UserType;
+  userData: UserType;
   selectedItems: CartItemType[];
   totalOrderAmount: number;
 };
 
 const Payment: FC<UserProps> = ({
-  userdata,
+  userData,
   selectedItems,
   totalOrderAmount,
 }) => {
-  const [selectedPayment, setSelectedPayment] = useState("계좌이체");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const [selectedPayment, setSelectedPayment] = useState("계좌이체");
   const [accountNumber, setAccountNumber] = useState("");
   const [accountValid, setAccountValid] = useState(true);
 
-  const navigate = useNavigate();
-
   const handlePaymentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedPayment(e.target.value);
-    // 결제 방법이 변경될 때, 계좌번호 초기화 및 에러 상태 초기화
     setAccountNumber("");
     setAccountValid(true);
   };
@@ -34,97 +41,30 @@ const Payment: FC<UserProps> = ({
   const handleAccountNumberChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    // 모두 숫자
     const isNumber = /^[0-9]*$/.test(e.target.value);
-    // 모두 숫자이고 최대 14개인지
     if (isNumber && e.target.value.length <= 14) {
       setAccountNumber(e.target.value);
     }
   };
-  // 입력된 계좌번호 값이 11개 이하이고 onBlur시 에러 메시지 띄우기
+
   const validateAccountNumber = () => {
     if (accountNumber.length === 0) {
       setAccountValid(true);
     } else if (accountNumber.length < 11) {
       setAccountValid(false);
+      setAccountNumber("");
     } else {
       setAccountValid(true);
     }
   };
 
-  // // 토스 onclick으로 해보기
-  // const handleTossPay = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-
-  //   const tossClientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
-
-  //   if (!tossClientKey) {
-  //     console.error("토스 클라이언트 키가 설정되지 않았습니다.");
-  //     return;
-  //   }
-
-  //   const tossPayment = await loadTossPayments(tossClientKey);
-
-  //   tossPayment
-  //     .requestPayment("카드", {
-  //       amount: totalOrderAmount,
-  //       orderId: Math.random().toString(36).slice(2),
-  //       orderName: "주문",
-  //       customerName: userdata.name,
-  //     })
-  //     .then(async function (data) {
-  //       // 결제 승인 API 호출
-  //       const { orderId, paymentKey, amount } = data;
-  //       const secretKey = process.env.REACT_APP_TOSS_SECRET_KEY;
-
-  //       const url = `https://api.tosspayments.com/v1/payments/confirm`;
-  //       const basicToken = Buffer.from(`${secretKey}:`, "utf-8").toString(
-  //         "base64"
-  //       );
-
-  //       const confirmResponse = fetch(url, {
-  //         method: "post",
-  //         body: JSON.stringify({
-  //           amount,
-  //           orderId,
-  //           paymentKey,
-  //         }),
-  //         headers: {
-  //           Authorization: `Basic ${basicToken}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }).then((response) => response.json());
-  //       console.log("confirmResponse", confirmResponse);
-
-  //       // const today = new Date();
-  //       // const date = today.toDateString();
-
-  //       // const paymentData = {
-  //       //   userId: userdata.id,
-  //       //   userEmail: userdata.email,
-  //       //   order_date: date,
-  //       //   orderAmount: amount,
-  //       //   orderStatus: "주문수락",
-  //       //   OrderItem: selectedItems,
-  //       // };
-  //     })
-  //     .catch((error) => {
-  //       console.error("토스 결제 중 오류발생,", error);
-  //       if (error.code === "USER_CANCEL") {
-  //         console.error("결제창이 닫아졌습니다.");
-  //       }
-  //     });
-  // };
   const handleTossPay = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
     const tossClientKey = process.env.REACT_APP_TOSS_CLIENT_KEY;
-
     if (!tossClientKey) {
       console.error("토스 클라이언트 키가 설정되지 않았습니다.");
       return;
     }
-
     const tossPayment = await loadTossPayments(tossClientKey);
 
     tossPayment
@@ -132,10 +72,9 @@ const Payment: FC<UserProps> = ({
         amount: totalOrderAmount,
         orderId: Math.random().toString(36).slice(2),
         orderName: "주문",
-        customerName: userdata.name,
+        customerName: userData.name,
       })
       .then(async function (data) {
-        // 결제 승인 API 호출
         const { orderId, paymentKey, amount } = data;
         const secretKey = process.env.REACT_APP_TOSS_SECRET_KEY;
 
@@ -155,7 +94,19 @@ const Payment: FC<UserProps> = ({
           },
         }).then((response) => response.json());
         console.log("confirmResponse", confirmResponse);
-        // 결제 성공
+
+        postOrder(selectedItems.map((item) => item.cartProductId))
+          .then((res) => {
+            console.log(res, "주문 성공");
+            dispatch(resetOrder());
+            dispatch(deleteOrderedItems(selectedItems));
+            navigate("/order/result?success=true");
+          })
+          .catch((error) => {
+            console.error("주문 중 오류 발생", error);
+            navigate("/order/result?success=false");
+          });
+
         navigate("/order/result?success=true");
       })
       .catch((error) => {
@@ -163,12 +114,9 @@ const Payment: FC<UserProps> = ({
         if (error.code === "USER_CANCEL") {
           console.error("결제창이 닫아졌습니다.");
         }
-        // 결제 실패
         navigate("/order/result?success=false");
       });
-
-    sessionStorage.removeItem("totalOrderAmount");
-    sessionStorage.removeItem("selectedItems");
+    sessionStorage.clear();
   };
 
   return (
@@ -176,14 +124,6 @@ const Payment: FC<UserProps> = ({
       <Title>결제정보</Title>
       <Table>
         <tbody>
-          {/* <tr>
-            <th>총상품가격</th>
-            <td>50000원</td>
-          </tr>
-          <tr>
-            <th>배송비</th>
-            <td>3000원</td>
-          </tr> */}
           <tr>
             <th>총결제금액</th>
             <td>{totalOrderAmount}원</td>
@@ -201,16 +141,6 @@ const Payment: FC<UserProps> = ({
                     onChange={handlePaymentChange}
                   />
                   <label htmlFor="계좌이체">계좌이체</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    id="쿠페이머니"
-                    value="쿠페이머니"
-                    checked={selectedPayment === "쿠페이머니"}
-                    onChange={handlePaymentChange}
-                  />
-                  <label htmlFor="쿠페이머니">쿠페이머니</label>
                 </div>
                 <div>
                   <input
@@ -241,20 +171,9 @@ const Payment: FC<UserProps> = ({
                         onChange={handleAccountNumberChange}
                         onBlur={validateAccountNumber}
                         placeholder="숫자만 입력하세요"
+                        required={selectedPayment === "계좌이체"}
                       />
                     </div>
-                  </div>
-                )}
-
-                {selectedPayment === "쿠페이머니" && (
-                  <div className="paymoney">
-                    <div className="paymoney-info">
-                      <span>잔액</span>
-                      <span>{userdata.paymoney}원</span>
-                    </div>
-                    <p>
-                      * 잔액이 부족할 경우, 정상적인 결제가 이루어지지 않습니다.
-                    </p>
                   </div>
                 )}
 

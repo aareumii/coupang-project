@@ -1,12 +1,16 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { UserType } from "../../types";
+import { UserType } from "../../types/user";
 
 type UserProps = {
-  userdata: UserType;
+  userData: UserType;
 };
 
-const BuyerInfo: FC<UserProps> = ({ userdata }) => {
+function formatPhoneNumber(phone: string) {
+  return phone.slice(0, 3) + "-" + phone.slice(3, 7) + "-" + phone.slice(7);
+}
+
+const BuyerInfo: FC<UserProps> = ({ userData }) => {
   return (
     <Wrap>
       <Title>구매자정보</Title>
@@ -14,15 +18,15 @@ const BuyerInfo: FC<UserProps> = ({ userdata }) => {
         <tbody>
           <tr>
             <th>이름</th>
-            <td>{userdata.name}</td>
+            <td>{userData.name}</td>
           </tr>
           <tr>
             <th>이메일</th>
-            <td>{userdata.email}</td>
+            <td>{userData.email}</td>
           </tr>
           <tr>
             <th>휴대폰 번호</th>
-            <td>{userdata.phone}</td>
+            <td>{formatPhoneNumber(userData.phoneNumber)}</td>
           </tr>
         </tbody>
       </Table>

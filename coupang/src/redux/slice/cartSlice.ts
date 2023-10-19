@@ -1,16 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CartItemType } from "../../types";
+import { CartItemType } from "../../types/cart";
 
-// 선택된 아이템들을 sessionStorage에 저장하는 함수
-const saveToSessionStorage = (selectedItems: CartItemType[]) => {
-  sessionStorage.setItem("selectedItems", JSON.stringify(selectedItems));
-};
-
-// sessionStorage에서 선택된 아이템들을 불러오는 함수
-const loadFromSessionStorage = (): CartItemType[] => {
-  const savedData = sessionStorage.getItem("selectedItems");
-  return savedData ? JSON.parse(savedData) : [];
-};
+import { current } from "@reduxjs/toolkit";
 
 declare interface CartState {
   items: CartItemType[];
@@ -18,20 +9,19 @@ declare interface CartState {
   order: CartItemType[];
 }
 
-//items는 장바구니 데이터, selectedItems는 현재 장바구니에서 선택된 데이터, order는 결제페이지에서 확인하는 데이터입니다.
 const initialState: CartState = {
-  items: [], //장바구니에 보여질화면
-  selectedItems: loadFromSessionStorage(),
-  order: [], //결제화면에 보여줄 아이템들
+  items: [],
+  selectedItems: [],
+  order: [],
 };
 
 const allAvailableItemsSelected = (state: CartState) => {
   const availableItems = state.items.filter(
-    (item) => item.amount <= item.stock_quantity
+    (item) => item.amount <= item.stockQuantity
   );
   return availableItems.every((item) =>
     state.selectedItems.some(
-      (selectedItem) => selectedItem.product_id === item.product_id
+      (selectedItem) => selectedItem.productId === item.productId
     )
   );
 };
@@ -40,6 +30,9 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    setDirectOrder: (state, action: PayloadAction<CartItemType>) => {
+      state.order = [action.payload];
+    },
     setItems: (state, action: PayloadAction<CartItemType[]>) => {
       state.items = action.payload;
     },
@@ -49,75 +42,75 @@ const cartSlice = createSlice({
     toggleSelectItem: (state, action: PayloadAction<CartItemType>) => {
       const currentItem = action.payload;
       const existingItem = state.selectedItems.find(
-        (item) => item.product_id === currentItem.product_id
+        (item) => item.productId === currentItem.productId
       );
 
       if (existingItem) {
         state.selectedItems = state.selectedItems.filter(
-          (item) => item.product_id !== currentItem.product_id
+          (item) => item.productId !== currentItem.productId
         );
       } else {
-        state.selectedItems.push(currentItem);
+        state.selectedItems = [...state.selectedItems, currentItem];
       }
-
-      saveToSessionStorage(state.selectedItems);
     },
-
     toggleSelectAll: (state) => {
       if (allAvailableItemsSelected(state)) {
         state.selectedItems = [];
       } else {
         state.selectedItems = state.items.filter(
-          (item) => item.amount <= item.stock_quantity
+          (item) => item.amount <= item.stockQuantity
         );
       }
-
-      saveToSessionStorage(state.selectedItems);
     },
-
     updateItemAmount: (
       state,
-      action: PayloadAction<{ product_id: number; amount: number }>
+      action: PayloadAction<{ cartProductId: number; amount: number }>
     ) => {
-      const { product_id, amount } = action.payload;
-      const item = state.items.find((i) => i.product_id === product_id);
-
+      const { cartProductId, amount } = action.payload;
+      const item = state.items.find((i) => i.cartProductId === cartProductId);
       if (item) {
         item.amount = amount;
+      }
 
-        // 선택한 상품도 업데이트
-        const selectedItem = state.selectedItems.find(
-          (selected) => selected.product_id === product_id
-        );
-        if (selectedItem) {
-          selectedItem.amount = amount;
-        }
+      const selectedItem = state.selectedItems.find(
+        (selected) => selected.cartProductId === cartProductId
+      );
+      if (selectedItem) {
+        selectedItem.amount = amount;
       }
     },
-
     deleteItem: (state, action: PayloadAction<number>) => {
-      const product_id = action.payload;
-      state.items = state.items.filter(
-        (item) => item.product_id !== product_id
-      );
+      const productId = action.payload;
+      state.items = state.items.filter((item) => item.productId !== productId);
     },
     deleteSelected: (state) => {
-      const selectedItemIds = state.selectedItems.map(
-        (item) => item.product_id
-      );
+      const selectedItemIds = state.selectedItems.map((item) => item.productId);
       state.items = state.items.filter(
-        (item) => !selectedItemIds.includes(item.product_id)
+        (item) => !selectedItemIds.includes(item.productId)
       );
       state.selectedItems = [];
     },
-
     resetSelectedItems: (state) => {
       state.selectedItems = [];
+    },
+
+    // 장바구니 리셋 테스트
+    deleteOrderedItems: (state, action: PayloadAction<CartItemType[]>) => {
+      console.log("Current items in cart:", current(state).items); // 수정된 부분
+      const orderedItemIds = action.payload.map((item) => item.productId);
+      state.items = state.items.filter(
+        (item) => !orderedItemIds.includes(item.productId)
+      );
+      state.selectedItems = state.selectedItems.filter(
+        (item) => !orderedItemIds.includes(item.productId)
+      );
+      console.log("Items after deletion:", current(state).items); // 수정된 부분
     },
   },
 });
 
 export const {
+  setDirectOrder,
   setItems,
   resetOrder,
   toggleSelectItem,
@@ -126,6 +119,8 @@ export const {
   deleteItem,
   deleteSelected,
   resetSelectedItems,
+
+  deleteOrderedItems,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

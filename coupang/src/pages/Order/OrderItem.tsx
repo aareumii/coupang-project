@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import styled from "styled-components";
-import { CartItemType } from "../../types";
+import { CartItemType } from "../../types/cart";
 
 type SelectedItemProps = {
   item: CartItemType;
@@ -9,7 +9,7 @@ type SelectedItemProps = {
 const OrderItem: FC<SelectedItemProps> = ({ item }) => {
   return (
     <TR>
-      <td>{item.product_name}</td>
+      <td>{item.productName}</td>
       <td>수량 {item.amount}개</td>
     </TR>
   );
