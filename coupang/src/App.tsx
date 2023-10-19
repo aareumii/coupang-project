@@ -1,10 +1,11 @@
-import React from "react";
-
-import "./App.css";
+import React, { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./pages/Main/Main";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
+import Bread from "./pages/Category/Bread";
+import Jam from "./pages/Category/Jam";
+import Cake from "./pages/Category/Cake";
+import LoginPage from "./pages/LoginPage/Signin/LogIn";
+import SignupPage from "./pages/RegisterPage/SignUp";
 import Cart from "./pages/Cart/Cart";
 import Order from "./pages/Order/Order";
 import OrderResult from "./pages/Order/OrderResult";
@@ -16,6 +17,18 @@ function App() {
       element: <Main />,
     },
     {
+      path: "/Bread",
+      element: <Bread />,
+    },
+    {
+      path: "/Jam",
+      element: <Jam />,
+    },
+    {
+      path: "/Cake",
+      element: <Cake />,
+    },
+    {
       path: "/login", // 로그인 페이지 경로
       element: <LoginPage />, // 로그인 페이지 컴포넌트
     },
@@ -24,7 +37,7 @@ function App() {
       element: <SignupPage />, // 회원가입 페이지 컴포넌트
     },
     {
-      path: "/cart", // 장바구니 페이지 경로
+      path: "/cart",
       element: <Cart />,
     },
     {
@@ -36,6 +49,7 @@ function App() {
       element: <OrderResult />,
     },
   ]);
+
   return <RouterProvider router={router} />;
 }
 
