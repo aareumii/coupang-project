@@ -129,11 +129,13 @@ function InventoryList() {
   return (
     <StyledInventoryList>
       <h4>상품 목록 및 재고관리</h4>
+      <div className="select-container">
       <select onChange={(e) => setShowInvent(e.target.value)}>
         <option value="모든상품보기">모든상품보기</option>
         <option value="판매중 상품보기">판매중 상품보기</option>
         <option value="판매완료 상품보기">판매완료 상품보기</option>
       </select>
+      </div>
       <table>
         <thead>
           <tr>

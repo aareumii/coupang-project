@@ -13,6 +13,15 @@ export const StyledInventoryList = styled.div`
     margin-bottom: 16px;
   }
 
+  .select-container {
+    position: absolute; 
+    top: 130px; 
+    right: 100px; 
+    padding: 10px;
+  }
+  }
+
+
   table {
     border-collapse: collapse;
     width: 84.2%;
@@ -45,4 +54,3 @@ export const StyledInventoryList = styled.div`
     cursor: pointer;
   }
 `;
-
