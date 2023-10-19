@@ -1,12 +1,6 @@
 import React, { FC, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import {
-  resetOrder,
-  deleteSelected,
-  deleteOrderedItems,
-} from "../../redux/slice/cartSlice";
 import { loadTossPayments } from "@tosspayments/payment-sdk";
 import { CartItemType } from "../../types/cart";
 import { UserType } from "../../types/user";
@@ -25,7 +19,6 @@ const Payment: FC<UserProps> = ({
   selectedItems,
   totalOrderAmount,
 }) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [selectedPayment, setSelectedPayment] = useState("계좌이체");
@@ -98,8 +91,6 @@ const Payment: FC<UserProps> = ({
         postOrder(selectedItems.map((item) => item.cartProductId))
           .then((res) => {
             console.log(res, "주문 성공");
-            dispatch(resetOrder());
-            dispatch(deleteOrderedItems(selectedItems));
             navigate("/order/result?success=true");
           })
           .catch((error) => {

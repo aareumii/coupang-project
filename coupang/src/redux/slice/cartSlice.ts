@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItemType } from "../../types/cart";
 
-import { current } from "@reduxjs/toolkit";
+// import { current } from "@reduxjs/toolkit";
 
 declare interface CartState {
   items: CartItemType[];
@@ -35,9 +35,6 @@ const cartSlice = createSlice({
     },
     setItems: (state, action: PayloadAction<CartItemType[]>) => {
       state.items = action.payload;
-    },
-    resetOrder: (state) => {
-      state.order = [];
     },
     toggleSelectItem: (state, action: PayloadAction<CartItemType>) => {
       const currentItem = action.payload;
@@ -93,34 +90,18 @@ const cartSlice = createSlice({
     resetSelectedItems: (state) => {
       state.selectedItems = [];
     },
-
-    // 장바구니 리셋 테스트
-    deleteOrderedItems: (state, action: PayloadAction<CartItemType[]>) => {
-      console.log("Current items in cart:", current(state).items); // 수정된 부분
-      const orderedItemIds = action.payload.map((item) => item.productId);
-      state.items = state.items.filter(
-        (item) => !orderedItemIds.includes(item.productId)
-      );
-      state.selectedItems = state.selectedItems.filter(
-        (item) => !orderedItemIds.includes(item.productId)
-      );
-      console.log("Items after deletion:", current(state).items); // 수정된 부분
-    },
   },
 });
 
 export const {
   setDirectOrder,
   setItems,
-  resetOrder,
   toggleSelectItem,
   toggleSelectAll,
   updateItemAmount,
   deleteItem,
   deleteSelected,
   resetSelectedItems,
-
-  deleteOrderedItems,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

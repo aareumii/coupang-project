@@ -1,14 +1,7 @@
 import React, { FC, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import {
-  resetOrder,
-  deleteSelected,
-  resetSelectedItems,
-  deleteOrderedItems,
-} from "../../redux/slice/cartSlice";
 import { RootState } from "../../redux/store/store";
 import { MdArrowForwardIos } from "react-icons/md";
 import bakepang from "../../assets/bakepang.png";
@@ -18,11 +11,9 @@ import OrderList from "./OrderList";
 import Payment from "./Payment";
 import { CartItemType } from "../../types/cart";
 import { UserType } from "../../types/user";
-import { postOrder } from "../../api/order"; //getUserData 추가
-import Footer from "../../components/footer/Footer";
+import { postOrder, getUserData } from "../../api/order";
 
 const Order: FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState<UserType | null>(null);
@@ -32,30 +23,15 @@ const Order: FC = () => {
   const [hasOrdered, setHasOrdered] = useState(false);
 
   useEffect(() => {
-    axios
-      .get(
-        "https://3c2167fb-e55d-4327-8405-a650c719e040.mock.pstmn.io/user/profile"
-      )
+    getUserData()
       .then((res) => {
-        const data = res.data;
-        setUserData(data);
+        console.log(res);
+        setUserData(res);
       })
       .catch((error) => {
-        console.error("사용자 정보 가져오는 중 오류발생", error);
+        console.error("사용자 정보를 불러오던 중 오류 발생", error);
       });
   }, []);
-
-  // useEffect(() => {
-  //   getUserData()
-  //     .then((res) => {
-  //       // const data = res.data;
-  //       console.log(res);
-  //       setUserData(res);
-  //     })
-  //     .catch((error) => {
-  //       console.error("사용자 정보를 불러오던 중 오류 발생", error);
-  //     });
-  // }, []);
 
   useEffect(() => {
     if (directOrderItem.length > 0) {
@@ -97,8 +73,6 @@ const Order: FC = () => {
     postOrder(selectedItems.map((item) => item.cartProductId))
       .then((res) => {
         console.log(res, "주문 성공");
-        dispatch(resetOrder());
-        dispatch(deleteOrderedItems(selectedItems));
         navigate("/order/result?success=true");
       })
       .catch((error) => {
@@ -152,7 +126,7 @@ const Order: FC = () => {
         </HeaderWrap>
         <Form onSubmit={handlePayment}>
           {userData && (
-            <ContentsWrap>
+            <div>
               <BuyerInfo userData={userData} />
               <ShipInfo userData={userData} />
               <OrderList selectedItems={selectedItems} />
@@ -161,7 +135,7 @@ const Order: FC = () => {
                 selectedItems={selectedItems}
                 totalOrderAmount={totalOrderAmount}
               />
-            </ContentsWrap>
+            </div>
           )}
           <AgreeBox>
             <input type="checkbox" required />
@@ -184,12 +158,14 @@ export default Order;
 const Wrap = styled.div`
   width: calc(100vw-(100vw - 100%));
   height: 100%;
+  min-height: 650px;
   padding: 10px 0;
   margin: 0 auto;
   background-color: #f2f2f2;
   @media screen and (max-width: 768px) {
     padding: 0;
     background-color: transparent;
+    overflow-x: hidden;
   }
 `;
 
@@ -199,6 +175,7 @@ const Logo = styled.div`
   padding: 20px 0 10px;
   img {
     width: 140px;
+    margin-left: 20px;
   }
   @media screen and (max-width: 1024px) {
     width: calc(80vw + 80px);
@@ -274,8 +251,6 @@ const OrderStep = styled.div`
 const Form = styled.form`
   width: 100%;
 `;
-
-const ContentsWrap = styled.div``;
 
 const AgreeBox = styled.div`
   display: flex;

@@ -15,7 +15,6 @@ import { TiShoppingCart } from "react-icons/ti";
 import bakepang from "../../assets/bakepang.png";
 import CartItem from "./CartItem";
 import CartErrorModal from "./CartErrorModal";
-import Footer from "../../components/footer/Footer";
 
 const Cart: FC = () => {
   const navigate = useNavigate();
@@ -206,6 +205,7 @@ const Wrap = styled.div`
   @media screen and (max-width: 768px) {
     padding: 0;
     background-color: transparent;
+    overflow-x: hidden;
   }
 `;
 
@@ -215,6 +215,7 @@ const Logo = styled.div`
   padding: 20px 0 10px;
   img {
     width: 140px;
+    margin-left: 20px;
   }
   @media screen and (max-width: 1024px) {
     width: calc(80vw + 80px);
@@ -477,3 +478,7 @@ const BuyButton = styled.button`
   color: #fff;
   cursor: pointer;
 `;
+
+// const ExtendedButton = styled(Button)`
+//   margin: 10px;
+// `;

@@ -6,10 +6,6 @@ type UserProps = {
   userData: UserType;
 };
 
-function formatPhoneNumber(phone: string) {
-  return phone.slice(0, 3) + "-" + phone.slice(3, 7) + "-" + phone.slice(7);
-}
-
 const ShipInfo: FC<UserProps> = ({ userData }) => {
   return (
     <Wrap>
@@ -23,7 +19,7 @@ const ShipInfo: FC<UserProps> = ({ userData }) => {
             </tr>
             <tr>
               <th>연락처</th>
-              <td>{formatPhoneNumber(userData.phoneNumber)}</td>
+              <td>{userData.phoneNumber}</td>
             </tr>
             <tr>
               <th>배송주소</th>

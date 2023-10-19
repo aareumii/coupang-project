@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { MdArrowForwardIos } from "react-icons/md";
-import bakepang from "../../assets/headerImg/Bakepang.png";
+import bakepang from "../../assets/bakepang.png";
 
 const OrderResult: FC = () => {
   // URL 파라미터에서 success 값을 가져옴
@@ -61,12 +61,17 @@ const OrderResult: FC = () => {
 export default OrderResult;
 
 const Wrap = styled.div`
-  width: 100%;
-  /* height: 100vh; */
+  width: calc(100vw-(100vw - 100%));
   height: 100%;
+  min-height: 650px;
   padding: 10px 0;
   margin: 0 auto;
   background-color: #f2f2f2;
+  @media screen and (max-width: 768px) {
+    padding: 0;
+    background-color: transparent;
+    overflow-x: hidden;
+  }
 `;
 
 const Logo = styled.div`
@@ -75,6 +80,13 @@ const Logo = styled.div`
   padding: 20px 0 10px;
   img {
     width: 140px;
+    margin-left: 20px;
+  }
+  @media screen and (max-width: 1024px) {
+    width: calc(80vw + 80px);
+  }
+  @media screen and (max-width: 768px) {
+    width: 100vw;
   }
 `;
 const Container = styled.div`
@@ -83,6 +95,14 @@ const Container = styled.div`
   margin: 0 auto 70px;
   padding: 40px 39px;
   background: #fff;
+  @media screen and (max-width: 1024px) {
+    width: 80vw;
+  }
+  @media screen and (max-width: 768px) {
+    width: 87vw;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+  }
 `;
 
 const HeaderWrap = styled.div`
