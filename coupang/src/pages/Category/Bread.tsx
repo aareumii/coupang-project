@@ -18,7 +18,6 @@ import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
 
-
 const Bread = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -86,14 +85,16 @@ const Bread = () => {
         </StFilter>
 
         <ItemListWrap>
-        {category.map((item: any) => (
-          <div key={item.category.categoryName}> {/* 각 상품에 대한 key는 상위 div에 적용합니다. */}
-            <Link to={`/product/detail/${item.name}`}>
-              <CateItem {...item} />
-            </Link>
-          </div>
-        ))}
-      </ItemListWrap>
+          {category.map((item: any) => (
+            <div key={item.category.categoryName}>
+              {" "}
+              {/* 각 상품에 대한 key는 상위 div에 적용합니다. */}
+              <Link to={`/product/detail/${item.name}`}>
+                <CateItem {...item} />
+              </Link>
+            </div>
+          ))}
+        </ItemListWrap>
       </main>
       <footer>
         <Footer />

@@ -15,12 +15,6 @@ interface CartState {
   cart: ProductInCart[];
 }
 
-// declare interface CartState {
-//   items: CartItemType[];
-//   selectedItems: CartItemType[];
-//   order: CartItemType[];
-// }
-
 const initialState: CartState = {
   items: [],
   selectedItems: [],
