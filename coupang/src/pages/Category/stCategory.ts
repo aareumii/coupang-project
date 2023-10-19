@@ -46,6 +46,7 @@ export const StCategory = styled.div`
     margin: auto;
     padding-top: 30px;
     padding-left: 160px;
+    margin-bottom: 20px;
     @media screen and (max-width: 1024px) {
       width: 80vw;
     }
