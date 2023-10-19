@@ -6,6 +6,7 @@ import Jam from './pages/Category/Jam';
 import Cake from './pages/Category/Cake';
 import LoginPage from './pages/LoginPage/Signin/LogIn';
 import SignupPage from './pages/RegisterPage/SignUp';
+import InventoryList from './pages/Inventory/InventoryList';
 
 function App() {
 	const router = createBrowserRouter([
@@ -32,6 +33,10 @@ function App() {
 		{
 			path: '/signup', // 회원가입 페이지 경로
 			element: <SignupPage />, // 회원가입 페이지 컴포넌트
+		},
+		{
+			path: '/Inventory', // 재고 및 상품관리 경로
+			element: <InventoryList />, // 재고 및 상품관리 컴포넌트
 		},
 	]);
 
