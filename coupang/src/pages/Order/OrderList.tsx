@@ -1,17 +1,21 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import OrderItem from "./OrderItem";
+import { CartItemType } from "../../types/cart";
 
-const OrderList: FC = () => {
+type SelectedItemProps = {
+  selectedItems: CartItemType[];
+};
+
+const OrderList: FC<SelectedItemProps> = ({ selectedItems }) => {
   return (
     <Wrap>
-      {/* cart에서 선택된 상품들 length로 배송 건수 나타내기 */}
-      <Title>배송 2건</Title>
+      <Title>배송 {selectedItems.length}건</Title>
       <Table>
         <tbody>
-          {/* OrderItem으로 cart에서 선택된 상품들 map을 통해 list로 보여주기 */}
-          <OrderItem />
-          <OrderItem />
+          {selectedItems.map((item) => (
+            <OrderItem key={item.productId} item={item} />
+          ))}
         </tbody>
       </Table>
     </Wrap>

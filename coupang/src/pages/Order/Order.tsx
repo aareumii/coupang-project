@@ -1,27 +1,109 @@
-import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import React, { FC, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store/store";
+import { postOrder, getUserData } from "../../api/order";
 import { MdArrowForwardIos } from "react-icons/md";
-import bakepang from "../../assets/headerImg/Bakepang.png";
+import bakepang from "../../assets/bakepang.png";
 import BuyerInfo from "./BuyerInfo";
 import ShipInfo from "./ShipInfo";
 import OrderList from "./OrderList";
 import Payment from "./Payment";
+import { CartItemType } from "../../types/cart";
+import { UserType } from "../../types/user";
+import styled from "styled-components";
+import * as st from "../Cart/CartOrder.style";
 
-const OrderPage: FC = () => {
+const Order: FC = () => {
+  const navigate = useNavigate();
+
+  const [userData, setUserData] = useState<UserType | null>(null);
+  const directOrderItem = useSelector((state: RootState) => state.cart.order);
+  const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
+  const [totalOrderAmount, setTotalOrderAmount] = useState<number>(0);
+  const [hasOrdered, setHasOrdered] = useState(false);
+
+  useEffect(() => {
+    getUserData()
+      .then((res) => {
+        setUserData(res);
+      })
+      .catch((error) => {
+        console.error("사용자 정보를 불러오던 중 오류 발생", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (directOrderItem.length > 0) {
+      setSelectedItems(directOrderItem);
+      const totalAmount = directOrderItem.reduce(
+        (acc, item) => acc + item.amount * item.productPrice,
+        0
+      );
+      setTotalOrderAmount(totalAmount);
+    } else {
+      const savedOrderItem = sessionStorage.getItem("directOrderItem");
+      const savedSelectedItems = sessionStorage.getItem("selectedItems");
+      const savedTotalOrderAmount = sessionStorage.getItem("totalOrderAmount");
+
+      if (savedOrderItem) {
+        const parsedOrderItem: CartItemType = JSON.parse(savedOrderItem);
+        setSelectedItems([parsedOrderItem]);
+        const totalAmount =
+          parsedOrderItem.amount * parsedOrderItem.productPrice;
+        setTotalOrderAmount(totalAmount);
+      } else if (savedSelectedItems) {
+        const parsedItems: CartItemType[] = JSON.parse(savedSelectedItems);
+        setSelectedItems(parsedItems);
+        if (savedTotalOrderAmount) {
+          const parsedTotalOrderAmount = JSON.parse(savedTotalOrderAmount);
+          setTotalOrderAmount(parsedTotalOrderAmount);
+        }
+      }
+    }
+  }, [directOrderItem]);
+
+  const handlePayment = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!userData) {
+      console.error("사용자 데이터가 없습니다.");
+      return;
+    }
+    console.log("Ordering the following items:", selectedItems);
+    postOrder(selectedItems.map((item) => item.cartProductId))
+      .then((res) => {
+        console.log(res, "주문 성공");
+        navigate("/order/result?success=true");
+      })
+      .catch((error) => {
+        console.error("주문 중 오류 발생", error);
+        navigate("/order/result?success=false");
+      });
+    setHasOrdered(true);
+    sessionStorage.clear();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (!hasOrdered) {
+        sessionStorage.removeItem("directOrderItem");
+      }
+    };
+  }, [hasOrdered]);
+
   return (
-    <Wrap>
-      <Logo>
+    <st.Wrap>
+      <st.Logo>
         <Link to={"/"}>
           <img src={bakepang} alt="로고" />
         </Link>
-      </Logo>
-      <Container>
-        <HeaderWrap>
-          <TitleWrap>
+      </st.Logo>
+      <st.Container>
+        <ExtendedHeaderWrap>
+          <st.TitleWrap>
             <h2>주문/결제</h2>
-          </TitleWrap>
-          <StepWrap>
+          </st.TitleWrap>
+          <st.StepWrap>
             <div>
               <span>01</span>
               <p>장바구니</p>
@@ -29,19 +111,32 @@ const OrderPage: FC = () => {
             <span>
               <MdArrowForwardIos color="#afafaf" />
             </span>
-            <OrderStep>
+            <st.CurrentStep>
               <span>02</span>
               <p>주문/결제</p>
-            </OrderStep>
-          </StepWrap>
-        </HeaderWrap>
-        <Form>
-          <ContentsWrap>
-            <BuyerInfo />
-            <ShipInfo />
-            <OrderList />
-            <Payment />
-          </ContentsWrap>
+            </st.CurrentStep>
+            <span>
+              <MdArrowForwardIos color="#afafaf" />
+            </span>
+            <div>
+              <span>03</span>
+              <p>주문완료</p>
+            </div>
+          </st.StepWrap>
+        </ExtendedHeaderWrap>
+        <Form onSubmit={handlePayment}>
+          {userData && (
+            <div>
+              <BuyerInfo userData={userData} />
+              <ShipInfo userData={userData} />
+              <OrderList selectedItems={selectedItems} />
+              <Payment
+                userData={userData}
+                selectedItems={selectedItems}
+                totalOrderAmount={totalOrderAmount}
+              />
+            </div>
+          )}
           <AgreeBox>
             <input type="checkbox" required />
             <span>
@@ -49,93 +144,27 @@ const OrderPage: FC = () => {
               제공(해외직구의 경우 국외제공) 및 결제에 동의합니다.
             </span>
           </AgreeBox>
-          <ButtonWrap>
-            <PaymentButton>결제하기</PaymentButton>
-          </ButtonWrap>
+          <st.ButtonWrap>
+            <st.Button bgcolor="blue" type="submit">
+              결제하기
+            </st.Button>
+          </st.ButtonWrap>
         </Form>
-      </Container>
-    </Wrap>
+      </st.Container>
+    </st.Wrap>
   );
 };
 
-export default OrderPage;
+export default Order;
 
-const Wrap = styled.div`
-  width: 100%;
-  padding: 10px 0;
-  margin: 0 auto;
-  background-color: #f2f2f2;
-`;
-
-const Logo = styled.div`
-  width: calc(72vw + 80px);
-  margin: 0 auto;
-  padding: 20px 0 10px;
-  img {
-    width: 140px;
-  }
-`;
-const Container = styled.div`
-  width: 72vw;
-  border: 1px solid #e0e0e0;
-  margin: 0 auto 70px;
-  padding: 40px 39px;
-  background: #fff;
-`;
-
-const HeaderWrap = styled.div`
-  width: 100%;
-  padding: 20px 0 20px;
+const ExtendedHeaderWrap = styled(st.HeaderWrap)`
   margin-bottom: 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
   border-bottom: 2px solid #2f2f2f;
-`;
-
-const TitleWrap = styled.div`
-  display: flex;
-  align-items: center;
-  color: #2f2f2f;
-  font-size: 1.6rem;
-  font-weight: 500;
-  font-weight: bold;
-`;
-
-const StepWrap = styled.div`
-  display: flex;
-  color: #d4d4d4;
-  span {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0 2px;
-  }
-  p {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: bold;
-  }
-`;
-
-const OrderStep = styled.div`
-  span {
-    font-size: 1rem;
-    color: #299fe0;
-    font-weight: bold;
-  }
-  p {
-    display: inline-block;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #000;
-  }
 `;
 
 const Form = styled.form`
   width: 100%;
 `;
-
-const ContentsWrap = styled.div``;
 
 const AgreeBox = styled.div`
   display: flex;
@@ -145,25 +174,4 @@ const AgreeBox = styled.div`
   span {
     font-size: 0.875rem;
   }
-`;
-
-const ButtonWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const PaymentButton = styled.button`
-  font-size: 1.375rem;
-  font-weight: 700;
-  display: inline-block;
-  width: 216px;
-  line-height: 18px;
-  border: 2px solid #0073e9;
-  border-radius: 4px;
-  padding: 22px 0 19px;
-  text-align: center;
-  background-color: #0073e9;
-  color: #fff;
-  cursor: pointer;
 `;

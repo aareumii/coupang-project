@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { CartItemType } from "../../types/types";
+import { CartItemType } from "../../types/cart";
 import { Product } from "./productSlice";
 import { fetchAddToCart } from "../../api/getProductApi";
 
@@ -15,6 +15,12 @@ interface CartState {
   cart: ProductInCart[];
 }
 
+// declare interface CartState {
+//   items: CartItemType[];
+//   selectedItems: CartItemType[];
+//   order: CartItemType[];
+// }
+
 const initialState: CartState = {
   items: [],
   selectedItems: [],
@@ -23,7 +29,7 @@ const initialState: CartState = {
 };
 
 export const addProductToCart = createAsyncThunk(
-  'cart/addToCart',
+  "cart/addToCart",
   async (product: ProductInCart, thunkAPI) => {
     try {
       const response = await fetchAddToCart(product, product.amount);
@@ -34,13 +40,26 @@ export const addProductToCart = createAsyncThunk(
       }
     } catch (error) {
       if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message || "장바구니 추가에 실패했습니다.");
+        return thunkAPI.rejectWithValue(
+          error.message || "장바구니 추가에 실패했습니다."
+        );
       } else {
         return thunkAPI.rejectWithValue("장바구니 추가에 실패했습니다.");
       }
     }
   }
 );
+
+const allAvailableItemsSelected = (state: CartState) => {
+  const availableItems = state.items.filter(
+    (item) => item.amount <= item.stockQuantity
+  );
+  return availableItems.every((item) =>
+    state.selectedItems.some(
+      (selectedItem) => selectedItem.productId === item.productId
+    )
+  );
+};
 
 const cartSlice = createSlice({
   name: "cart",
@@ -51,9 +70,6 @@ const cartSlice = createSlice({
     },
     setItems: (state, action: PayloadAction<CartItemType[]>) => {
       state.items = action.payload;
-    },
-    resetOrder: (state) => {
-      state.order = [];
     },
     toggleSelectItem: (state, action: PayloadAction<CartItemType>) => {
       const currentItem = action.payload;
@@ -69,18 +85,45 @@ const cartSlice = createSlice({
         state.selectedItems = [...state.selectedItems, currentItem];
       }
     },
-    updateItemAmount: (state, action: PayloadAction<{ cartProductId: number; amount: number }>) => {
+    toggleSelectAll: (state) => {
+      if (allAvailableItemsSelected(state)) {
+        state.selectedItems = [];
+      } else {
+        state.selectedItems = state.items.filter(
+          (item) => item.amount <= item.stockQuantity
+        );
+      }
+    },
+    updateItemAmount: (
+      state,
+      action: PayloadAction<{ cartProductId: number; amount: number }>
+    ) => {
       const { cartProductId, amount } = action.payload;
-      const item = state.items.find((i) => i.productId === cartProductId);
+      const item = state.items.find((i) => i.cartProductId === cartProductId);
       if (item) {
         item.amount = amount;
       }
+
       const selectedItem = state.selectedItems.find(
-        (selected) => selected.productId === cartProductId
+        (selected) => selected.cartProductId === cartProductId
       );
       if (selectedItem) {
         selectedItem.amount = amount;
       }
+    },
+    deleteItem: (state, action: PayloadAction<number>) => {
+      const productId = action.payload;
+      state.items = state.items.filter((item) => item.productId !== productId);
+    },
+    deleteSelected: (state) => {
+      const selectedItemIds = state.selectedItems.map((item) => item.productId);
+      state.items = state.items.filter(
+        (item) => !selectedItemIds.includes(item.productId)
+      );
+      state.selectedItems = [];
+    },
+    resetSelectedItems: (state) => {
+      state.selectedItems = [];
     },
     addToCart: (state, action: PayloadAction<ProductInCart>) => {
       const existingProduct = state.cart.find(
@@ -112,19 +155,21 @@ const cartSlice = createSlice({
           price: action.payload.price * action.payload.amount,
         };
         state.cart.push(newProduct);
-        }
-      });
-    },
-  });
-  
-  export const {
-    setDirectOrder,
-    setItems,
-    resetOrder,
-    toggleSelectItem,
-    updateItemAmount,
-    addToCart
-  } = cartSlice.actions;
-  
-  export default cartSlice.reducer;
-  
+      }
+    });
+  },
+});
+
+export const {
+  setDirectOrder,
+  setItems,
+  toggleSelectItem,
+  toggleSelectAll,
+  updateItemAmount,
+  deleteItem,
+  deleteSelected,
+  resetSelectedItems,
+  addToCart,
+} = cartSlice.actions;
+
+export default cartSlice.reducer;
