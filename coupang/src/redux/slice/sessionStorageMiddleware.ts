@@ -13,7 +13,6 @@ export const sessionStorageMiddleware: Middleware =
         "cart/toggleSelectAll",
         "cart/updateItemAmount",
         "cart/deleteSelected",
-        "cart/deleteOrderedItems",
       ].includes(action.type)
     ) {
       const state = store.getState();
