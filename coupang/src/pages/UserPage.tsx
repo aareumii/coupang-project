@@ -2,14 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
-import {
-  // BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  NavLink,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, Link, NavLink, useNavigate } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import PaymentManagement from "./PaymentManagement";
 import SalesListPage from "./SalesListPage";
@@ -17,7 +10,7 @@ import PurchaseListPage from "./PurchaseListPage";
 import CartPage from "./CartPage";
 import NotFound from "./NotFound";
 import Login from "../LoginPage/Login";
-import LogoutButton from "../LoginPage/LogoutButton";
+import LogoutButton, { logoutUser } from "../LoginPage/LogoutButton";
 
 const Container = styled.div`
   display: grid;
@@ -149,13 +142,25 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
+// const handleLoginClick = () => {
+
+// };
+
 // UserPage 컴포넌트
 const UserPage: React.FC = () => {
   const profileImageUrl = "https://via.placeholder.com/100";
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate("/login");
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // 토큰이 있으면 이미 로그인된 상태
+      alert("로그인 상태입니다.");
+    } else {
+      console.log("사용자가 로그인되지 않았습니다.");
+      navigate("/login");
+    }
   };
 
   return (
@@ -165,7 +170,6 @@ const UserPage: React.FC = () => {
         <h2>UserName 님</h2>
       </ProfileImageBar>
       <MenuBar>
-        {" "}
         <ListItem>
           <h3>My 쇼핑</h3>
         </ListItem>
@@ -182,14 +186,14 @@ const UserPage: React.FC = () => {
           <h3>My 정보</h3>
         </ListItem>
         <ListItem>
-          <StyledLink to="userinfo">개인정보확인/수정</StyledLink>
+          <StyledLink to="userinfo">개인정보확인</StyledLink>
         </ListItem>
         <ListItem addUnderline>
           <StyledLink to="bakepay">결제수단·페이관리</StyledLink>
         </ListItem>
         <ListItem>
           <button onClick={handleLoginClick}>로그인</button>
-          <LogoutButton />
+          <button onClick={logoutUser}>로그아웃</button>
         </ListItem>
       </MenuBar>
       <Sidebar>
@@ -217,12 +221,11 @@ const UserPage: React.FC = () => {
             <div>
               <span className="large-number">0</span>원
             </div>
-            {/* <button className="charge-button">충전하기</button> */}
           </SideBarInfoItem>
         </SideBarInfo>
       </Sidebar>
+
       <Content>
-        {/* <h3>장바구니 목록</h3> */}
         <Routes>
           <Route path="userinfo" element={<UserInfo />} />
           <Route path="bakepay" element={<PaymentManagement />} />

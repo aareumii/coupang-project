@@ -1,11 +1,14 @@
 // UserInfo.tsx
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-declare global {
-  interface Window {
-    daum: any;
-  }
-}
+import axios from "axios";
+
+// declare global {
+//   interface Window {
+//     daum: any;
+//   }
+// }
+
 const Container = styled.div`
   max-width: 600px;
   margin: 10px auto;
@@ -16,14 +19,14 @@ const Container = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const FlexContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+// const FlexContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
 
-  margin-bottom: 10px;
-  gap: 20px;
-`;
+//   margin-bottom: 10px;
+//   gap: 20px;
+// `;
 
 const Input = styled.input`
   width: 60%;
@@ -54,6 +57,8 @@ const InputCell = styled.td`
 const Button = styled.button`
   border: none;
   margin: 0 5px;
+  margin-bottom: 20px;
+  margin-left: 3rem;
   padding: 10px 15px;
   border-radius: 3px;
   background-color: #0077b6;
@@ -69,34 +74,34 @@ const RightAlignedButton = styled(Button)`
   margin-left: 62%;
 `;
 
-const ErrorText = styled.p`
-  color: red;
-  margin-bottom: 10px;
-`;
+// const ErrorText = styled.p`
+//   color: red;
+//   margin-bottom: 10px;
+// `;
 
-const Modal = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+// const Modal = styled.div`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background: rgba(0, 0, 0, 0.6);
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// `;
 
-const ModalContent = styled.div`
-  width: 300px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-`;
+// const ModalContent = styled.div`
+//   width: 300px;
+//   padding: 20px;
+//   background-color: #fff;
+//   border-radius: 5px;
+// `;
 
 type UserInfoType = {
   name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   address: string;
   detailedAddress: string;
   zipCode: string;
@@ -106,53 +111,77 @@ const UserInfo: React.FC = () => {
   const [user, setUser] = useState<UserInfoType>({
     name: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     address: "",
     detailedAddress: "",
     zipCode: "",
   });
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const detailAddressRef = useRef<HTMLInputElement>(null);
-  const handleAddressSearch = () => {
-    new window.daum.Postcode({
-      oncomplete: function (data: any) {
-        setUser((prev) => ({
-          ...prev,
-          address: data.address,
-          zipCode: data.zonecode,
-        }));
-        if (detailAddressRef.current) {
-          detailAddressRef.current.focus();
-        }
-      },
-    }).open();
-  };
+  // const [newPassword, setNewPassword] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
+  // const [showModal, setShowModal] = useState(false);
+  // const detailAddressRef = useRef<HTMLInputElement>(null);
+  // const handleAddressSearch = () => {
+  //   if (window.daum && window.daum.Postcode) {
+  //     new window.daum.Postcode({
+  //       oncomplete: function (data) {
+  //         setUser((prev) => ({
+  //           ...prev,
+  //           address: data.address,
+  //           zipCode: data.zonecode,
+  //         }));
+  //         if (detailAddressRef.current) {
+  //           detailAddressRef.current.focus();
+  //         }
+  //       },
+  //     }).open();
+  //   } else {
+  //     console.error("Daum Postcode API is not loaded.");
+  //   }
+  // };
+  const fetchUserInfo = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token is not available in localStorage.");
+      return;
+    }
 
+    try {
+      const response = await axios.get(
+        "http://43.201.30.126:8080/api/user/myPage/userInfo",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰을 헤더에 넣어줍니다.
+          },
+        }
+      );
+      const { name, email, address, phoneNumber } = response.data;
+
+      setUser((prev) => ({
+        ...prev,
+        name: name,
+        email: email,
+        phoneNumber: phoneNumber,
+        address: address,
+      }));
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+    }
+  };
   useEffect(() => {
-    // 주소 API 스크립트 동적 로딩
-    const script = document.createElement("script");
-    script.src =
-      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-    script.async = true;
-    document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
+    fetchUserInfo();
   }, []);
 
-  const handleUpdate = () => {
-    if (newPassword !== confirmPassword) {
-      setShowModal(true);
-      return;
-    }
-    if (newPassword.length < 8 || newPassword.length > 12) {
-      alert("비밀번호는 8-12자리여야 합니다.");
-      return;
-    }
-    // Update backend with the new data
-  };
+  // useEffect(() => {
+  //   // 주소 API 스크립트 동적 로딩
+  //   const script = document.createElement("script");
+  //   script.src =
+  //     "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+  //   script.async = true;
+  //   document.head.appendChild(script);
+  //   return () => {
+  //     document.head.removeChild(script);
+  //   };
+  // }, []);
 
   const handleCancel = () => {
     window.location.href = "/user/sales";
@@ -162,37 +191,23 @@ const UserInfo: React.FC = () => {
     const isConfirmed = window.confirm("정말 탈퇴하시겠습니까?");
     if (isConfirmed) {
       // Call backend API to withdraw
+    } else {
+      window.alert("취소 되었습니다.");
     }
   };
 
-  const [profileImage, setProfileImage] = useState<File | null>(null);
+  // const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setProfileImage(e.target.files[0]);
-    }
-  };
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     setProfileImage(e.target.files[0]);
+  //   }
+  // };
   return (
     <Container>
-      <h2>회원정보 수정</h2>
+      <h2>개인정보 확인</h2>
       <Table>
         <tbody>
-          <tr>
-            <LabelCell>프로필 이미지</LabelCell>
-            <InputCell>
-              <FlexContainer>
-                {profileImage && (
-                  <img
-                    src={URL.createObjectURL(profileImage)}
-                    alt="Profile preview"
-                    width="100"
-                    style={{ marginLeft: "4rem" }}
-                  />
-                )}
-                <input type="file" onChange={handleImageChange} />
-              </FlexContainer>
-            </InputCell>
-          </tr>
           <tr>
             <LabelCell>name</LabelCell>
             <InputCell>
@@ -208,82 +223,31 @@ const UserInfo: React.FC = () => {
           <tr>
             <LabelCell>전화번호</LabelCell>
             <InputCell>
-              <Input defaultValue={user.phone} disabled />
+              <Input defaultValue={user.phoneNumber} disabled />
             </InputCell>
           </tr>
-          <tr>
-            <LabelCell>우편번호</LabelCell>
-            <InputCell>
-              <Input defaultValue={user.zipCode} disabled />
-            </InputCell>
-          </tr>
+
           <tr>
             <LabelCell>주소</LabelCell>
             <InputCell>
-              <Input defaultValue={user.address} />
+              <Input defaultValue={user.address} disabled />
             </InputCell>
-            <InputCell>
+            {/* <InputCell>
               <Button
                 onClick={handleAddressSearch}
                 style={{ marginLeft: "-20px" }}
               >
                 변경
               </Button>
-            </InputCell>
-          </tr>
-          <tr>
-            <LabelCell>상세 주소</LabelCell>
-            <InputCell>
-              <Input
-                ref={detailAddressRef}
-                defaultValue={user.detailedAddress}
-                onChange={(e) => {
-                  const newUser = { ...user, detailedAddress: e.target.value };
-                  setUser(newUser);
-                }}
-              />
-            </InputCell>
-          </tr>
-          <tr>
-            <LabelCell>새 비밀번호</LabelCell>
-            <InputCell>
-              <Input
-                type="password"
-                placeholder="새 비밀번호"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </InputCell>
-          </tr>
-          <tr>
-            <LabelCell>새 비밀번호 확인</LabelCell>
-            <InputCell>
-              <Input
-                type="password"
-                placeholder="새 비밀번호 확인"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </InputCell>
+            </InputCell> */}
           </tr>
         </tbody>
       </Table>
-      {(newPassword !== confirmPassword ||
-        newPassword.length < 6 ||
-        newPassword.length > 12) && <ErrorText>다시 확인해주세요</ErrorText>}
-      <Button onClick={handleUpdate}>수정</Button>
+
       <Button onClick={handleCancel}>취소</Button>
       <RightAlignedButton onClick={handleWithdrawal}>
         회원 탈퇴
       </RightAlignedButton>
-      {showModal && (
-        <Modal onClick={() => setShowModal(false)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <p>비밀번호가 일치하지 않습니다</p>
-            <Button onClick={() => setShowModal(false)}>확인</Button>
-          </ModalContent>
-        </Modal>
-      )}
     </Container>
   );
 };

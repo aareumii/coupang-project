@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import Bakepang from "../../assets/headerImg/Bakepang.png";
+// import Bakepang from "../../assets/headerimg/Bakepang.png";
+import Bakepang from "src/assets/headerimg/Bakepang.png";
+
 import DaumPostcode from "react-daum-postcode";
 
 // import { sendSms, verifySms } from '../../api/sms';

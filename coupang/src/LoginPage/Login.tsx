@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+//Login.tsx
 
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 // import Bakepang from "../../../assets/headerImg/Bakepang.png";
@@ -126,7 +127,7 @@ const Login = () => {
           </button>
           <FormError>{loginError}</FormError>
         </FormContainer>
-        <LogoutButton />
+        {/* <LogoutButton /> */}
 
         <hr />
         <Link to={"/signup"}>
