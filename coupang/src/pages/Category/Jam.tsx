@@ -41,7 +41,7 @@ const Jam = () => {
 
   const category = products.filter(
     (item: { category: { categoryId: number } }) =>
-      item.category.categoryId === 1
+      item.category.categoryId === 2
   );
 
   return (
@@ -126,5 +126,4 @@ const ItemListWrap = styled.div`
   flex-wrap: wrap;
   margin: auto;
   width: 100%;
-  height: 350px;
 `;
