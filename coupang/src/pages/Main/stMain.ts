@@ -2,6 +2,9 @@ import styled from "styled-components";
 
 export const StMain = styled.div`
   position: relative;
+  /* overflow-x: hidden;
+  overflow-y: hidden; */
+
   .header {
     width: 75vw;
     margin: auto;
@@ -13,6 +16,9 @@ export const StMain = styled.div`
     z-index: 20;
     position: relative;
     /* margin-bottom: 30px; */
+    @media screen and (max-width: 768px) {
+      width: 90vw;
+    }
   }
   .logo {
     margin-left: 20px;
@@ -21,8 +27,10 @@ export const StMain = styled.div`
     height: 50px;
     cursor: pointer;
     @media screen and (max-width: 768px) {
-      width: 100px;
-      height: 50px;
+      width: 60px;
+      height: 30px;
+      margin-left: 5px;
+      padding-right: 2px;
     }
   }
   .main {
@@ -32,6 +40,11 @@ export const StMain = styled.div`
     padding-left: 160px;
     @media screen and (max-width: 1024px) {
       width: 70vw;
+    }
+    @media screen and (max-width: 768px) {
+      width: 70vw;
+      padding-top: 20px;
+      padding-left: 30px;
     }
   }
 `;

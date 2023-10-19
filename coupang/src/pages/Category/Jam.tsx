@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import coupang from "../../assets/headerImg/베이크팡.png";
 import { StCategory } from "./stCategory";
-import Header from "../../components/Header/Header";
-import Category from "../../components/Header/Category";
+import Header from "../../components/header/Header";
+import Category from "../../components/header/Category";
 import { FaSearch } from "react-icons/fa";
-import MyCoupang from "../../components/Header/MyCoupang";
-import Cart from "../../components/Header/Cart";
+import MyCoupang from "../../components/header/MyCoupang";
+import Cart from "../../components/header/Cart";
 import { useNavigate } from "react-router-dom"; // useNavigate로 수정
-import ItemList from "../../components/MainHome/ItemList";
+import ItemList from "../../components/main/ItemList";
 import { GET_PRODUCT_API } from "../../api/Products";
 import axios from "axios";
 import { Product } from "../../types/item";
 import CateItem from "../../components/category/CateItem";
-import { StFilter } from "../../styles/ItemFilterStyle";
-import { StSearchBox } from "../../styles/searchStyle";
+import { StFilter } from "../../styles/ItemFilter.styled";
+import { StSearchBox } from "../../styles/Search.Styled";
 
 const Jam = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -105,6 +105,10 @@ const GrayBar = styled.div`
     width: 60vw;
     margin: auto;
     font-size: 0.8rem;
+    @media screen and (max-width: 768px) {
+      width: 80vw;
+      font-size: 0.6rem;
+    }
   }
 `;
 const ItemListWrap = styled.div`

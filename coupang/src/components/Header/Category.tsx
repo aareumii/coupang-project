@@ -70,8 +70,9 @@ const CategoryBox = styled.div`
   cursor: pointer;
 
   @media screen and (max-width: 768px) {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
+    margin: 5px 0;
     border-radius: 16px;
   }
 `;
@@ -83,6 +84,7 @@ const CategoryBtn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   > img {
     width: 35px;
     height: 35px;
@@ -91,9 +93,9 @@ const CategoryBtn = styled.div`
 
     align-items: center;
     @media screen and (max-width: 768px) {
-      width: 25px;
-      height: 25px;
-      padding-left: 1px;
+      width: 20px;
+      height: 20px;
+      padding-left: 0;
     }
   }
   > p {
