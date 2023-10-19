@@ -17,6 +17,7 @@ import { Product } from "../../types/item";
 import { GET_PRODUCT_API } from "../../api/Products";
 import { StFilter } from "../../styles/ItemFilterStyle";
 import { StSearchBox } from "../../styles/searchStyle";
+import Footer from "../../components/footer/Footer";
 
 const Main = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -62,6 +63,7 @@ const Main = () => {
       <Header />
       <header className="header">
         <Category />
+		<HeaderBottom>
         <a href="/">
           <img className="logo" src={coupang} />
         </a>
@@ -83,14 +85,6 @@ const Main = () => {
 					</HeaderBottom>
 				</header>
 				<Banner />
-				<main className="main">
-					<ItemCategory />
-					<ItemFilter />
-					<ItemListWrap>
-						{searched.map((item: any) => (
-							<ItemList {...item} />
-						))}
-					</ItemListWrap>
 
       <main className="main">
         <ItemCategory />
@@ -139,7 +133,7 @@ const Main = () => {
 
         <Pagination />
       </main>
-      <footer></footer>
+      <Footer/>
     </StMain>
   );
 };
@@ -150,4 +144,8 @@ const ItemListWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+`;
+
+const HeaderBottom = styled.div`
+	display: flex;
 `;

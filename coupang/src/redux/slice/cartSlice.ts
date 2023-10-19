@@ -2,17 +2,22 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItemType } from "../../types/types";
+import { Product } from './productSlice'; 
 
 declare interface CartState {
   items: CartItemType[];
   selectedItems: CartItemType[];
   order: CartItemType[];
+  cart: Product[];
+
 }
 
 const initialState: CartState = {
   items: [],
   selectedItems: [],
   order: [],
+  cart: [],
+
 };
 
 const allAvailableItemsSelected = (state: CartState) => {
@@ -67,13 +72,12 @@ const cartSlice = createSlice({
       action: PayloadAction<{ cartProductId: number; amount: number }>
     ) => {
       const { cartProductId, amount } = action.payload;
-      const item = state.items.find((i) => i.cartProductId === cartProductId);
+      const item = state.items.find((i) => i.productId === cartProductId);
       if (item) {
         item.amount = amount;
       }
-
       const selectedItem = state.selectedItems.find(
-        (selected) => selected.cartProductId === cartProductId
+        (selected) => selected.productId === cartProductId
       );
       if (selectedItem) {
         selectedItem.amount = amount;
@@ -93,6 +97,23 @@ const cartSlice = createSlice({
     resetSelectedItems: (state) => {
       state.selectedItems = [];
     },
+    addToCart: (state, action: PayloadAction<{ product: Product; quantity: number }>) => {
+      const existingProduct = state.cart.find(
+          item => item.id === action.payload.product.id
+      );
+      if (existingProduct) {
+          existingProduct.amount += action.payload.quantity;
+          existingProduct.price += action.payload.product.price * action.payload.quantity;
+      } else {
+          const newProduct = {
+              ...action.payload.product,
+              amount: action.payload.quantity,
+              price: action.payload.product.price * action.payload.quantity
+          };
+          state.cart.push(newProduct);
+      }
+  },
+  
   },
 });
 
@@ -106,6 +127,7 @@ export const {
   deleteItem,
   deleteSelected,
   resetSelectedItems,
+  addToCart
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

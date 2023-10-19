@@ -1,15 +1,21 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';  // createAsyncThunk import 추가
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type Product = {
     id: number;
     productName: string;
     price: number;
     amount: number;
+    cartItems: any[]; 
 };
 
-const initialState = {
+interface ProductState {
+    productInfo: Product | {}; // Product 타입 또는 빈 객체를 허용
+    cart: Product[];
+}
+
+const initialState: ProductState = {
     productInfo: {},
-    cart: [] as Product[]
+    cart: []
 };
 
 const productSlice = createSlice({
@@ -17,12 +23,10 @@ const productSlice = createSlice({
     initialState,
     reducers: {
         addToCart: (state, action: PayloadAction<Product>) => {
-            // 기존 제품 찾기
             const existingProduct = state.cart.find(
                 item => item.id === action.payload.id
             );
             if (existingProduct) {
-                // 제품의 수량 및 가격 업데이트
                 existingProduct.amount += action.payload.amount;
                 existingProduct.price += action.payload.price;
             } else {

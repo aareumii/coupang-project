@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ProductInfo from './pages/ProductDetail/ProductInfo';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Main from './pages/Main/Main';
 import Bread from './pages/Category/Bread';
@@ -17,8 +16,7 @@ function App() {
 		<Router>
 		  <Routes>
 			<Route path="/" element={<Main />} />  
-			<Route path="/product/:productName" element={<ProductInfo />} />
-			<Route path="/ProductDetail" element={<ProductDetail />} />
+            <Route path="/productInfo/:productName" element={<ProductDetail />} /> 
 			<Route path="/Bread" element={<Bread />} />
 			<Route path="/Jam" element={<Jam />} />
 			<Route path="/Cake" element={<Cake />} />

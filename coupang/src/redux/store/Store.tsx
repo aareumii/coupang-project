@@ -1,7 +1,7 @@
 // store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import productSlice from '../slice/productSlice';
-import cartSlice from '../slice/cartSlice';  // 추가
+import cartSlice from '../slice/cartSlice'; 
 
 
 const store = configureStore({
@@ -12,4 +12,5 @@ const store = configureStore({
     },
 });
 
+export type RootState = ReturnType<typeof store.getState>;
 export default store;

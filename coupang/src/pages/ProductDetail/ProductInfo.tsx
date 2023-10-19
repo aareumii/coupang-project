@@ -14,8 +14,11 @@ import { addToCart } from '../../redux/slice/productSlice';
 import AddToCartButton from './AddToCartButton';
 import AddToOrderButton from './AddToOrderButton';
 import { fetchProductDetails } from '../../api/getProductApi'; 
-import { updateCartProduct } from '../../api/getProductApi';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { AxiosError } from 'axios';
+import { setDirectOrder } from '../../redux/slice/cartSlice';
 
 
 type ProductType = {
@@ -27,19 +30,21 @@ type ProductType = {
 
 const ProductInfo: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<ProductType | null>(null);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
-  // const { productName } = useParams<{ productName: string }>();
-  const productName = "smartphone22";
+  const { productName } = useParams<{ productName: string }>();
+  // const productName = "smartphone22";
 
   useEffect(() => {
     const getProductDetails = async () => {
       try {
         const data = productName ? await fetchProductDetails(productName) : null;
         
-        if (data) { // 여기서 data의 유효성 검사를 추가합니다.
+        if (data) { // data의 유효성 검사 추가합니다.
             setProduct({
               img: data.img1,
               productName: data.name,
@@ -72,6 +77,31 @@ const ProductInfo: React.FC = () => {
     }
   }
 
+  const handleAddToCartClick = async () => {
+    if (!product) return;  // 제품이 없는 경우 무시
+  
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('사용자가 로그인하지 않았습니다.');
+        // 사용자가 로그인하지 않았을 때의 처리 (예: 로그인 페이지로 이동)
+        return;
+      }
+  
+      const response = await addToCart({
+        productId: product.productName,
+        quantity: quantity
+      });
+  
+      console.log('장바구니 추가 응답:', response);
+  
+    } catch (error) {
+      console.error('장바구니에 추가하는 도중 오류 발생:', error);
+    }
+  };
+  
+
+
   return (
     <Container>
     {product?.img ? <ProductImage src={product.img} alt="Product" /> : null}
@@ -88,34 +118,11 @@ const ProductInfo: React.FC = () => {
       </QuantityCounter>
 
       <ButtonWrapper>
-      <AddToCartButton onClick={async () => {
-    console.log("Current price:", totalPrice);
-
-    if (product) {
-        const userId = 1; // 여기서 사용자 ID를 가져옵니다.
-        const cartProductId = 1; // 장바구니 제품 ID를 설정합니다.
-
-        // PUT 메소드로 수량과 가격 업데이트
-        await updateCartProduct(userId, cartProductId, quantity);
-
-        const action = addToCart({
-            productName: product.productName,
-            amount: quantity,
-            price: totalPrice,
-            id: 1
-        });
-
-        console.log(action);
-        dispatch(action);
-    }
-}} />
-      <AddToOrderButton onClick={() => {
-        // Redux action으로 장바구니에 제품 정보 추가
-    }} />
+      <AddToCartButton onClick={handleAddToCartClick} />
+      <AddToOrderButton onClick={handleAddToCartClick}/>
       </ButtonWrapper>
     </ProductInfoBox>
     </Container>
   );
 }
-
 export default ProductInfo;

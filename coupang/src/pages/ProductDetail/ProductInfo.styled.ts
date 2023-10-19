@@ -43,6 +43,8 @@ export const ProductPrice = styled.span`
 
 export const QuantityCounter = styled.div`
   display: flex;
+  justify-content: center;
+	align-items: center;   
   margin-bottom: 20px;
   border: 1px solid #83929A;
 
@@ -55,7 +57,7 @@ export const QuantityCounter = styled.div`
   & > span {
     padding: 0 10px;
     background-color: #ffffff;
-    border: 1px solid #EBEBEB;
+    border: none;
   }
 `;
 

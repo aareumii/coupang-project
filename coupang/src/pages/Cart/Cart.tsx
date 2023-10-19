@@ -5,8 +5,11 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { TiShoppingCart } from "react-icons/ti";
 import bakepang from "../../assets/headerImg/Bakepang.png";
 import CartItem from "./CartItem";
+import { CartItemType } from "../../types/types"
 
 const Cartpage: FC = () => {
+  const cartItems: CartItemType[] = [];
+
   return (
     <Wrap>
       <Logo>
@@ -38,7 +41,7 @@ const Cartpage: FC = () => {
           <CartAmount>
             {/* 장바구니에 담긴 총 상품 개수 = api로 받아온 배열의 legnth */}
             {/* <p>장바구니 상품 &#40; {cartItems.length} &#41;</p> */}
-            <p>장바구니에 담긴 상품 &#40; 6 &#41;</p>
+            <p>장바구니에 담긴 상품 &#40; {cartItems.length} &#41;</p> 
           </CartAmount>
           <CartItemTable>
             <colgroup>
@@ -62,17 +65,13 @@ const Cartpage: FC = () => {
               </tr>
             </thead>
             <tbody>
-              <CartItem />
-              <CartItem />
               {/* 장바구니 api 받아와서 map으로 보여주기 */}
-              {/* {cartItems.map((item) => (
-                <CartItem
-                // key={item.id}
-                // item={item}
-                // selectedItems={selectedItems}
-                // setSelectedItems={setSelectedItems}
-                />
-            ))} */}
+              {cartItems.map((item: CartItemType) => (
+               <CartItem
+                key={item.productId}
+                data={item}
+              />
+              ))}
             </tbody>
           </CartItemTable>
         </TableWrap>
@@ -84,7 +83,7 @@ const Cartpage: FC = () => {
         <PriceWrap>
           <TotalPriceWrap>
             <p>총 상품가격</p>
-            <Price>14,000</Price>
+            <Price>0</Price>
             <p>원</p>
           </TotalPriceWrap>
           <CalculateSign>+</CalculateSign>
@@ -96,7 +95,7 @@ const Cartpage: FC = () => {
           <CalculateSign>=</CalculateSign>
           <TotalSumPriceWrap>
             <p>총 주문금액</p>
-            <SumPrice>14,000</SumPrice>
+            <SumPrice>0</SumPrice>
             <p>원</p>
           </TotalSumPriceWrap>
         </PriceWrap>

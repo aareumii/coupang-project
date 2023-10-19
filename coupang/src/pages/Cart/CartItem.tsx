@@ -2,8 +2,10 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { MdKeyboardArrowUp, MdKeyboardArrowDown } from "react-icons/md";
 import itemImg from "../../assets/itemImg.jpg";
+import { CartItemType } from '../../types/types';
 
-const CartItem: FC = () => {
+
+const CartItem: FC<{ data: CartItemType }> = ({ data }) => {
   return (
     <>
       <tr>
@@ -11,20 +13,21 @@ const CartItem: FC = () => {
           <input type="checkbox" />
         </td>
         <td rowSpan={2}>
+          {/* 임시 이미지 사용. 나중에 data.img와 같은 식으로 변경될 수 있음 */}
           <img src={itemImg} alt="임시 이미지" />
         </td>
-        <ProductInfo colSpan={3}>상품명, 설명</ProductInfo>
-        <PriceInfo rowSpan={2}>14,000</PriceInfo>
+        <ProductInfo colSpan={3}>{data.name}</ProductInfo>
+        <PriceInfo rowSpan={2}>{data.price}</PriceInfo>
         <PriceInfo rowSpan={2}>무료</PriceInfo>
       </tr>
       <tr>
-        <ProductInfo>상품가격</ProductInfo>
+        <ProductInfo>{data.price}</ProductInfo>
         <td>
           <AmountBox>
             <button>
               <MdKeyboardArrowUp />
             </button>
-            <p>4</p>
+            <p>{data.amount}</p>
             <button>
               <MdKeyboardArrowDown />
             </button>
