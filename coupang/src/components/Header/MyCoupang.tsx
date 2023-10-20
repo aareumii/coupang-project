@@ -1,5 +1,5 @@
 import React from 'react';
-import mycoupang from '../../assets/headerimg/myPage.svg';
+import mycoupang from '../../assets/headerImg/myPage.svg';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -8,8 +8,8 @@ const MyCoupang = () => {
 		<>
 			<MypageBox>
 				<IconWrapper>
-					<img src={mycoupang} />
 					<Link to={'/userinfo'}>
+						<img src={mycoupang} />
 						<p>마이페이지</p>
 					</Link>
 				</IconWrapper>
