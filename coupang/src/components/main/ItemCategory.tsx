@@ -39,6 +39,9 @@ export default ItemCategory;
 const ItemCategoryWrap = styled.div`
   width: 60vw;
   margin: 30px 0 100px 0;
+  @media screen and (max-width: 768px) {
+    margin: 15px 0 50px 0;
+  }
 
   h1 {
     color: black;
@@ -46,6 +49,10 @@ const ItemCategoryWrap = styled.div`
     font-weight: bold;
     font-size: 2rem;
     margin-bottom: 40px;
+    @media screen and (max-width: 768px) {
+      margin-bottom: 20px;
+    }
+
     @media screen and (max-width: 1024px) {
       font-size: 1.6rem;
     }
@@ -76,9 +83,9 @@ const CategoryGrid = styled.div`
       margin-bottom: 47px;
     }
     @media screen and (max-width: 768px) {
-      width: 60px;
-      height: 50px;
-      margin-bottom: 35px;
+      width: 50px;
+      height: 40px;
+      margin-bottom: 30px;
     }
   }
   #jam {
@@ -91,9 +98,9 @@ const CategoryGrid = styled.div`
       margin-bottom: 37px;
     }
     @media screen and (max-width: 768px) {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 18px;
+      width: 60px;
+      height: 60px;
+      margin-bottom: 20px;
     }
   }
   #cake {
@@ -104,12 +111,12 @@ const CategoryGrid = styled.div`
     @media screen and (max-width: 1024px) {
       width: 90px;
       height: 70px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
     @media screen and (max-width: 768px) {
-      width: 70px;
-      height: 50px;
-      margin-bottom: 30px;
+      width: 60px;
+      height: 40px;
+      margin-bottom: 25px;
     }
   }
   img {
@@ -124,6 +131,10 @@ const CategoryGrid = styled.div`
     margin-bottom: 10px;
     text-align: center;
     &:hover {
+      background-color: #fcdec7;
+    }
+
+    &:hover {
       background-color: #fac99c;
     }
 
@@ -132,8 +143,8 @@ const CategoryGrid = styled.div`
       height: 130px;
     }
     @media screen and (max-width: 768px) {
-      width: 90px;
-      height: 90px;
+      width: 70px;
+      height: 70px;
     }
   }
   a {
@@ -145,7 +156,7 @@ const CategoryGrid = styled.div`
       font-size: 0.8rem;
     }
     @media screen and (max-width: 768px) {
-      font-size: 0.6rem;
+      font-size: 0.4rem;
     }
   }
   p {

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import 평점 from "../../assets/mainImg/평점.png";
 import 로켓 from "../../assets/mainImg/로켓배송.png";
-import { StItemContent } from "../../styles/itemCardStyle";
+import { StItemContent } from "../../styles/ItemCard.styled";
 
 export interface propsType {
   id: number;
@@ -40,7 +40,7 @@ const CateItem = (props: propsType) => {
             <p>무료배송</p>
             <div className="star">
               <img src={평점} className="star__png" />
-              (999+)
+              {props.click}+
             </div>
           </div>
         </div>

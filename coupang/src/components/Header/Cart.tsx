@@ -20,14 +20,14 @@ const IconWrapper = styled.div`
   cursor: pointer;
 
   img {
-    margin-left: 10px;
+    /* margin-left: 10px; */
 
     width: 50px;
     height: 30px;
     padding-bottom: 5px;
     @media screen and (max-width: 768px) {
-      width: 50px;
-      height: 30px;
+      width: 30px;
+      height: 20px;
       margin-left: 0px;
     }
   }
@@ -35,7 +35,7 @@ const IconWrapper = styled.div`
     font-size: 0.6rem;
     text-align: center;
     @media screen and (max-width: 768px) {
-      display: none;
+      font-size: 0.3rem;
     }
   }
   a {

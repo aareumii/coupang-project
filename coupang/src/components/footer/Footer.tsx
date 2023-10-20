@@ -38,10 +38,13 @@ const FooterLayer_01 = styled.div`
 
   width: 99vw;
   height: 100px;
-  margin: 30px auto;
+  margin: 200px auto 40px;
   font-size: 12px;
   color: #555;
   line-height: 150%;
+  @media screen and (max-width: 768px) {
+    font-size: 0.4rem;
+  }
   h1 {
     a {
       background-position: -19px -34px;
