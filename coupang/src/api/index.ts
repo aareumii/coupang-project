@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 const axiosClient: AxiosInstance = axios.create({
-	baseURL: 'http://43.201.30.126:8080/api', // baseURL 프로퍼티를 사용하여 기본 URL 설정
+	baseURL: process.env.REACT_APP_BASE_URL, // REACT_APP_BASE_URL =   "http://43.201.30.126:8080/api"
 });
 
 axiosClient.interceptors.response.use(
