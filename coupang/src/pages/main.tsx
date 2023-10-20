@@ -9,11 +9,12 @@ import {
 	useLocation,
 } from 'react-router-dom';
 import CartPage from './CartPage';
-import UserPage from './UserPage';
+import User from './UserPage';
 import NotFound from './NotFound';
 import Header from './Header';
 import Cart from './Cart';
 import Login from '../pages/Main/Main';
+import UserInfo from './UserInfo';
 
 const MainContent: React.FC = () => {
 	const currentLocation = useLocation();
@@ -31,8 +32,8 @@ const MainContent: React.FC = () => {
 				<Route path="/user" element={<NotFound />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/cartlist" element={<Cart />} />
-
-				<Route path="/user/*" element={<UserPage />} />
+				<Route path="/userinfo/*" element={<UserInfo />} />
+				<Route path="/user/*" element={<User />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</div>

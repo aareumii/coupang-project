@@ -8,8 +8,9 @@ const MyCoupang = () => {
 		<>
 			<MypageBox>
 				<IconWrapper>
-					<img src={mycoupang} />
 					<Link to={'/userinfo'}>
+						<img src={mycoupang} />
+
 						<p>마이페이지</p>
 					</Link>
 				</IconWrapper>
