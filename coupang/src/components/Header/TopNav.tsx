@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import LogoutButton from "../../pages/LoginPage/LogoutButton";
 
-const Header = () => {
+const TopNav = () => {
   const handleLogout = () => {
     // 로그아웃 처리 로직을 구현합니다.
   };
@@ -56,7 +56,7 @@ function isLoggedIn() {
   return !!localStorage.getItem("accessToken");
 }
 
-export default Header;
+export default TopNav;
 
 const HeaderWrapper = styled.div`
   width: 100%;

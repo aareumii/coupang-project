@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import bakepang from "../../assets/headerImg/Bakepang.png";
 import { StCategory } from "./stCategory";
-import Header from "../../components/header/Header";
 import Category from "../../components/header/Category";
 import { FaSearch } from "react-icons/fa";
 import MyCoupang from "../../components/header/MyCoupang";
@@ -17,6 +16,7 @@ import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
+import TopNav from "../../components/header/TopNav";
 
 const Bread = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -47,7 +47,7 @@ const Bread = () => {
 
   return (
     <StCategory>
-      <Header />
+      <TopNav />
       <header className="header">
         <Category />
         <img className="logo" src={bakepang} onClick={linktoMain} />

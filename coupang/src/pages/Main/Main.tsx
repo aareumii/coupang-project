@@ -17,7 +17,7 @@ import { GET_PRODUCT_API } from "../../api/Products";
 import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
-import Header from "../../components/header/Header";
+import TopNav from "../../components/header/TopNav";
 
 const Main = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -60,7 +60,7 @@ const Main = () => {
 
   return (
     <StMain>
-      <Header />
+      <TopNav />
       <header className="header">
         <Category />
         <a href="/">
