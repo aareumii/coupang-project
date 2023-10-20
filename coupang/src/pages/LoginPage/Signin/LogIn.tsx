@@ -192,50 +192,6 @@ const Container = styled.div`
 	}
 `;
 
-// const LoginWrap = styled.div`
-// 	position: relative;
-// 	display: flex;
-
-// 	div {
-// 		width: 100%;
-// 		font-weight: 400;
-// 		font-size: 16px;
-// 		line-height: 19px;
-// 		margin-top: 24px;
-// 		display: flex;
-// 		justify-content: space-around;
-
-// 		a {
-// 			padding: 14px 0;
-// 			color: #454f5b;
-// 			text-align: center;
-// 			text-decoration: none;
-// 		}
-// 	}
-// `;
-
-// const PasswordWrap = styled.div`
-// 	display: flex;
-// 	position: relative;
-
-// 	div {
-// 		width: 100%;
-// 		font-weight: 400;
-// 		font-size: 16px;
-// 		line-height: 19px;
-// 		margin-top: 24px;
-// 		display: flex;
-// 		justify-content: space-around;
-
-// 		a {
-// 			padding: 14px 0;
-// 			color: #454f5b;
-// 			text-align: center;
-// 			text-decoration: none;
-// 		}
-// 	}
-// `;
-
 const FormContainer = styled.div`
 	display: flex;
 	flex-direction: column;
