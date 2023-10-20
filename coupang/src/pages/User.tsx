@@ -1,5 +1,5 @@
 import React from 'react';
-import Hee
+import Header from '../components/header/Header';
 import Category from '../components/header/Category';
 import { StSearchBox } from '../styles/Search.Styled';
 import { FaSearch } from 'react-icons/fa';
