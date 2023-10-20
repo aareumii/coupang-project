@@ -1,5 +1,3 @@
-// UserPage.tsx
-
 import React from 'react';
 import styled from 'styled-components';
 import { Routes, Route, Link, NavLink, useNavigate } from 'react-router-dom';
@@ -12,12 +10,141 @@ import NotFound from './NotFound';
 import Login from '../pages/LoginPage/LogIn';
 import LogoutButton from '../pages/LoginPage/LogoutButton';
 
+const Container = styled.div`
+	display: grid;
+	grid-template-rows: auto 2fr auto;
+	grid-template-columns: 200px 1fr;
+	height: 100vh;
+	margin-left: 10rem;
+
+	grid-template:
+		'ProfileImageBar Sidebar Sidebar' 0px
+		'MenuBar content content' 280px
+		'MenuBar content content' 1fr
+		/ 200px 3fr 1fr;
+
+	grid-template-areas:
+		'ProfileImageBar Sidebar Sidebar'
+		'MenuBar content content'
+		'MenuBar content content ';
+`;
+
+const ProfileImageBar = styled.aside`
+	grid-row: 1 / 4;
+	grid-column: 1 / 1;
+	background-color: #286db4;
+	color: #fff;
+	padding: 1.5rem;
+
+	margin-top: 11rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 150px;
+`;
+
+const ProfileImage = styled.img`
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	//   margin-bottom: 1rem;
+	//   margin-top: 1rem;
+`;
+
+const MenuBar = styled.aside`
+	grid-row: 3 /4;
+	grid-column: 1 / 2;
+	background-color: #f9f9f9;
+	color: black;
+	padding: 1rem;
+	margin-top: 5rem;
+`;
+
+const Sidebar = styled.div`
+	grid-row: 2 / 4;
+	grid-column: 2 / 3;
+	// background-color: #82bce2;
+	color: #fff;
+	padding-left: 0.1rem;
+	margin-top: 11rem;
+	width: 110%;
+	// height: 150px;
+`;
+
+const Content = styled.main`
+	grid-row: 3 / 4;
+	grid-column: 2 / 2;
+	background-color: #fff;
+	padding: 1rem;
+	margin-top: 6rem;
+	margin-left: 1rem;
+	text-align: left;
+	width: 100%;
+`;
+
+const ListItem = styled.div<{ addUnderline?: boolean }>`
+	margin-bottom: 10px;
+	${(props) =>
+		props.addUnderline &&
+		`
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 2rem;
+    `}
+
+	// a 태그 스타일 추가
+  a {
+		text-decoration: none;
+		color: inherit;
+	}
+`;
+
+const SideBarInfo = styled.div`
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	align-items: center;
+	gap: 0.2rem;
+	flex: 1;
+	margin-right: 0.5rem;
+	background-color: #ffff;
+	font-size: 22.5px;
+`;
+const SideBarInfoItem = styled.div`
+	cursor: pointer;
+	color: white;
+	text-align: left;
+	// margin-right: 2px;
+	// margin: 0px 0px 0px 20px;
+	// border-right: 2px solid white;
+
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+	padding: 1rem;
+	background-color: #82bce2;
+
+	&:last-child {
+		border-right: none;
+	}
+
+	.large-number {
+		font-size: 3rem;
+	}
+`;
+const StyledLink = styled(NavLink)`
+	text-decoration: none;
+	color: inherit;
+
+	&:hover {
+		color: blue;
+	}
+	&.active {
+		color: blue;
+	}
+`;
+
+// const handleLoginClick = () => {
+
+// };
+
 // UserPage 컴포넌트
-
-interface UserPageProps {
-	onLogout?: () => void;
-}
-
 const UserPage: React.FC<UserPageProps> = ({ onLogout }) => {
 	const profileImageUrl = 'https://via.placeholder.com/100';
 	const navigate = useNavigate();
@@ -116,122 +243,3 @@ const UserPage: React.FC<UserPageProps> = ({ onLogout }) => {
 };
 
 export default UserPage;
-
-const Container = styled.div``;
-
-const ProfileImageBar = styled.aside`
-	grid-row: 1 / 4;
-	grid-column: 1 / 1;
-	background-color: #286db4;
-
-	color: #fff;
-	padding: 1.5rem;
-
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	height: 150px;
-`;
-
-const ProfileImage = styled.img`
-	width: 100px;
-	height: 100px;
-	border-radius: 50%;
-	//   margin-bottom: 1rem;
-	//   margin-top: 1rem;
-`;
-
-const MenuBar = styled.aside`
-	grid-row: 3 /4;
-	grid-column: 1 / 2;
-	background-color: #f9f9f9;
-	color: black;
-	padding: 1rem;
-	margin-top: 5rem;
-`;
-
-const Sidebar = styled.div`
-	grid-row: 2/ 4;
-	grid-column: 2 / 3;
-	// background-color: #82bce2;
-	color: #fff;
-	padding-left: 0.1rem;
-
-	// height: 150px;
-`;
-
-const Content = styled.main`
-	grid-row: 3 / 4;
-	grid-column: 2 / 2;
-	background-color: #fff;
-	padding: 1rem;
-	margin-top: 6rem;
-	margin-left: 1rem;
-	text-align: left;
-	width: 100%;
-`;
-
-const ListItem = styled.div<{ addUnderline?: boolean }>`
-	margin-bottom: 10px;
-	${(props) =>
-		props.addUnderline &&
-		`
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 2rem;
-    `}
-
-	// a 태그 스타일 추가
-  a {
-		text-decoration: none;
-		color: inherit;
-	}
-`;
-
-const SideBarInfo = styled.div`
-	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	align-items: center;
-	gap: 0.2rem;
-	flex: 1;
-	margin-right: 0.5rem;
-	background-color: #ffff;
-	font-size: 22.5px;
-`;
-const SideBarInfoItem = styled.div`
-	cursor: pointer;
-	color: white;
-	text-align: left;
-	// margin-right: 2px;
-	// margin: 0px 0px 0px 20px;
-	// border-right: 2px solid white;
-
-	padding: 1rem;
-	background-color: #82bce2;
-	height: 150px;
-	padding: 1.5rem;
-
-	&:last-child {
-		border-right: none;
-	}
-
-	.large-number {
-		font-size: 3rem;
-	}
-`;
-const StyledLink = styled(NavLink)`
-	text-decoration: none;
-	color: inherit;
-
-	&:hover {
-		color: blue;
-	}
-	&.active {
-		color: blue;
-	}
-`;
-
-// const handleLoginClick = () => {
-
-// };
-
-// UserPage 컴포넌트
