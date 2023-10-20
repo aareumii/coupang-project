@@ -10,7 +10,6 @@ const MyCoupang = () => {
 				<IconWrapper>
 					<Link to={'/userinfo'}>
 						<img src={mycoupang} />
-
 						<p>마이페이지</p>
 					</Link>
 				</IconWrapper>
