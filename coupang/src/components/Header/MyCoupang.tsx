@@ -1,5 +1,5 @@
 import React from 'react';
-import mycoupang from '../../assets/headerImg/myPage.svg';
+import mycoupang from '../../assets/headerimg/myPage.svg';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ const MyCoupang = () => {
 					<MypageDrop>
 						<Contents>
 							<li>
-								<Link to={'/userpage'}>주문목록</Link>
+								<Link to={'/user'}>주문목록</Link>
 							</li>
 							<li>
 								<a href="#">취소/반품</a>

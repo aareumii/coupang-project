@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import bakepang from '../../assets/headerImg/Bakepang.png';
+import bakepang from '../../assets/headerimg/Bakepang.png';
 import DaumPostcode from 'react-daum-postcode';
 import userAPI from '../../api/user';
 

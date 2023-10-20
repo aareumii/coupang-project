@@ -5,7 +5,7 @@ import { StSearchBox } from '../styles/Search.Styled';
 import { FaSearch } from 'react-icons/fa';
 import MyCoupang from '../components/header/MyCoupang';
 import Cart from '../components/header/Cart';
-import bakepang from '../assets/headerImg/Bakepang.png';
+import bakepang from '../assets/headerimg/Bakepang.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';

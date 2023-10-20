@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import menuBar from '../../assets/headerImg/menuBar.svg';
-import bread from '../../assets/headerImg/bread1.png';
-import jam from '../../assets/headerImg/jam.png';
-import cake from '../../assets/headerImg/Cake.png';
-import market from '../../assets/headerImg/market.png';
+import menuBar from '../../assets/headerimg/menuBar.svg';
+import bread from '../../assets/headerimg/bread1.png';
+import jam from '../../assets/headerimg/jam.png';
+import cake from '../../assets/headerimg/Cake.png';
+import market from '../../assets/headerimg/market.png';
 
 const Category = () => {
 	return (
