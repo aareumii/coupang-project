@@ -1,5 +1,5 @@
 import React from 'react';
-import cart from '../../assets/headerimg/cart.svg';
+import cart from '../../assets/headerImg/cart.svg';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 

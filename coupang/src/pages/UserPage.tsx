@@ -145,7 +145,7 @@ const StyledLink = styled(NavLink)`
 // };
 
 // UserPage 컴포넌트
-const UserPage: React.FC<UserPageProps> = ({ onLogout }) => {
+const UserPage: React.FC = () => {
 	const profileImageUrl = 'https://via.placeholder.com/100';
 	const navigate = useNavigate();
 

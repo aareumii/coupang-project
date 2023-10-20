@@ -12,15 +12,10 @@ import Cart from './pages/Cart/Cart';
 import Order from './pages/Order/Order';
 import OrderResult from './pages/Order/OrderResult';
 import UserInfo from './pages/UserInfo';
-import UserPage from './pages/UserPage';
+import User from './pages/User';
 import LogoutButton from './pages/LoginPage/LogoutButton';
 
 function App() {
-	const handleLogout = () => {
-		console.log('로그아웃 되었습니다.');
-		// 추가적인 로그아웃 로직 (예: 토큰 제거 등)
-	};
-
 	return (
 		<div className="App">
 			<Router>
@@ -41,10 +36,7 @@ function App() {
 					<Route path="/order/result" element={<OrderResult />} />
 					<Route path="/order/result" element={<OrderResult />} />
 					<Route path="/userinfo" element={<UserInfo />} />
-					<Route
-						path="/userpage"
-						element={<UserPage onLogout={handleLogout} />}
-					/>
+					<Route path="/user" element={<User />} />
 				</Routes>
 			</Router>
 		</div>

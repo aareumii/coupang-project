@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Bakepang from '../../assets/headerimg/Bakepang.png';
+import Bakepang from '../../assets/headerImg/Bakepang.png';
 import userAPI from '../../api/user';
 
 interface LoginProps {}

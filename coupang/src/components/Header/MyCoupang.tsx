@@ -1,5 +1,5 @@
 import React from 'react';
-import mycoupang from '../../assets/headerimg/myPage.svg';
+import mycoupang from '../../assets/headerImg/myPage.svg';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
