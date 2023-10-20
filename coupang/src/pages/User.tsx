@@ -9,11 +9,15 @@ import bakepang from '../assets/headerImg/Bakepang.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import SalesListPage from './SalesListPage';
+import CartPage from './CartPage';
 
 const User = () => {
 	// const [userInput, setUserInput] = useState("");
 	const [search, setSearch] = useState('');
 	const [callbackSearch, setcallbackSearch] = useState('');
+	const [showSalesList, setShowSalesList] = useState(false);
+	const [showCart, setShowCart] = useState(false);
 	const navigate = useNavigate();
 	const getValue = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearch(e.target.value);
@@ -27,6 +31,16 @@ const User = () => {
 			navigate(`/?q=${keyword}`);
 			setcallbackSearch(search);
 		}
+	};
+
+	const toggleSalesList = () => {
+		setShowSalesList(!showSalesList);
+		setShowCart(false); // 판매목록을 표시할 때 장바구니 목록 숨기기
+	};
+
+	const toggleCart = () => {
+		setShowCart(!showCart);
+		setShowSalesList(false); // 장바구니 목록을 표시할 때 판매목록 숨기기
 	};
 
 	return (
@@ -65,18 +79,15 @@ const User = () => {
 						<nav>
 							<div>
 								<p>My 쇼핑</p>
-								<span>판매목록</span>
+								<span onClick={toggleCart}>장바구니 목록</span>
+								<span onClick={toggleSalesList}>판매목록</span>
 								<span>구매목록</span>
 							</div>
 							<div>
 								<p>My 정보</p>
-								<span>판매목록</span>
-								<span>구매목록</span>
+								<span>개인정보확인</span>
+								<span>결제수단 페이관리</span>
 							</div>
-							<ButtonWrap>
-								<button>로그인</button>
-								<button>로그아웃</button>
-							</ButtonWrap>
 						</nav>
 					</MyMenu>
 				</LeftMenu>
@@ -107,6 +118,8 @@ const User = () => {
 							</div>
 						</li>
 					</ul>
+					{showSalesList && <SalesListPage />}
+					{showCart && <CartPage />}
 				</RightMenu>
 			</Menu>
 		</Container>
@@ -238,19 +251,6 @@ const MyMenu = styled.div`
 				}
 			}
 		}
-	}
-`;
-
-const ButtonWrap = styled.div`
-	padding: 20px 0;
-	button {
-		width: 100px;
-		border: none;
-		font-size: 15px;
-		line-height: 16px;
-		padding: 10px;
-		margin: 5px 0;
-		cursor: pointer;
 	}
 `;
 
