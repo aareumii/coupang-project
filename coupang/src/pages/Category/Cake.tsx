@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import coupang from "../../assets/headerImg/Bakepang.png";
 import { StCategory } from "./stCategory";
-import TopNav from "../../components/header/TopNav";
-import Category from "../../components/header/Category";
+import TopNav from "../../components/haed/TopNav";
+import Category from "../../components/haed/Category";
 import { FaSearch } from "react-icons/fa";
-import MyCoupang from "../../components/header/MyCoupang";
-import Cart from "../../components/header/Cart";
+import MyCoupang from "../../components/haed/MyCoupang";
+import Cart from "../../components/haed/Cart";
 import { useNavigate } from "react-router-dom"; // useNavigate로 수정
 // import ItemList from '../../components/MainHome/ItemList';
 import { GET_PRODUCT_API } from "../../api/Products";

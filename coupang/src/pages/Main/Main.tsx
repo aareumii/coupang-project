@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import ItemList from "../../components/main/ItemList";
-import Category from "../../components/header/Category";
-import Pagination from "../../components/header/Pagination";
+import Category from "../../components/haed/Category";
+import Pagination from "../../components/haed/Pagination";
 import bakepang from "../../assets/headerImg/Bakepang.png";
-import MyCoupang from "../../components/header/MyCoupang";
-import Cart from "../../components/header/Cart";
+import MyCoupang from "../../components/haed/MyCoupang";
+import Cart from "../../components/haed/Cart";
 import ItemCategory from "../../components/main/ItemCategory";
 import Banner from "../../components/main/Banner";
 import axios from "axios";
@@ -17,7 +17,7 @@ import { GET_PRODUCT_API } from "../../api/Products";
 import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
-import TopNav from "../../components/header/TopNav";
+import TopNav from "../../components/haed/TopNav";
 
 const Main = () => {
   const [products, setProducts] = useState<Product[]>([]);

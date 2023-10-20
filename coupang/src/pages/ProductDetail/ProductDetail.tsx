@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Header from "../../components/header/TopNav";
-import Category from "../../components/header/Category";
-import Pagination from "../../components/header/Pagination";
+import Header from "../../components/haed/TopNav";
+import Category from "../../components/haed/Category";
+import Pagination from "../../components/haed/Pagination";
 import bakepang from "../../assets/headerImg/Bakepang.png";
-import MyCoupang from "../../components/header/MyCoupang";
-import Cart from "../../components/header/Cart";
+import MyCoupang from "../../components/haed/MyCoupang";
+import Cart from "../../components/haed/Cart";
 import ProductInfo from "./ProductInfo";
 import { StMain } from "../Main/stMain";
 import styled from "styled-components";

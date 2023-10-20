@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "../components/header/TopNav";
-import Category from "../components/header/Category";
+import Header from "../components/haed/TopNav";
+import Category from "../components/haed/Category";
 import { StSearchBox } from "../styles/Search.Styled";
 import { FaSearch } from "react-icons/fa";
-import MyCoupang from "../components/header/MyCoupang";
-import Cart from "../components/header/Cart";
+import MyCoupang from "../components/haed/MyCoupang";
+import Cart from "../components/haed/Cart";
 import bakepang from "../assets/headerImg/Bakepang.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
