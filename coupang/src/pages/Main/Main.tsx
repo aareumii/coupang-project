@@ -3,7 +3,7 @@ import Header from "../../components/header/Header";
 import ItemList from "../../components/main/ItemList";
 import Category from "../../components/header/Category";
 import Pagination from "../../components/header/Pagination";
-import bakepang from "../../assets/headerImg/베이크팡.png";
+import bakepang from "../../assets/headerimg/베이크팡.png";
 import MyCoupang from "../../components/header/MyCoupang";
 import Cart from "../../components/header/Cart";
 import ItemCategory from "../../components/main/ItemCategory";

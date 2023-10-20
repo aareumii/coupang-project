@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import coupang from "../../assets/headerImg/베이크팡.png";
+import coupang from "../../assets/headerimg/베이크팡.png";
 import { StCategory } from "./stCategory";
 import Header from "../../components/header/Header";
 import Category from "../../components/header/Category";
@@ -17,7 +17,6 @@ import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
-
 
 const Cake = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -84,13 +83,15 @@ const Cake = () => {
           </div>
         </StFilter>
         <ItemListWrap>
-        {category.map((item: any) => (
-          <div key={item.category.categoryName}> {/* 각 상품에 대한 key는 상위 div에 적용합니다. */}
-            <Link to={`/product/detail/${item.name}`}>
-              <CateItem {...item} />
-            </Link>
-          </div>
-        ))}
+          {category.map((item: any) => (
+            <div key={item.category.categoryName}>
+              {" "}
+              {/* 각 상품에 대한 key는 상위 div에 적용합니다. */}
+              <Link to={`/product/detail/${item.name}`}>
+                <CateItem {...item} />
+              </Link>
+            </div>
+          ))}
         </ItemListWrap>
       </main>
       <footer>

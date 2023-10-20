@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import bakepang from "../../assets/headerImg/베이크팡.png";
+import bakepang from "../../assets/headerimg/베이크팡.png";
 import { StCategory } from "./stCategory";
 import Header from "../../components/header/Header";
 import Category from "../../components/header/Category";
