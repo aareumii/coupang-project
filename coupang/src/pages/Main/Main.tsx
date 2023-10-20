@@ -18,6 +18,8 @@ import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
 
+import Header from "../../components/header/Header";
+
 const Main = () => {
   const [products, setProducts] = useState<Product[]>([]);
   // const [userInput, setUserInput] = useState("");
@@ -60,6 +62,7 @@ const Main = () => {
   return (
     <StMain>
       <header className="header">
+        <Header />
         <Category />
         <a href="/">
           <img className="logo" src={bakepang} alt="베이크팡" />
