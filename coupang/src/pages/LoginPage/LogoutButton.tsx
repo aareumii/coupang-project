@@ -1,5 +1,5 @@
 import React from 'react';
-import userAPI from '../../../api/user';
+import userAPI from '../../api/user';
 import styled from 'styled-components';
 
 interface LogoutButtonProps {

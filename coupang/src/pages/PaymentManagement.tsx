@@ -82,8 +82,13 @@ const HistoryButton = styled.button`
 const PaymentManagement: React.FC = () => {
   const [balance, setBalance] = useState(0); // 초기값은 예시로 0으로 설정
 
+  const showComingSoonAlert = () => {
+    window.alert("준비 중 입니다.");
+  };
+
   // 충전하기 버튼 클릭 핸들러
   const handleCharge = () => {
+    showComingSoonAlert();
     // 충전 로직을 여기에 추가
     // 예를 들어, API 호출 또는 잔액 업데이트를 수행가능
     // 잔액 업데이트가 성공적으로 이루어지면 setBalance를 사용하여 상태를 업데이트
@@ -92,6 +97,7 @@ const PaymentManagement: React.FC = () => {
 
   // 인출하기 버튼 클릭 핸들러
   const handleWithdraw = () => {
+    showComingSoonAlert();
     // 인출 로직을 여기에 추가
     // 예를 들어, API 호출 또는 잔액 업데이트를 수행가능
     // 잔액 업데이트가 성공적으로 이루어지면 setBalance를 사용하여 상태를 업데이트
@@ -107,7 +113,9 @@ const PaymentManagement: React.FC = () => {
         </BalanceAmount>
       </BalanceContainer>
       <ButtonContainer>
-        <HistoryButton>머니 사용 내역</HistoryButton>
+        <HistoryButton onClick={showComingSoonAlert}>
+          머니 사용 내역
+        </HistoryButton>
         <ChargeButton onClick={handleCharge}>충전하기</ChargeButton>
         <WithdrawButton onClick={handleWithdraw}>인출하기</WithdrawButton>
       </ButtonContainer>
