@@ -16,6 +16,7 @@ import { StFilter } from "../../styles/ItemFilter.styled";
 import { StSearchBox } from "../../styles/Search.Styled";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
+import Header from "../../components/header/Header";
 
 const Jam = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -46,6 +47,7 @@ const Jam = () => {
   return (
     <StCategory>
       <header className="header">
+        <Header />
         <Category />
         <img className="logo" src={coupang} onClick={linktoMain} />
         <StSearchBox>

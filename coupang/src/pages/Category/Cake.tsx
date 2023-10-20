@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import coupang from "../../assets/headerImg/Bakepang.png";
 import { StCategory } from "./stCategory";
-// import Header from '../../components/header/Header';
+import Header from "../../components/header/Header";
 import Category from "../../components/header/Category";
 import { FaSearch } from "react-icons/fa";
 import MyCoupang from "../../components/header/MyCoupang";
@@ -46,7 +46,7 @@ const Cake = () => {
 
   return (
     <StCategory>
-      {/* <Header /> */}
+      <Header />
       <header className="header">
         <Category />
         <img className="logo" src={coupang} onClick={linktoMain} />
