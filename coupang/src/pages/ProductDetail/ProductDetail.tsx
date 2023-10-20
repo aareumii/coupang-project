@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import Header from "../../components/header/Header";
-import Category from "../../components/header/Category";
+import React, { useState } from 'react';
+import Header from '../../components/header/Header';
+import Category from '../../components/header/Category';
 import Pagination from '../../components/header/Pagination';
-import bakepang from '../../assets/headerImg/베이크팡.png';
+import bakepang from '../../assets/headerimg/Bakepang.png';
 import MyCoupang from '../../components/header/MyCoupang';
 import Cart from '../../components/header/Cart';
 import ProductInfo from './ProductInfo';
@@ -12,9 +12,7 @@ import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/item';
 import Footer from '../../components/footer/Footer';
-import { StSearchBox } from "../../styles/Search.Styled";
-
-
+import { StSearchBox } from '../../styles/Search.Styled';
 
 const ProductDetail = () => {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -56,40 +54,38 @@ const ProductDetail = () => {
 
 	return (
 		<StMain>
-		<Header />
-		<header className="header">
-		<Category />
+			<Header />
+			<header className="header">
+				<Category />
 
-		  <a href="/">
-          	<img className="logo" src={bakepang} alt="베이크팡" />
-		  </a>
-  
-		  <StSearchBox>
-			<div className="form">
-			  <input
-				className="input"
-				placeholder="찾고 싶은 상품을 검색해보세요!"
-				onChange={getValue}
-				onKeyDown={handleKeyDown}
-			  />
-			  <FaSearch className="search__icon" />
-			</div>
-		  </StSearchBox>
-  
-			<MyCoupang />
-			<Cart />
+				<a href="/">
+					<img className="logo" src={bakepang} alt="베이크팡" />
+				</a>
+
+				<StSearchBox>
+					<div className="form">
+						<input
+							className="input"
+							placeholder="찾고 싶은 상품을 검색해보세요!"
+							onChange={getValue}
+							onKeyDown={handleKeyDown}
+						/>
+						<FaSearch className="search__icon" />
+					</div>
+				</StSearchBox>
+
+				<MyCoupang />
+				<Cart />
 			</header>
-
 			<main className="main">
-                <ProductInfo />
+				<ProductInfo />
 				<Pagination />
 			</main>{' '}
 			<footer className="footer">
 				<Footer />
 			</footer>
-			</StMain>
+		</StMain>
 	);
 };
 
 export default ProductDetail;
-
