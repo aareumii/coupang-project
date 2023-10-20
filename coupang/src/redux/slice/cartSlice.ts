@@ -1,7 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CartItemType } from "../../types/cart";
 import { Product } from "./productSlice";
-import { fetchAddToCart } from "../../api/getProductApi";
 
 type ProductInCart = Product & {
   amount: number;
@@ -21,28 +20,6 @@ const initialState: CartState = {
   order: [],
   cart: [],
 };
-
-export const addProductToCart = createAsyncThunk(
-  "cart/addToCart",
-  async (product: ProductInCart, thunkAPI) => {
-    try {
-      const response = await fetchAddToCart(product, product.amount);
-      if (response && response.message === "상품을 장바구니에 추가하였습니다") {
-        return product;
-      } else {
-        return thunkAPI.rejectWithValue("장바구니 추가에 실패했습니다.");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(
-          error.message || "장바구니 추가에 실패했습니다."
-        );
-      } else {
-        return thunkAPI.rejectWithValue("장바구니 추가에 실패했습니다.");
-      }
-    }
-  }
-);
 
 const allAvailableItemsSelected = (state: CartState) => {
   const availableItems = state.items.filter(
@@ -134,24 +111,7 @@ const cartSlice = createSlice({
         state.cart.push(newProduct);
       }
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(addProductToCart.fulfilled, (state, action) => {
-      const existingProduct = state.cart.find(
-        (item) => item.id === action.payload.id
-      );
-      if (existingProduct) {
-        existingProduct.amount += action.payload.amount;
-        existingProduct.price += action.payload.price * action.payload.amount;
-      } else {
-        const newProduct = {
-          ...action.payload,
-          price: action.payload.price * action.payload.amount,
-        };
-        state.cart.push(newProduct);
-      }
-    });
-  },
+  }
 });
 
 export const {

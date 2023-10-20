@@ -3,7 +3,17 @@ import { AxiosError } from "axios";
 
 export const isAuthenticated = (): boolean => {
   const token = localStorage.getItem("accessToken");
-  return !!token; // 토큰이 있는 경우 true 반환, 없는 경우 false 반환
+  return !!token;
+};
+
+export const fetchProductDetails = async (name: string) => {
+  try {
+    const response = await axiosClient.get(`product/detail/${name}`);
+    return response.data;
+  } catch (error) {
+    console.error("상품 정보를 가져오는데 실패했습니다", error);
+    throw error;
+  }
 };
 
 export const postAddToCart = async (product: any, quantity: number) => {
@@ -17,16 +27,8 @@ export const postAddToCart = async (product: any, quantity: number) => {
       productId: product.id,
       quantity: quantity,
     });
-
-    if (
-      response.data &&
-      response.data.message === "상품을 장바구니에 추가하였습니다"
-    ) {
-      return response.data;
-    } else {
-      throw new Error("장바구니 추가에 실패했습니다.");
-    }
-  } catch (error) {
+  } 
+  catch (error) {
     const e = error as AxiosError;
     if (e.response && e.response.status === 400) {
       console.error("가입 되지 않은 회원입니다.");
