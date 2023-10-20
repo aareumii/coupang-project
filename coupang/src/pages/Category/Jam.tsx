@@ -46,8 +46,8 @@ const Jam = () => {
 
   return (
     <StCategory>
+      <Header />
       <header className="header">
-        <Header />
         <Category />
         <img className="logo" src={coupang} onClick={linktoMain} />
         <StSearchBox>

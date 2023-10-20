@@ -60,8 +60,8 @@ const Main = () => {
 
   return (
     <StMain>
+      <Header />
       <header className="header">
-        <Header />
         <Category />
         <a href="/">
           <img className="logo" src={bakepang} alt="베이크팡" />
