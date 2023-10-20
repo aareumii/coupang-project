@@ -7,6 +7,7 @@ import Cake from './pages/Category/Cake';
 import LoginPage from './pages/LoginPage/Signin/LogIn';
 import SignupPage from './pages/RegisterPage/SignUp';
 import UserInfo from './pages/UserInfo';
+import UserPage from './pages/UserPage';
 
 function App() {
 	const router = createBrowserRouter([
@@ -37,6 +38,10 @@ function App() {
 		{
 			path: '/userinfo', // 유저페이지 경로
 			element: <UserInfo />,
+		},
+		{
+			path: '/userpage', // 유저페이지 경로
+			element: <UserPage />,
 		},
 	]);
 

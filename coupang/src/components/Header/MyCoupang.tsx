@@ -3,6 +3,7 @@ import mycoupang from '../../assets/headerImg/myPage.svg';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import UserInfo from '../../pages/UserInfo';
+import UserPage from '../../pages/UserPage';
 
 const MyCoupang = () => {
 	return (
@@ -20,7 +21,7 @@ const MyCoupang = () => {
 					<MypageDrop>
 						<Contents>
 							<li>
-								<a href="#">주문목록</a>
+								<Link to={'/userpage'}>주문목록</Link>
 							</li>
 							<li>
 								<a href="#">취소/반품</a>

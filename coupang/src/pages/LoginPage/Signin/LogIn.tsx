@@ -1,75 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Bakepang from '../../../assets/headerImg/베이크팡.png';
 import userAPI from '../../../api/user';
 
-const Login = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [emailError, setEmailError] = useState('');
-	const [passwordError, setPasswordError] = useState('');
+interface LoginProps {}
+
+interface LoginFormState {
+	email: string;
+	password: string;
+	emailError: string;
+	passwordError: string;
+}
+
+const Login: React.FC<LoginProps> = () => {
+	const [formData, setFormData] = useState<LoginFormState>({
+		email: '',
+		password: '',
+		emailError: '',
+		passwordError: '',
+	});
+
 	const navigate = useNavigate();
 
-	const isEmailValid = (email) =>
+	const isEmailValid = (email: string): boolean =>
 		/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-	const isPasswordValid = (password) =>
+	const isPasswordValid = (password: string): boolean =>
 		/^(?=.*[a-z])(?=.*\d).{8,20}$/.test(password);
 
 	const handleCloseModal = () => {
 		navigate('/');
 	};
 
-	const handleLogin = async (e) => {
+	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		let isValid = true;
 
-		if (!email || !isEmailValid(email)) {
-			setEmailError('올바른 이메일 형식이 아닙니다.');
+		if (!formData.email || !isEmailValid(formData.email)) {
+			setFormData((prevData) => ({
+				...prevData,
+				emailError: '올바른 이메일 형식이 아닙니다.',
+			}));
 			isValid = false;
 		} else {
-			setEmailError('');
+			setFormData((prevData) => ({
+				...prevData,
+				emailError: '',
+			}));
 		}
 
-		if (!password || !isPasswordValid(password)) {
-			setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
+		if (!formData.password || !isPasswordValid(formData.password)) {
+			setFormData((prevData) => ({
+				...prevData,
+				passwordError: '비밀번호는 최소 8자 이상이어야 합니다.',
+			}));
 			isValid = false;
 		} else {
-			setPasswordError('');
+			setFormData((prevData) => ({
+				...prevData,
+				passwordError: '',
+			}));
 		}
 
 		if (!isValid) return;
 
 		try {
-			await userAPI.login(email, password);
+			await userAPI.login(formData.email, formData.password);
 			console.log('로그인 성공');
 			handleCloseModal();
-		} catch (error) {
+		} catch (error: any) {
 			console.error('API 호출 오류:', error.message);
-			setEmailError('서버에 연결할 수 없습니다.');
+			setFormData((prevData) => ({
+				...prevData,
+				emailError: '서버에 연결할 수 없습니다.',
+			}));
 		}
 	};
 
-	const handleEmailChange = (e) => {
-		const newEmail = e.target.value;
-		setEmail(newEmail);
+	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prevData) => ({
+			...prevData,
+			[name]: value,
+		}));
 
-		if (!newEmail || !isEmailValid(newEmail)) {
-			setEmailError('올바른 이메일 형식이 아닙니다.');
-		} else {
-			setEmailError('');
+		if (name === 'email') {
+			if (!value || !isEmailValid(value)) {
+				setFormData((prevData) => ({
+					...prevData,
+					emailError: '올바른 이메일 형식이 아닙니다.',
+				}));
+			} else {
+				setFormData((prevData) => ({
+					...prevData,
+					emailError: '',
+				}));
+			}
 		}
-	};
 
-	const handlePasswordChange = (e) => {
-		const newPassword = e.target.value;
-		setPassword(newPassword);
-
-		if (!newPassword || !isPasswordValid(newPassword)) {
-			setPasswordError('비밀번호는 최소 8자 이상이어야 합니다.');
-		} else {
-			setPasswordError('');
+		if (name === 'password') {
+			if (!value || !isPasswordValid(value)) {
+				setFormData((prevData) => ({
+					...prevData,
+					passwordError: '비밀번호는 최소 8자 이상이어야 합니다.',
+				}));
+			} else {
+				setFormData((prevData) => ({
+					...prevData,
+					passwordError: '',
+				}));
+			}
 		}
 	};
 
@@ -81,30 +122,32 @@ const Login = () => {
 						<img src={Bakepang} alt="로고" />
 					</Link>
 				</h1>
-				<FormContainer onSubmit={handleLogin}>
-					<div>
-						<input
-							id="email"
-							type="email"
-							placeholder="아이디(이메일)"
-							value={email}
-							onChange={handleEmailChange}
-						/>
-						<FormError>{emailError}</FormError>
-					</div>
-					<div>
-						<input
-							type="password"
-							placeholder="비밀번호"
-							value={password}
-							onChange={handlePasswordChange}
-						/>
-						<FormError>{passwordError}</FormError>
-					</div>
-					<button type="submit" onClick={handleLogin}>
-						로그인
-					</button>
-				</FormContainer>
+				<form onSubmit={handleLogin}>
+					<FormContainer>
+						<div>
+							<input
+								id="email"
+								type="email"
+								name="email"
+								placeholder="아이디(이메일)"
+								value={formData.email}
+								onChange={handleInputChange}
+							/>
+							<FormError>{formData.emailError}</FormError>
+						</div>
+						<div>
+							<input
+								type="password"
+								name="password"
+								placeholder="비밀번호"
+								value={formData.password}
+								onChange={handleInputChange}
+							/>
+							<FormError>{formData.passwordError}</FormError>
+						</div>
+						<button type="submit">로그인</button>
+					</FormContainer>
+				</form>
 				<hr />
 				<Link to={'/signup'}>
 					<SignupButton>회원가입</SignupButton>

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import bakepang from '../../assets/headerImg/베이크팡.png';
 import DaumPostcode from 'react-daum-postcode';
+import userAPI from '../../api/user';
 
 // import { sendSms, verifySms } from '../../api/sms';
 
@@ -162,37 +163,25 @@ const SignupPage: React.FC = () => {
 
 	const handleSignup = async () => {
 		try {
-			const response = await fetch(
-				'http://43.201.30.126:8080/api/user/signup',
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						name,
-						email,
-						password,
-						gender,
-						postcode,
-						address,
-						detailedAddress,
-						phone,
-						certificationNumber,
-					}),
-				}
-			);
-
-			const data = await response.json();
+			const userData = {
+				name,
+				email,
+				password,
+				gender,
+				postcode,
+				address,
+				detailedAddress,
+				phone,
+				certificationNumber,
+			};
+			const data = await userAPI.signup(userData);
 
 			if (data.status === 'success') {
 				setIsSuccessModalOpen(true); // 가입 성공 시 모달을 표시
 			} else {
 				alert('가입 실패: ' + data.message);
 			}
-		} catch (error: any) {
-			// error를 any 타입으로 지정
-			console.error('API 호출 오류:', error.message);
+		} catch (error) {
 			alert('서버에 연결할 수 없습니다.');
 		}
 	};
@@ -303,12 +292,18 @@ const SignupPage: React.FC = () => {
 						{/* 모달 상태에 따라 DaumPostcode 컴포넌트를 조건부 렌더링 */}
 						{isAddressModalOpen && (
 							<ModalOverlay
-								style={{ width: '50%', height: '100%', padding: '50px' }}
+								style={{
+									width: '100%',
+									height: '45%',
+									position: 'absolute',
+									top: '40%',
+									left: '0',
+								}}
 							>
 								<DaumPostcode
 									onComplete={handleAddressSelected}
 									autoClose
-									style={{ width: '70%', height: '70%' }}
+									style={{ width: '90%', height: '90%' }}
 								/>
 								<CloseButton onClick={handleCloseAddressModal}>x</CloseButton>
 							</ModalOverlay>
@@ -358,12 +353,12 @@ const SignupPage: React.FC = () => {
 				<SignUpButton onClick={handleSignup}>가입하기</SignUpButton>
 
 				{isSuccessModalOpen && (
-					<ModalOverlay>
-						<ModalContent>
+					<SignUpModalOverlay>
+						<SignupModalContent>
 							<p>가입 완료되었습니다.</p>
-							<CloseButton onClick={handleCloseSuccessModal}>닫기</CloseButton>
-						</ModalContent>
-					</ModalOverlay>
+							<CloseButton onClick={handleCloseSuccessModal}>X</CloseButton>
+						</SignupModalContent>
+					</SignUpModalOverlay>
 				)}
 
 				<p>
@@ -388,6 +383,7 @@ const Container = styled.div`
 	min-width: 290px;
 	margin: 0 auto;
 	padding-bottom: 30px;
+	position: relative;
 
 	h1 {
 		margin: 0 auto;
@@ -587,15 +583,13 @@ const TelNumberConfirm = styled.button`
 
 const ModalOverlay = styled.div`
 	position: absolute;
-	top: 25%;
+	top: 50%;
 	left: 25%;
-	width: 50%;
-	height: 50%;
 	background-color: rgba(0, 0, 0, 0.5);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 100; /* 다른 내용 위에 오도록 설정 */
+	z-index: 100;
 `;
 
 const CloseButton = styled.button`
@@ -626,6 +620,7 @@ const SignUpButton = styled.button`
 `;
 
 const AddressWrap = styled.div`
+	z-index: 100; /* 다른 내용 위에 오도록 설정 */
 	label {
 		padding: 10px 0 10px 0;
 		font-size: 14px;
@@ -652,7 +647,20 @@ const PostCodeButton = styled.button`
 	font-weight: bold;
 `;
 
-const ModalContent = styled.div`
+const SignUpModalOverlay = styled.div`
+	width: 87%;
+	padding: 30px;
+	position: absolute;
+	bottom: 20%;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100;
+`;
+
+const SignupModalContent = styled.div`
 	width: 80%;
 	padding: 20px;
 	background-color: #fff;
@@ -664,11 +672,3 @@ const ModalContent = styled.div`
 		margin-bottom: 20px;
 	}
 `;
-
-// const ErrorContainer = styled.div`
-//   color: #e52528;
-//   font-size: 14px;
-//   font-weight: bold;
-//   margin-top: 10px;
-//   text-align: center;
-// `;
