@@ -8,8 +8,8 @@ const MyCoupang = () => {
 		<>
 			<MypageBox>
 				<IconWrapper>
-					<img src={mycoupang} />
 					<Link to={'/userinfo'}>
+						<img src={mycoupang} />
 						<p>마이페이지</p>
 					</Link>
 				</IconWrapper>
@@ -17,7 +17,7 @@ const MyCoupang = () => {
 					<MypageDrop>
 						<Contents>
 							<li>
-								<Link to={'/userpage'}>주문목록</Link>
+								<Link to={'/user'}>주문목록</Link>
 							</li>
 							<li>
 								<a href="#">취소/반품</a>
